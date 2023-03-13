@@ -13,20 +13,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "[address]")
-public class Address {
+public class BookImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String city;
-    private String province;
-    private String district;
-    private String ward;
-    private String street;
-    private String Status;
+    private String url;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "book_id")
+    private Book book;
 }

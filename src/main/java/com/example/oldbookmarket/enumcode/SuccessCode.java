@@ -1,5 +1,5 @@
 package com.example.oldbookmarket.enumcode;
 
 public enum SuccessCode {
-    Get_All_Success
+     CREATE_SUCCESS, Get_All_Success
 }

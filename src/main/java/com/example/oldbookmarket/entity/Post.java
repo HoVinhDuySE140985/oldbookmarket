@@ -21,7 +21,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    private String name;
+    private String title;
     private String imageUrl;
     private LocalDate createAt;
     private String location;

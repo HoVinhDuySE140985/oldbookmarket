@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -22,7 +24,6 @@ public class Book {
     private Long id;
     private String name;
     private String isbn;
-    private String imageUrl;
     private LocalDate publicationDate;
     private String publicCompany;
     private String author;
@@ -42,4 +43,8 @@ public class Book {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "book")
+    private List<BookImage> imageList;
 }
