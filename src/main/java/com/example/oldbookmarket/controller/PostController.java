@@ -42,6 +42,7 @@ public class PostController {
             responeDTO.setData(postList);
             responeDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(responeDTO);
@@ -103,10 +104,10 @@ public class PostController {
     }
 
     @PutMapping("reject-post/{id}")
-    public ResponseEntity<ResponeDTO> rejectPost(@RequestBody PostRequestDTO postRequestDTO){
+    public ResponseEntity<ResponeDTO> rejectPost(@PathVariable Long id, String reasonReject){
         ResponeDTO responeDTO = new ResponeDTO();
         try {
-            PostResponeDTO post = postService.rejectPost(postRequestDTO);
+            PostResponeDTO post = postService.rejectPost(id,reasonReject);
             responeDTO.setData(post);
             responeDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
         }catch (Exception e){

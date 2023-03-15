@@ -108,13 +108,13 @@ public class PostServiceimpl implements PostService {
                     }
                 }
             }
-            Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
             postResponeDTO =PostResponeDTO.builder()
                     .id(post.getId())
                     .title(post.getTitle())
                     .imageUrl(post.getImageUrl())
                     .form(post.getForm())
-                    .categoryId(category.getId())
+                    .categoryId(subcate.getCategory().getId())
                     .subCategoryId(post.getSubcategory().getId())
                     .bookList(post.getBooks())
                     .location(post.getLocation())
@@ -134,13 +134,13 @@ public class PostServiceimpl implements PostService {
         try {
             postList = postRepo.findAll();
             for (Post post: postList) {
-                Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+                Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
                 if(post.getPostStatus().equalsIgnoreCase("active")){
                     PostResponeDTO postResponeDTO = new PostResponeDTO();
                     postResponeDTO.setId(post.getId());
                     postResponeDTO.setTitle(post.getTitle());
                     postResponeDTO.setForm(post.getForm());
-                    postResponeDTO.setCategoryId(category.getId());
+                    postResponeDTO.setCategoryId(subcate.getCategory().getId());
                     postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
                     postResponeDTO.setImageUrl(post.getImageUrl());
                     postResponeDTO.setLocation(post.getLocation());
@@ -150,6 +150,7 @@ public class PostServiceimpl implements PostService {
                 }
             }
         }catch (Exception e){
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.valueOf(404),"Chua co bai dang");
         }
         return postResponeDTOS;
@@ -162,12 +163,12 @@ public class PostServiceimpl implements PostService {
         try {
             postList = postRepo.getAllByUser_Id(userId);
             for (Post posts:postList) {
-                Category category = postRepo.findBySubcategory_Id(posts.getSubcategory().getId());
+                Subcategory subcate = subcategoryRepo.getById(posts.getSubcategory().getId());
                 PostResponeDTO postResponeDTO = new PostResponeDTO();
                 postResponeDTO.setId(posts.getId());
                 postResponeDTO.setTitle(posts.getTitle());
                 postResponeDTO.setForm(posts.getForm());
-                postResponeDTO.setCategoryId(category.getId());
+                postResponeDTO.setCategoryId(subcate.getCategory().getId());
                 postResponeDTO.setSubCategoryId(posts.getSubcategory().getId());
                 postResponeDTO.setImageUrl(posts.getImageUrl());
                 postResponeDTO.setLocation(posts.getLocation());
@@ -189,13 +190,13 @@ public class PostServiceimpl implements PostService {
         try {
             postList = postRepo.findAll();
             for (Post post: postList) {
-                Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+                Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
                 if(post.getPostStatus().equalsIgnoreCase("active")){
                     PostResponeDTO postResponeDTO = new PostResponeDTO();
                     postResponeDTO.setId(post.getId());
                     postResponeDTO.setTitle(post.getTitle());
                     postResponeDTO.setForm(post.getForm());
-                    postResponeDTO.setCategoryId(category.getId());
+                    postResponeDTO.setCategoryId(subcate.getCategory().getId());
                     postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
                     postResponeDTO.setImageUrl(post.getImageUrl());
                     postResponeDTO.setLocation(post.getLocation());
@@ -217,13 +218,13 @@ public class PostServiceimpl implements PostService {
         try {
             postList = postRepo.findAll();
             for (Post post: postList) {
-                Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+                Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
                 if(post.getPostStatus().equalsIgnoreCase("active")){
                     PostResponeDTO postResponeDTO = new PostResponeDTO();
                     postResponeDTO.setId(post.getId());
                     postResponeDTO.setTitle(post.getTitle());
                     postResponeDTO.setForm(post.getForm());
-                    postResponeDTO.setCategoryId(category.getId());
+                    postResponeDTO.setCategoryId(subcate.getCategory().getId());
                     postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
                     postResponeDTO.setImageUrl(post.getImageUrl());
                     postResponeDTO.setLocation(post.getLocation());
@@ -245,12 +246,13 @@ public class PostServiceimpl implements PostService {
             Post post = postRepo.getById(id);
             post.setPostStatus("active");
             postRepo.save(post);
-            Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
             postResponeDTO.setId(post.getId());
             postResponeDTO.setTitle(post.getTitle());
             postResponeDTO.setForm(post.getForm());
-            postResponeDTO.setCategoryId(category.getId());
+            postResponeDTO.setCategoryId(subcate.getCategory().getId());
             postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
+            postResponeDTO.setBookList(post.getBooks());
             postResponeDTO.setImageUrl(post.getImageUrl());
             postResponeDTO.setLocation(post.getLocation());
             postResponeDTO.setStatus(post.getPostStatus());
@@ -262,19 +264,20 @@ public class PostServiceimpl implements PostService {
     }
 
     @Override
-    public PostResponeDTO rejectPost(PostRequestDTO postRequestDTO) {
+    public PostResponeDTO rejectPost(Long id, String reasonReject) {
         PostResponeDTO postResponeDTO = new PostResponeDTO();
         try {
-            Post post = postRepo.getById(postRequestDTO.getId());
+            Post post = postRepo.getById(id);
             post.setPostStatus("reject");
-            post.setReasonReject(post.getReasonReject());
+            post.setReasonReject(reasonReject);
             postRepo.save(post);
-            Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
             postResponeDTO.setId(post.getId());
             postResponeDTO.setTitle(post.getTitle());
             postResponeDTO.setForm(post.getForm());
-            postResponeDTO.setCategoryId(category.getId());
+            postResponeDTO.setCategoryId(subcate.getCategory().getId());
             postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
+            postResponeDTO.setBookList(post.getBooks());
             postResponeDTO.setImageUrl(post.getImageUrl());
             postResponeDTO.setLocation(post.getLocation());
             postResponeDTO.setStatus(post.getPostStatus());
@@ -298,12 +301,13 @@ public class PostServiceimpl implements PostService {
                 post.setPostStatus("active");
                 postRepo.save(post);
             }
-            Category category = postRepo.findBySubcategory_Id(post.getSubcategory().getId());
+            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
             postResponeDTO.setId(post.getId());
             postResponeDTO.setTitle(post.getTitle());
             postResponeDTO.setForm(post.getForm());
-            postResponeDTO.setCategoryId(category.getId());
+            postResponeDTO.setCategoryId(subcate.getCategory().getId());
             postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
+            postResponeDTO.setBookList(post.getBooks());
             postResponeDTO.setImageUrl(post.getImageUrl());
             postResponeDTO.setLocation(post.getLocation());
             postResponeDTO.setStatus(post.getPostStatus());
@@ -312,7 +316,7 @@ public class PostServiceimpl implements PostService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return postResponeDTO;
     }
 
 

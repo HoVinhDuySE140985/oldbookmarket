@@ -9,7 +9,7 @@ import java.util.List;
 public interface PostService {
     PostResponeDTO createPost(PostRequestDTO postRequestDTO);
     PostResponeDTO acceptPost(Long id);
-    PostResponeDTO rejectPost(PostRequestDTO postRequestDTO);
+    PostResponeDTO rejectPost(Long id, String reasonReject);
     PostResponeDTO updatePostStatus(Long id);
     List<PostResponeDTO> getAllPost();
     List<PostResponeDTO> getAllMyPosts(Long userId);
