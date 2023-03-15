@@ -22,10 +22,12 @@ public class Post {
     @Column(name = "id")
     private Long id;
     private String title;
+    private String form;
     private String imageUrl;
     private LocalDate createAt;
     private String location;
     private String postStatus;
+    private String reasonReject;
 
     @JsonIgnore
     @OneToMany(mappedBy = "post")
@@ -39,4 +41,9 @@ public class Post {
     @JsonIgnore
     @OneToOne(mappedBy = "post")
     private Order order;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "subcategory_id")
+    private Subcategory subcategory;
 }

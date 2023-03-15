@@ -17,8 +17,13 @@ import java.util.List;
 public class PostResponeDTO {
     private Long id;
     private String title;
+    private String form;
     private String imageUrl;
     private String location;
     private String status;
     private List<Book> bookList;
+    private Long userId;
+    private Long subCategoryId;
+    private Long categoryId;
+    private String reasonReject;
 }

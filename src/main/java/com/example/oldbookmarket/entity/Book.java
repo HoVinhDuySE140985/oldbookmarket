@@ -33,11 +33,8 @@ public class Book {
     private String description;
     private Double initPrice;
     private Double price;
+    private String categoryExchange;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "subcategory_id")
-    private Subcategory subcategory;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

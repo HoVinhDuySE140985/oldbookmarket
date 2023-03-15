@@ -27,6 +27,7 @@ public class Subcategory {
     private Category category;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "subcategory")
-    private List<Book> bookList;
+    @OneToMany(mappedBy = "subcategory" )
+    private List<Post> postList;
+
 }

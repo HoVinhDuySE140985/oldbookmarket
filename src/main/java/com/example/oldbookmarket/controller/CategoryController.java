@@ -26,7 +26,6 @@ public class CategoryController {
     public ResponseEntity<ResponeDTO> getAllCategory(){
         ResponeDTO responeDTO = new ResponeDTO();
             List<Category> categoryList = categoryService.getAllCategory();
-            categoryList = null;
             if (categoryList != null){
                 responeDTO.setData(categoryList);
                 responeDTO.setSuccessCode(SuccessCode.Get_All_Success);

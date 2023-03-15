@@ -1,6 +1,5 @@
 package com.example.oldbookmarket.dto.request;
 
-import com.example.oldbookmarket.entity.BookImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Data
-public class BookRequestDTO {
+public class BookSellRequestDTO {
     private String name;
     private String isbn;
     private List<String> bookImages;
