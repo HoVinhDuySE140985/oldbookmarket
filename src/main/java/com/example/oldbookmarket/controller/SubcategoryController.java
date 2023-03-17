@@ -1,6 +1,6 @@
 package com.example.oldbookmarket.controller;
 
-import com.example.oldbookmarket.dto.respone.ResponeDTO;
+import com.example.oldbookmarket.dto.respone.ResponseDTO;
 import com.example.oldbookmarket.entity.Subcategory;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.SubCategoryService;
@@ -21,15 +21,15 @@ public class SubcategoryController {
 
     @GetMapping("get-all-subcategory/{id}")
     @PermitAll
-    public ResponseEntity<ResponeDTO> getSubCategoryByCateId(@PathVariable Long id){
-        ResponeDTO responeDTO = new ResponeDTO();
+    public ResponseEntity<ResponseDTO> getSubCategoryByCateId(@PathVariable Long id){
+        ResponseDTO responseDTO = new ResponseDTO();
             List<Subcategory> subcategoryList = subCategoryService.getSubCategoryByCategoryId(id);
             if( subcategoryList != null){
-                responeDTO.setData(subcategoryList);
-                responeDTO.setSuccessCode(SuccessCode.Get_All_Success);
+                responseDTO.setData(subcategoryList);
+                responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             }else {
                 throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
             }
-        return  ResponseEntity.ok().body(responeDTO);
+        return  ResponseEntity.ok().body(responseDTO);
     }
 }

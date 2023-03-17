@@ -25,9 +25,13 @@ public class Post {
     private String form;
     private String imageUrl;
     private LocalDate createAt;
-    private String location;
     private String postStatus;
+    private Double initPrice;
+    private Double price;
+    private String bookExchange;
     private String reasonReject;
+    private String location;
+    private String description;
 
     @JsonIgnore
     @OneToMany(mappedBy = "post")

@@ -1,5 +1,6 @@
 package com.example.oldbookmarket.dto.request;
 
+import com.example.oldbookmarket.dto.request.BookRequestDTO.BookRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +19,14 @@ public class PostRequestDTO {
     private String imageUrl;
     private LocalDate createAt;
     private String form;
-    private List<BookSellRequestDTO> bookSellList;
-    private List<BookExchangeRequestDTO> bookExchangeList;
+    private List<BookRequestDTO> bookList;
+    private Double initPrice;
+    private Double price;
+    private String bookExchange;
     private Long userId;
     private Long categoryId;
     private Long subCategoryId;
     private String reasonReject;
+    private String location;
+    private String description;
 }

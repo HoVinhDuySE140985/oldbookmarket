@@ -24,6 +24,9 @@ public class Order {
     private LocalDate orderDate;
     private Double amount;
     private String note;
+    private String paymentMethod;
+    private String deliveryMethod;
+    private String status;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)
@@ -34,11 +37,8 @@ public class Order {
     @OneToMany(mappedBy = "order")
     private List<Complaint> complaintList;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "order")
-    private List<Order_Status> order_statusList;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "")
+    @OneToOne(mappedBy = "order")
     private Refund refund;
 }

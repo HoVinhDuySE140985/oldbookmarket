@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponeDTO {
+public class ResponseDTO {
     private SuccessCode successCode;
     private Object data;
 }

@@ -1,6 +1,6 @@
 package com.example.oldbookmarket.controller;
 
-import com.example.oldbookmarket.dto.respone.ResponeDTO;
+import com.example.oldbookmarket.dto.respone.ResponseDTO;
 import com.example.oldbookmarket.entity.Category;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.CategoryService;
@@ -23,15 +23,15 @@ public class CategoryController {
 
     @GetMapping("get-all-category")
     @PermitAll
-    public ResponseEntity<ResponeDTO> getAllCategory(){
-        ResponeDTO responeDTO = new ResponeDTO();
+    public ResponseEntity<ResponseDTO> getAllCategory(){
+        ResponseDTO responseDTO = new ResponseDTO();
             List<Category> categoryList = categoryService.getAllCategory();
             if (categoryList != null){
-                responeDTO.setData(categoryList);
-                responeDTO.setSuccessCode(SuccessCode.Get_All_Success);
+                responseDTO.setData(categoryList);
+                responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             }else {
                 throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
             }
-        return ResponseEntity.ok().body(responeDTO);
+        return ResponseEntity.ok().body(responseDTO);
     }
 }

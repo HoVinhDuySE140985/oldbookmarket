@@ -32,13 +32,17 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Address> addressList;
 
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "user")
+//    private List<User_Role> userRoles;
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<User_Role> userRoles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<User_Status> userStatuses;
+    private List<UserStatus> userStatuses;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

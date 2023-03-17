@@ -1,18 +1,18 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.PostRequestDTO;
-import com.example.oldbookmarket.dto.respone.PostResponeDTO;
-import com.example.oldbookmarket.entity.Post;
+import com.example.oldbookmarket.dto.respone.PostResponseDTO;
 
 import java.util.List;
 
 public interface PostService {
-    PostResponeDTO createPost(PostRequestDTO postRequestDTO);
-    PostResponeDTO acceptPost(Long id);
-    PostResponeDTO rejectPost(Long id, String reasonReject);
-    PostResponeDTO updatePostStatus(Long id);
-    List<PostResponeDTO> getAllPost();
-    List<PostResponeDTO> getAllMyPosts(Long userId);
-    List<PostResponeDTO> searchPostByTitle(String title);
-    List<PostResponeDTO> searchPostByKeyWord(String keyWord);
+    PostResponseDTO createPost(PostRequestDTO postRequestDTO);
+    PostResponseDTO acceptPost(Long id);
+    PostResponseDTO rejectPost(Long id, String reasonReject);
+    PostResponseDTO updatePostStatus(Long id);
+    PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO);
+    List<PostResponseDTO> getAllPost();
+    List<PostResponseDTO> getAllMyPosts(Long userId);
+    List<PostResponseDTO> searchPostByTitle(String title);
+    List<PostResponseDTO> searchPostByKeyWord(String keyWord);
 }

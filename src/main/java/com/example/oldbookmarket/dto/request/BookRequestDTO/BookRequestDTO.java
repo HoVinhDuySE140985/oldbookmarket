@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.request;
+package com.example.oldbookmarket.dto.request.BookRequestDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class BookExchangeRequestDTO {
+public class BookRequestDTO {
     private String name;
     private String isbn;
     private List<String> bookImages;
@@ -22,8 +21,4 @@ public class BookExchangeRequestDTO {
     private String coverType;
     private String language;
     private String statusQuo;
-    private String description;
-    private Double price;
-    private String categoryExchange;
-
 }
