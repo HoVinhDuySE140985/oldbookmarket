@@ -3,9 +3,11 @@ package com.example.oldbookmarket.controller;
 import com.example.oldbookmarket.Jwt.JwtConfig;
 import com.example.oldbookmarket.dto.request.UserRequestDTO.LoginRequestDTO;
 import com.example.oldbookmarket.dto.request.UserRequestDTO.RegisterRequestDTO;
+import com.example.oldbookmarket.dto.request.UserRequestDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.respone.LoginResponseDTO;
 import com.example.oldbookmarket.dto.respone.RegisterResponseDTO;
 import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.respone.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
@@ -18,10 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -93,4 +92,21 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PutMapping("update-user-infor")
+    public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody UpdateUserRequestDTO updateUserRequestDTO){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            UpdateUserResponseDTO updateUserResponseDTO = userService.updateUserInfo(updateUserRequestDTO);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+//    @GetMapping("get-user-info/{userId}")
+//    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long id){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//
+//    }
 }
