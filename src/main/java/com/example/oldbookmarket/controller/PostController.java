@@ -8,6 +8,7 @@ import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -87,7 +88,8 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("accept-post/{id}")
+    @PutMapping("staff/accept-post/{id}")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> acceptPost(@PathVariable Long id){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -101,7 +103,8 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("reject-post/{id}")
+    @PutMapping("staff/reject-post/{id}")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> rejectPost(@PathVariable Long id, String reasonReject){
         ResponseDTO responseDTO = new ResponseDTO();
         try {

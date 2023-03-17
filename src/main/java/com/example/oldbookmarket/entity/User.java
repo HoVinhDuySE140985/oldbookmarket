@@ -26,7 +26,6 @@ public class User {
     private String imageUrl;
     private LocalDate  dob;
     private String password;
-    private String userToken;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

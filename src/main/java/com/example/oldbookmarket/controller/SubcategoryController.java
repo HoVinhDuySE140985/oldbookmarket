@@ -7,6 +7,7 @@ import com.example.oldbookmarket.service.serviceinterface.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,5 +32,12 @@ public class SubcategoryController {
                 throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
             }
         return  ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("staff/create-subcategory/{cateId}")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<ResponseDTO> createNewSubCategory(@PathVariable Long cateId, String cateName){
+        ResponseDTO responseDTO = new ResponseDTO();
+        return ResponseEntity.ok().body(responseDTO);
     }
 }

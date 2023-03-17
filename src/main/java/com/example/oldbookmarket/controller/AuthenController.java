@@ -43,6 +43,7 @@ public class AuthenController {
     }
 
     @PostMapping("login")
+
     public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
