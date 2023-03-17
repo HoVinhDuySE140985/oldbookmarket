@@ -13,4 +13,6 @@ public interface UserService {
     RegisterResponseDTO createUser(RegisterRequestDTO registerRequestDTO);
 
     UpdateUserResponseDTO updateUserInfo(UpdateUserRequestDTO updateUserRequestDTO);
+
+    User findUserById(Long id);
 }

@@ -100,4 +100,15 @@ public class UserServiceImpl implements UserService {
         }
         return updateUserResponseDTO;
     }
+
+    @Override
+    public User findUserById(Long id) {
+        User user = new User();
+        try {
+            user = userRepo.getById(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return user;
+    }
 }

@@ -104,9 +104,15 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("get-user-info/{userId}")
-//    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long id){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//
-//    }
+    @GetMapping("get-user-info/{userId}")
+    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long id){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            User user = userService.findUserById(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+
+    }
 }
