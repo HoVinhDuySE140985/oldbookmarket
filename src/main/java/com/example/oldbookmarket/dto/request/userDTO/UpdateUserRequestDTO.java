@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.request.UserRequestDTO;
+package com.example.oldbookmarket.dto.request.userDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

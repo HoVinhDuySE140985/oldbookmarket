@@ -1,6 +1,6 @@
-package com.example.oldbookmarket.dto.request;
+package com.example.oldbookmarket.dto.request.postDTO;
 
-import com.example.oldbookmarket.dto.request.BookRequestDTO.BookRequestDTO;
+import com.example.oldbookmarket.dto.request.bookDTO.BookRequestDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

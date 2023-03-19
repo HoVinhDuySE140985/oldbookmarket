@@ -1,6 +1,6 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
-import com.example.oldbookmarket.dto.request.BookRequestDTO.UpdateBookResquestDTO;
+import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
 import com.example.oldbookmarket.dto.respone.BookImageResponseDTO;
 import com.example.oldbookmarket.dto.respone.BookResponseDTO;
 

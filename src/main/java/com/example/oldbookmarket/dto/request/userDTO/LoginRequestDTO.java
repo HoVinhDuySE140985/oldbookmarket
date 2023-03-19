@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.request.UserRequestDTO;
+package com.example.oldbookmarket.dto.request.userDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-public class RegisterRequestDTO {
-    private String name;
+public class LoginRequestDTO {
     private String email;
     private String password;
 }

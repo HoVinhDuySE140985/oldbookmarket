@@ -1,9 +1,9 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.Jwt.JwtConfig;
-import com.example.oldbookmarket.dto.request.UserRequestDTO.LoginRequestDTO;
-import com.example.oldbookmarket.dto.request.UserRequestDTO.RegisterRequestDTO;
-import com.example.oldbookmarket.dto.request.UserRequestDTO.UpdateUserRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.LoginRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.respone.LoginResponseDTO;
 import com.example.oldbookmarket.dto.respone.RegisterResponseDTO;
 import com.example.oldbookmarket.dto.respone.ResponseDTO;
@@ -16,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.PermitAll;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -43,7 +45,7 @@ public class AuthenController {
     }
 
     @PostMapping("login")
-
+    @PermitAll
     public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
@@ -76,9 +78,9 @@ public class AuthenController {
     }
 
     @PostMapping("register-user")
+    @PermitAll
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
             User user = userService.findByEmail(registerRequestDTO.getEmail());
             if(user == null){
                 RegisterResponseDTO registerResponseDTO = userService.createUser(registerRequestDTO);
@@ -87,18 +89,17 @@ public class AuthenController {
             }else {
                 throw new ResponseStatusException(HttpStatus.valueOf(400),"USER_EXISTED");
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PutMapping("update-user-infor")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody UpdateUserRequestDTO updateUserRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             UpdateUserResponseDTO updateUserResponseDTO = userService.updateUserInfo(updateUserRequestDTO);
-
+            responseDTO.setData(updateUserResponseDTO);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -106,6 +107,7 @@ public class AuthenController {
     }
 
     @GetMapping("get-user-info/{userId}")
+    @PermitAll
     public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long id){
         ResponseDTO responseDTO = new ResponseDTO();
         try {

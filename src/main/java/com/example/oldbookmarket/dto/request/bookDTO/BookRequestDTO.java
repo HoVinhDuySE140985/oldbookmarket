@@ -1,6 +1,5 @@
-package com.example.oldbookmarket.dto.request.BookRequestDTO;
+package com.example.oldbookmarket.dto.request.bookDTO;
 
-import com.example.oldbookmarket.entity.BookImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,17 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Data
-public class UpdateBookResquestDTO {
-    private Long postId;
-    private Long bookId;
+public class BookRequestDTO {
     private String name;
     private String isbn;
-    private List<BookImage> bookImages;
+    private List<String> bookImages;
     private LocalDate publicationDate;
     private String publicCompany;
     private String author;
     private String coverType;
     private String language;
     private String statusQuo;
-    private String description;
 }

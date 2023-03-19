@@ -36,6 +36,7 @@ public class CategoryController {
     }
 
     @GetMapping("get-all-category-and-subcategory")
+    @PermitAll
     public ResponseEntity<ResponseDTO> getAllCateAndSubCate(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {

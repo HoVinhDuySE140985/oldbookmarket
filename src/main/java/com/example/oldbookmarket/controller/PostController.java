@@ -1,6 +1,6 @@
 package com.example.oldbookmarket.controller;
 
-import com.example.oldbookmarket.dto.request.PostRequestDTO;
+import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
 import com.example.oldbookmarket.dto.respone.PostResponseDTO;
 import com.example.oldbookmarket.dto.respone.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.PermitAll;
 import java.util.List;
 
 @RestController
@@ -21,6 +22,7 @@ public class PostController {
     PostService postService;
 
     @PostMapping ("create-post")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> creatlPost(@RequestBody PostRequestDTO postRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -34,6 +36,7 @@ public class PostController {
     }
 
     @GetMapping("get-all-post")
+    @PermitAll
     public ResponseEntity<ResponseDTO> getAllPost(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -48,6 +51,7 @@ public class PostController {
     }
 
     @GetMapping("get-all-my-post/{userId}")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> getAllMyPost(long userId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -62,6 +66,7 @@ public class PostController {
     }
 
     @GetMapping("search-post-by-title/{title}")
+    @PermitAll
     public ResponseEntity<ResponseDTO> searchPostByBookName(@PathVariable String title){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -76,6 +81,7 @@ public class PostController {
     }
 
     @GetMapping("search-post-by-Keyword/{keyWord}")
+    @PermitAll
     public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -119,6 +125,7 @@ public class PostController {
     }
 
     @PutMapping("update-post-status/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updatePostStatus(Long id){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -133,6 +140,7 @@ public class PostController {
     }
 
     @PutMapping("update-post-info")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updatePostInfo(@RequestBody PostRequestDTO postRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {

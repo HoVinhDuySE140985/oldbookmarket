@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
-import com.example.oldbookmarket.dto.request.UserRequestDTO.RegisterRequestDTO;
-import com.example.oldbookmarket.dto.request.UserRequestDTO.UpdateUserRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.respone.RegisterResponseDTO;
 import com.example.oldbookmarket.dto.respone.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
             User user = new User();
             user.setName(registerRequestDTO.getName());
             user.setEmail(registerRequestDTO.getEmail());
+            user.setPhoneNumber(registerRequestDTO.getPhoneNumber());
             user.setPassword(encoder.encode(registerRequestDTO.getPassword()));
             user.setRole(roleRepo.findByName("CUSTOMER"));
             user = userRepo.save(user);
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService {
                     .userId(user.getId())
                     .name(user.getName())
                     .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
                     .password(user.getPassword())
                     .build();
         }catch (Exception e){

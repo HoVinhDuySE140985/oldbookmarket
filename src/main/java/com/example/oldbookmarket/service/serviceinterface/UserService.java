@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
-import com.example.oldbookmarket.dto.request.UserRequestDTO.RegisterRequestDTO;
-import com.example.oldbookmarket.dto.request.UserRequestDTO.UpdateUserRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.respone.RegisterResponseDTO;
 import com.example.oldbookmarket.dto.respone.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
