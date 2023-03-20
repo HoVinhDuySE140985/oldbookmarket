@@ -164,33 +164,27 @@ public class PostServiceimpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDTO> searchPostByTitle(String title) {
+    public PostResponseDTO searchPostByTitle(String title) {
         List<Post> postList = null;
-        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
+        PostResponseDTO postResponseDTO = new PostResponseDTO();
         try {
-            postList = postRepo.findAll();
+            postList = postRepo.findAllByTitle(title);
             for (Post post: postList) {
-//                Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
                 if(post.getPostStatus().equalsIgnoreCase("active")){
-                    PostResponseDTO postResponseDTO = new PostResponseDTO();
                     postResponseDTO.setId(post.getId());
                     postResponseDTO.setTitle(post.getTitle());
                     postResponseDTO.setForm(post.getForm());
-//                    postResponeDTO.setCategoryId(subcate.getCategory().getId());
-//                    postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
-//                    postResponeDTO.setBookList(post.getBooks());
                     postResponseDTO.setImageUrl(post.getImageUrl());
                     postResponseDTO.setLocation(post.getLocation());
                     postResponseDTO.setPrice(post.getPrice());
                     postResponseDTO.setStatus(post.getPostStatus());
                     postResponseDTO.setUserId(post.getUser().getId());
-                    postResponseDTOS.add(postResponseDTO);
                 }
             }
         }catch (Exception e){
             throw new ResponseStatusException(HttpStatus.valueOf(404),"Khong tim thay bai dang");
         }
-        return postResponseDTOS;
+        return postResponseDTO;
     }
 
     @Override
@@ -198,17 +192,13 @@ public class PostServiceimpl implements PostService {
         List<Post> postList = null;
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
-            postList = postRepo.findAll();
+            postList = postRepo.findByKeyWord(keyWord);
             for (Post post: postList) {
-//                Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
                 if(post.getPostStatus().equalsIgnoreCase("active")){
                     PostResponseDTO postResponseDTO = new PostResponseDTO();
                     postResponseDTO.setId(post.getId());
                     postResponseDTO.setTitle(post.getTitle());
                     postResponseDTO.setForm(post.getForm());
-//                    postResponeDTO.setCategoryId(subcate.getCategory().getId());
-//                    postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
-//                    postResponeDTO.setBookList(post.getBooks());
                     postResponseDTO.setImageUrl(post.getImageUrl());
                     postResponseDTO.setLocation(post.getLocation());
                     postResponseDTO.setPrice(post.getPrice());

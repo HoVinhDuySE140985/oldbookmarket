@@ -34,10 +34,19 @@ public class SubcategoryController {
         return  ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("staff/create-subcategory/{cateId}")
+    @PutMapping("staff/create-subcategory/{cateId}/{subCateName}")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<ResponseDTO> createNewSubCategory(@PathVariable Long cateId, String cateName){
+    public ResponseEntity<ResponseDTO> createNewSubCategory(@PathVariable Long cateId,
+                                                            @PathVariable String subCateName){
         ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Subcategory subcategory = subCategoryService.createNewSubcategory(cateId, subCateName);
+            responseDTO.setData(subcategory);
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.valueOf("400"),"CREATE_FAIL");
+        }
         return ResponseEntity.ok().body(responseDTO);
     }
 }

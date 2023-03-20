@@ -21,6 +21,7 @@ public class Order {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
+    private String shipAddress;
     private LocalDate orderDate;
     private Double amount;
     private String note;
@@ -41,4 +42,8 @@ public class Order {
     @JsonIgnore
     @OneToOne(mappedBy = "order")
     private Refund refund;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User user;
 }

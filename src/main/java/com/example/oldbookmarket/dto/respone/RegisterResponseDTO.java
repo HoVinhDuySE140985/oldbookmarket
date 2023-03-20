@@ -13,7 +13,7 @@ public class RegisterResponseDTO {
     private Long userId;
     private String name;
     private String email;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String password;
 
 }

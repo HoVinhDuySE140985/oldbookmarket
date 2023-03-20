@@ -61,6 +61,7 @@ public class AddressServiceImpl implements AddressService {
                 address.setStreet(updateAddressRequestDTO.getWard());
                 address = addressRepo.save(address);
                 addressResponseDTO = AddressResponseDTO.builder()
+                        .id(address.getId())
                         .city(address.getCity())
                         .province(address.getProvince())
                         .district(address.getDistrict())
@@ -74,20 +75,20 @@ public class AddressServiceImpl implements AddressService {
         return addressResponseDTO;
     }
 
-    @Override
-    public Address updateAddressStatus(Long addressId) {
-        Address address = new Address();
-        try {
-            address = addressRepo.getById(addressId);
-            if (address!=null){
-                address.setStatus("DEFAULT");
-                address = addressRepo.save(address);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return address;
-    }
+//    @Override
+//    public Address updateAddressStatus(Long addressId) {
+//        Address address = new Address();
+//        try {
+//            address = addressRepo.getById(addressId);
+//            if (address!=null){
+//                address.setStatus("DEFAULT");
+//                address = addressRepo.save(address);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return address;
+//    }
 
     @Override
     public List<Address> getAllAddress(Long userId) {

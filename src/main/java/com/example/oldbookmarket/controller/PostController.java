@@ -67,16 +67,15 @@ public class PostController {
 
     @GetMapping("search-post-by-title/{title}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByBookName(@PathVariable String title){
+    public ResponseEntity<ResponseDTO> searchPostByTitle(@PathVariable String title){
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            List<PostResponseDTO> resultList = postService.searchPostByTitle(title);
-            responseDTO.setData(resultList);
-            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+            PostResponseDTO result = postService.searchPostByTitle(title);
+            if (result.getTitle() != null){
+                responseDTO.setData(result);
+                responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+            }else {
+                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
+            }
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -84,13 +83,13 @@ public class PostController {
     @PermitAll
     public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord){
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
             List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
-            responseDTO.setData(resultList);
-            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+            if (!resultList.isEmpty()) {
+                responseDTO.setData(resultList);
+                responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+            }else {
+                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
+            }
         return ResponseEntity.ok().body(responseDTO);
     }
 

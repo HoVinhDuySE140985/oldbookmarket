@@ -49,4 +49,16 @@ public class CategoryServiceImpl implements CategoryService {
         }
         return categoryResponseDTOList;
     }
+
+    @Override
+    public Category createNewCategory(String cateName) {
+        Category category = new Category();
+        try {
+            category.setName(cateName);
+            categoryRepo.save(category);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return category;
+    }
 }

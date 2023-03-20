@@ -87,7 +87,7 @@ public class AuthenController {
                 responseDTO.setData(registerResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
             }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(400),"USER_EXISTED");
+                throw new ResponseStatusException(HttpStatus.valueOf(200),"USER_EXISTED");
             }
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -106,14 +106,17 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-user-info/{userId}")
-    @PermitAll
-    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long id){
+    @GetMapping("get-user-info/{userId}")  // loi
+//    @PreAuthorize("hasAnyRole('CUSTOMER' , 'ADMIN', 'STAFF')")
+    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long userId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            User user = userService.findUserById(id);
+            User user = userService.findUserById(userId);
+            responseDTO.setData(user);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
             e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.valueOf("404"),"USER_NOT_EXISTED");
         }
         return ResponseEntity.ok().body(responseDTO);
 

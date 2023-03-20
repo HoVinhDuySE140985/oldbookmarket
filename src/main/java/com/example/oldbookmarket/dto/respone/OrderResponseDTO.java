@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.request.orderDTO;
+package com.example.oldbookmarket.dto.respone;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,19 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
-public class AddOrderRequestDTO {
+public class OrderResponseDTO {
+    private Long orderId;
     private Long postId;
-    private Long userId;
-    private Long addressId;
+    private String shipAddress;
     private LocalDate orderDate;
     private Double amount;
     private String note;
-//    private String paymentMethod;
-//    private String deliveryMethod;
-//    private String status;
-
+    private String paymentMethod;
+    private String deliveryMethod;
+    private String status;
 }

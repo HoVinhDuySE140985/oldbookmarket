@@ -16,5 +16,5 @@ public class AddressResponseDTO {
     private String district;
     private String ward;
     private String street;
-    private String Status;
+//    private String Status;
 }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface SubCategoryService {
     List<Subcategory> getSubCategoryByCategoryId(Long id);
+    Subcategory createNewSubcategory(Long cateId, String subcateName);
 }

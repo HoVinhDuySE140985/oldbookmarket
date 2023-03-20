@@ -12,7 +12,7 @@ public interface AddressService {
 
     AddressResponseDTO updateAddress(UpdateAddressRequestDTO updateAddressRequestDTO);
 
-    Address updateAddressStatus(Long addressId);
+//    Address updateAddressStatus(Long addressId);
 
     List<Address> getAllAddress(Long userId);
 }

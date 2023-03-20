@@ -53,6 +53,13 @@ public class CategoryController {
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> createNewCategory(@PathVariable String cateName){
         ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Category category = categoryService.createNewCategory(cateName);
+            responseDTO.setData(category);
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return ResponseEntity.ok().body(responseDTO);
     }
 

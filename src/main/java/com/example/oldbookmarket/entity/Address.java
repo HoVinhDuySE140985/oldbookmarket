@@ -23,7 +23,7 @@ public class Address {
     private String district;
     private String ward;
     private String street;
-    private String Status;
+
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

@@ -8,4 +8,5 @@ import java.util.List;
 public interface CategoryService {
     List<Category> getAllCategory();
     List<CategoryResponseDTO> getAllCateAndSubCate();
+    Category createNewCategory(String cateName);
 }

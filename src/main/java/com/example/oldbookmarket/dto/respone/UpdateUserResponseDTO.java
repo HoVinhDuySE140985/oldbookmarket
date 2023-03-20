@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class UpdateUserResponseDTO {
 //    private Long id;
     private String name;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String email;
     private String gender;
     private String imageUrl;

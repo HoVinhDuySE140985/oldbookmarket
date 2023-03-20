@@ -50,19 +50,19 @@ public class AddressController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("update-address-status/{addressId}")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updateAddressStatus(@PathVariable Long addressId){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            Address address = addressService.updateAddressStatus(addressId);
-            responseDTO.setData(address);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @PutMapping("update-address-status/{addressId}")
+//    @PreAuthorize("hasRole('CUSTOMER')")
+//    public ResponseEntity<ResponseDTO> updateAddressStatus(@PathVariable Long addressId){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            Address address = addressService.updateAddressStatus(addressId);
+//            responseDTO.setData(address);
+//            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     @GetMapping("get-all-address-By/{userId}")
     @PermitAll

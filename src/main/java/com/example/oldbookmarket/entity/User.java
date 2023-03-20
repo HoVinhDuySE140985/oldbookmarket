@@ -21,7 +21,7 @@ public class User {
     private Long id;
     private String name;
     private String email;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String gender;
     private String imageUrl;
     private LocalDate  dob;
@@ -54,5 +54,9 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Complaint> complaints;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Order> orderList;
 
 }
