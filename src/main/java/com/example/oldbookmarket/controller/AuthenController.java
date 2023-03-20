@@ -65,7 +65,12 @@ public class AuthenController {
                 LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                         .id(userAuthenticated.getId())
                         .name(userAuthenticated.getName())
-//                        .role(userAuthenticated.getRole().getId())
+                        .email(userAuthenticated.getEmail())
+                        .phoneNumber(userAuthenticated.getPhoneNumber())
+                        .gender(userAuthenticated.getGender())
+                        .imageUrl(userAuthenticated.getImageUrl())
+                        .dob(userAuthenticated.getDob())
+                        .password(userAuthenticated.getPassword())
                         .token(jwtConfig.getTokenPrefix() + token)
                         .build();
                 responseDTO.setData(loginResponseDTO);

@@ -68,13 +68,13 @@ public class OrderController {
     @PutMapping("cancel-order/{orderId}")
     public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable Long orderId){
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
             Order order = orderService.cancelOrder(orderId);
-            responseDTO.setData(order);
-            responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+            if (order != null){
+                responseDTO.setData(order);
+                responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
+            }else {
+                throw new ResponseStatusException(HttpStatus.valueOf(200),"Huy Đơn Hàng Không Thành Công");
+            }
         return ResponseEntity.ok().body(responseDTO);
     }
 }

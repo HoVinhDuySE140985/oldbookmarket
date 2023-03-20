@@ -14,6 +14,12 @@ import java.time.LocalDate;
 public class LoginResponseDTO {
     private Long id;
     private String name;
+    private String email;
+    private String phoneNumber;
+    private String gender;
+    private String imageUrl;
+    private LocalDate dob;
+    private String password;
     private String token;
 
 

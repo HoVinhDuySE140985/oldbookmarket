@@ -20,5 +20,6 @@ public class OrderResponseDTO {
     private String note;
     private String paymentMethod;
     private String deliveryMethod;
+    private Long userId;
     private String status;
 }
