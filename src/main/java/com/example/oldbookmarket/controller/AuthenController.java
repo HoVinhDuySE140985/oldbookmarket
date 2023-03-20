@@ -71,7 +71,7 @@ public class AuthenController {
                         .imageUrl(userAuthenticated.getImageUrl())
                         .dob(userAuthenticated.getDob())
                         .password(userAuthenticated.getPassword())
-                        .token(jwtConfig.getTokenPrefix() + token)
+                        .accesstoken(jwtConfig.getTokenPrefix() + token)
                         .build();
                 responseDTO.setData(loginResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.Login_Success);

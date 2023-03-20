@@ -20,7 +20,7 @@ public class LoginResponseDTO {
     private String imageUrl;
     private LocalDate dob;
     private String password;
-    private String token;
+    private String accesstoken;
 
 
 

@@ -12,7 +12,9 @@ import com.example.oldbookmarket.repository.PostRepo;
 import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order cancelOrder(Long orderId) {
         Order order = new Order();
-        try {
+
             order = orderRepo.findById(orderId).get();
             if (order.getStatus().equalsIgnoreCase("processing")){
                 Post post = postRepo.findById(order.getPost().getId()).get();
@@ -117,10 +119,11 @@ public class OrderServiceImpl implements OrderService {
                 postRepo.save(post);
                 order.setStatus("cancel");
                 orderRepo.save(order);
+            }else {
+                throw new ResponseStatusException(HttpStatus.valueOf(200),"Huy Đơn Không Thành Công");
+
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
         return order;
     }
 }

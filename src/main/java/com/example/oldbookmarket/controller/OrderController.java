@@ -24,15 +24,15 @@ public class OrderController {
 
     @PostMapping("create-new-order")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewOrder(@RequestBody AddOrderRequestDTO addOrderRequestDTO){
+    public ResponseEntity<ResponseDTO> createNewOrder(@RequestBody AddOrderRequestDTO addOrderRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             OrderResponseDTO orderResponseDTO = orderService.createNewOrder(addOrderRequestDTO);
-            if (orderResponseDTO != null){
+            if (orderResponseDTO != null) {
                 responseDTO.setData(orderResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
@@ -40,41 +40,39 @@ public class OrderController {
     }
 
     @PutMapping("convert-order-status/{orderId}")
-    public ResponseEntity<ResponseDTO> updateStatus(@PathVariable Long orderId){
+    public ResponseEntity<ResponseDTO> updateStatus(@PathVariable Long orderId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             Order order = orderService.converOrderStatus(orderId);
             responseDTO.setData(order);
             responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("get-all-order-by/{userId}/{orderStatus}")
-    public ResponseEntity<ResponseDTO> getAllOrder(@PathVariable Long userId, @PathVariable String orderStatus){
+    public ResponseEntity<ResponseDTO> getAllOrder(@PathVariable Long userId, @PathVariable String orderStatus) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<Order> orderList = orderService.getAllOrder(userId,orderStatus);
+            List<Order> orderList = orderService.getAllOrder(userId, orderStatus);
             responseDTO.setData(orderList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PutMapping("cancel-order/{orderId}")
-    public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable Long orderId){
+    public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable Long orderId) {
         ResponseDTO responseDTO = new ResponseDTO();
-            Order order = orderService.cancelOrder(orderId);
-            if (order != null){
-                responseDTO.setData(order);
-                responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(200),"Huy Đơn Hàng Không Thành Công");
-            }
+
+        Order order = orderService.cancelOrder(orderId);
+        responseDTO.setData(order);
+        responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
+
         return ResponseEntity.ok().body(responseDTO);
     }
 }
