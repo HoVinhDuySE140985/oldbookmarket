@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     public User findUserById(Long id) {
         User user = new User();
         try {
-            user = userRepo.getById(id);
+            user = userRepo.findById(id).get();
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -46,7 +46,7 @@ public class AuthenController {
 
     @PostMapping("login")
     @PermitAll
-    public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
 
@@ -54,7 +54,7 @@ public class AuthenController {
             Authentication authenticate = authenticationManager.authenticate(authentication);
             System.out.println(authenticate.getName());
 
-            if(authenticate.isAuthenticated()){
+            if (authenticate.isAuthenticated()) {
                 User userAuthenticated = userService.findByEmail(authenticate.getName());
                 String token = Jwts.builder().setSubject(authenticate.getName())
                         .claim(("authorities"), authenticate.getAuthorities())
@@ -76,7 +76,7 @@ public class AuthenController {
                 responseDTO.setData(loginResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.Login_Success);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
@@ -84,44 +84,43 @@ public class AuthenController {
 
     @PostMapping("register-user")
     @PermitAll
-    public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO){
+    public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
-            User user = userService.findByEmail(registerRequestDTO.getEmail());
-            if(user == null){
-                RegisterResponseDTO registerResponseDTO = userService.createUser(registerRequestDTO);
-                responseDTO.setData(registerResponseDTO);
-                responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(200),"USER_EXISTED");
-            }
+        User user = userService.findByEmail(registerRequestDTO.getEmail());
+        if (user == null) {
+            RegisterResponseDTO registerResponseDTO = userService.createUser(registerRequestDTO);
+            responseDTO.setData(registerResponseDTO);
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        } else {
+            throw new ResponseStatusException(HttpStatus.valueOf(200), "USER_EXISTED");
+        }
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PutMapping("update-user-infor")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody UpdateUserRequestDTO updateUserRequestDTO){
+    public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             UpdateUserResponseDTO updateUserResponseDTO = userService.updateUserInfo(updateUserRequestDTO);
             responseDTO.setData(updateUserResponseDTO);
             responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("get-user-info/{userId}")  // loi
-//    @PreAuthorize("hasAnyRole('CUSTOMER' , 'ADMIN', 'STAFF')")
-    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long userId){
+    @PreAuthorize("hasAnyRole('CUSTOMER' , 'ADMIN', 'STAFF')")
+    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            User user = userService.findUserById(userId);
+        User user = userService.findUserById(userId);
+        if (user != null) {
             responseDTO.setData(user);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.valueOf("404"),"USER_NOT_EXISTED");
+        } else {
+            throw new ResponseStatusException(HttpStatus.valueOf("404"), "USER_NOT_EXISTED");
         }
         return ResponseEntity.ok().body(responseDTO);
 
