@@ -16,7 +16,7 @@ public class AddOrderRequestDTO {
     private Long userId;
     private Long addressId;
     private LocalDate orderDate;
-    private Double amount;
+//    private Double amount;
     private String note;
 //    private String paymentMethod;
 //    private String deliveryMethod;

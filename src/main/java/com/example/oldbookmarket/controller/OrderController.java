@@ -34,7 +34,6 @@ public class OrderController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -68,11 +67,13 @@ public class OrderController {
     @PutMapping("cancel-order/{orderId}")
     public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable Long orderId) {
         ResponseDTO responseDTO = new ResponseDTO();
-
-        Order order = orderService.cancelOrder(orderId);
-        responseDTO.setData(order);
-        responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
-
+        try {
+            Order order = orderService.cancelOrder(orderId);
+            responseDTO.setData(order);
+            responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return ResponseEntity.ok().body(responseDTO);
     }
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class PostRequestDTO {
     private LocalDate createAt;
     private String form;
     private List<BookRequestDTO> bookList;
-    private Double initPrice;
-    private Double price;
+    private BigDecimal initPrice;
+    private BigDecimal price;
     private String bookExchange;
     private Long userId;
     private Long categoryId;

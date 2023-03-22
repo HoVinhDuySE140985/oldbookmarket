@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponseDTO createNewOrder(AddOrderRequestDTO addOrderRequestDTO) {
+        BigDecimal comparePrice = BigDecimal.valueOf(500000);
         OrderResponseDTO orderResponseDTO = null;
         try {
             User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
@@ -43,31 +45,86 @@ public class OrderServiceImpl implements OrderService {
             postRepo.save(post);
             Address address = addressRepo.findAddressByIdAndUserId(addOrderRequestDTO.getAddressId(), addOrderRequestDTO.getUserId());
             String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
-            Order order = Order.builder()
-                    .shipAddress(shipadrress)
-                    .post(post)
-                    .orderDate(addOrderRequestDTO.getOrderDate())
-                    .amount(addOrderRequestDTO.getAmount())
-                    .note(addOrderRequestDTO.getNote())
-                    .paymentMethod("MOMO")
-                    .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                    .status("processing")
-                    .user(user)
-                    .build();
-            orderRepo.save(order);
-
-            orderResponseDTO = OrderResponseDTO.builder()
-                    .orderId(order.getId())
-                    .postId(order.getPost().getId())
-                    .shipAddress(order.getShipAddress())
-                    .orderDate(order.getOrderDate())
-                    .amount(order.getAmount())
-                    .note(order.getNote())
-                    .paymentMethod(order.getPaymentMethod())
-                    .deliveryMethod(order.getDeliveryMethod())
-                    .userId(order.getUser().getId())
-                    .status(order.getStatus())
-                    .build();
+            if (post.getForm().equalsIgnoreCase("bán")){
+                Order order = Order.builder()
+                        .shipAddress(shipadrress)
+                        .post(post)
+                        .orderDate(addOrderRequestDTO.getOrderDate())
+                        .amount(post.getPrice())
+                        .note(addOrderRequestDTO.getNote())
+                        .paymentMethod("MOMO")
+                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                        .status("processing")
+                        .user(user)
+                        .build();
+                orderRepo.save(order);
+                orderResponseDTO = OrderResponseDTO.builder()
+                        .orderId(order.getId())
+                        .postId(order.getPost().getId())
+                        .shipAddress(order.getShipAddress())
+                        .orderDate(order.getOrderDate())
+                        .amount(order.getAmount())
+                        .note(order.getNote())
+                        .paymentMethod(order.getPaymentMethod())
+                        .deliveryMethod(order.getDeliveryMethod())
+                        .userId(order.getUser().getId())
+                        .status(order.getStatus())
+                        .build();
+            }else{
+                if (post.getInitPrice().compareTo(comparePrice)>=0){
+                    Order order = Order.builder()
+                            .shipAddress(shipadrress)
+                            .post(post)
+                            .orderDate(addOrderRequestDTO.getOrderDate())
+                            .amount(post.getInitPrice().multiply(BigDecimal.valueOf(0.5)))
+                            .note(addOrderRequestDTO.getNote())
+                            .paymentMethod("MOMO")
+                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                            .status("processing")
+                            .user(user)
+                            .build();
+                    orderRepo.save(order);
+                    orderResponseDTO = OrderResponseDTO.builder()
+                            .orderId(order.getId())
+                            .postId(order.getPost().getId())
+                            .shipAddress(order.getShipAddress())
+                            .orderDate(order.getOrderDate())
+                            .amount(order.getAmount())
+                            .note(order.getNote())
+                            .paymentMethod(order.getPaymentMethod())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .userId(order.getUser().getId())
+                            .status(order.getStatus())
+                            .build();
+                    orderRepo.save(order);
+                }else {
+                    Order order = Order.builder()
+                            .shipAddress(shipadrress)
+                            .post(post)
+                            .orderDate(addOrderRequestDTO.getOrderDate())
+                            .amount(post.getInitPrice().multiply(BigDecimal.valueOf(0.3)))
+                            .note(addOrderRequestDTO.getNote())
+                            .paymentMethod("MOMO")
+                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                            .status("processing")
+                            .user(user)
+                            .build();
+                    orderRepo.save(order);
+                    orderResponseDTO = OrderResponseDTO.builder()
+                            .orderId(order.getId())
+                            .postId(order.getPost().getId())
+                            .shipAddress(order.getShipAddress())
+                            .orderDate(order.getOrderDate())
+                            .amount(order.getAmount())
+                            .note(order.getNote())
+                            .paymentMethod(order.getPaymentMethod())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .userId(order.getUser().getId())
+                            .status(order.getStatus())
+                            .build();
+                    orderRepo.save(order);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

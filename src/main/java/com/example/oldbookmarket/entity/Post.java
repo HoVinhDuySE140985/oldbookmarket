@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,8 +27,8 @@ public class Post {
     private String imageUrl;
     private LocalDate createAt;
     private String postStatus;
-    private Double initPrice;
-    private Double price;
+    private BigDecimal initPrice;
+    private BigDecimal price;
     private String bookExchange;
     private String reasonReject;
     private String location;

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,7 +21,7 @@ public class PostResponseDTO {
     private String description;
 //    private List<Book> bookList;
 //    private Double initPrice;
-    private Double price;
+    private BigDecimal price;
 //    private String categoryExchange;
     private Long userId;
 //    private Long subCategoryId;

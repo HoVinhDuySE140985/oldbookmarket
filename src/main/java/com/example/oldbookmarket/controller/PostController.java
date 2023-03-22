@@ -21,15 +21,15 @@ public class PostController {
     @Autowired
     PostService postService;
 
-    @PostMapping ("create-post")
+    @PostMapping("create-post")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> creatlPost(@RequestBody PostRequestDTO postRequestDTO){
+    public ResponseEntity<ResponseDTO> creatlPost(@RequestBody PostRequestDTO postRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO postResponseDTO = postService.createPost(postRequestDTO);
             responseDTO.setData(postResponseDTO);
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(responseDTO);
@@ -37,119 +37,114 @@ public class PostController {
 
     @GetMapping("get-all-post")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPost(){
+    public ResponseEntity<ResponseDTO> getAllPost() {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> postList = postService.getAllPost();
             responseDTO.setData(postList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("get-all-my-post/{userId}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllMyPost(long userId){
+    public ResponseEntity<ResponseDTO> getAllMyPost(long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> myPostList = postService.getAllMyPosts(userId);
             responseDTO.setData(myPostList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("search-post-by-title/{title}")
-    @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByTitle(@PathVariable String title){
-        ResponseDTO responseDTO = new ResponseDTO();
-            PostResponseDTO result = postService.searchPostByTitle(title);
-            if (result.getTitle() != null){
-                responseDTO.setData(result);
-                responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
-            }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @GetMapping("search-post-by-title/{title}")
+//    @PermitAll
+//    public ResponseEntity<ResponseDTO> searchPostByTitle(@PathVariable String title){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//            PostResponseDTO result = postService.searchPostByTitle(title);
+//            if (result.getTitle() != null){
+//                responseDTO.setData(result);
+//                responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+//            }else {
+//                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
+//            }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     @GetMapping("search-post-by-Keyword/{keyWord}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord){
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord) {
         ResponseDTO responseDTO = new ResponseDTO();
-            List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
-            if (!resultList.isEmpty()) {
+        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
+        try {
                 responseDTO.setData(resultList);
                 responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
+            }catch(Exception e){
+                e.printStackTrace();
             }
-        return ResponseEntity.ok().body(responseDTO);
-    }
-
-    @PutMapping("staff/accept-post/{id}")
-    @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<ResponseDTO> acceptPost(@PathVariable Long id){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO post = postService.acceptPost(id);
-            responseDTO.setData(post);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok().body(responseDTO);
         }
-        return ResponseEntity.ok().body(responseDTO);
-    }
 
-    @PutMapping("staff/reject-post/{id}")
-    @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<ResponseDTO> rejectPost(@PathVariable Long id, String reasonReject){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO post = postService.rejectPost(id,reasonReject);
-            responseDTO.setData(post);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        @PutMapping("staff/accept-post/{id}")
+        @PreAuthorize("hasRole('STAFF')")
+        public ResponseEntity<ResponseDTO> acceptPost (@PathVariable Long id){
+            ResponseDTO responseDTO = new ResponseDTO();
+            try {
+                PostResponseDTO post = postService.acceptPost(id);
+                responseDTO.setData(post);
+                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.ok().body(responseDTO);
         }
-        return ResponseEntity.ok().body(responseDTO);
-    }
 
-    @PutMapping("update-post-status/{id}")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updatePostStatus(Long id){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
-            responseDTO.setData(postResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        @PutMapping("staff/reject-post/{id}")
+        @PreAuthorize("hasRole('STAFF')")
+        public ResponseEntity<ResponseDTO> rejectPost (@PathVariable Long id, String reasonReject){
+            ResponseDTO responseDTO = new ResponseDTO();
+            try {
+                PostResponseDTO post = postService.rejectPost(id, reasonReject);
+                responseDTO.setData(post);
+                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.ok().body(responseDTO);
         }
-        return  ResponseEntity.ok().body(responseDTO);
-    }
 
-    @PutMapping("update-post-info")
-    @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updatePostInfo(@RequestBody PostRequestDTO postRequestDTO){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO postResponseDTO = postService.updatePostInfo(postRequestDTO);
-            responseDTO.setData(postResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        @PutMapping("update-post-status/{id}")
+        @PreAuthorize("hasRole('CUSTOMER')")
+        public ResponseEntity<ResponseDTO> updatePostStatus (Long id){
+            ResponseDTO responseDTO = new ResponseDTO();
+            try {
+                PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
+                responseDTO.setData(postResponseDTO);
+                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.ok().body(responseDTO);
         }
-        return  ResponseEntity.ok().body(responseDTO);
+
+        @PutMapping("update-post-info")
+        @PreAuthorize("hasRole('CUSTOMER')")
+        public ResponseEntity<ResponseDTO> updatePostInfo (@RequestBody PostRequestDTO postRequestDTO){
+            ResponseDTO responseDTO = new ResponseDTO();
+            try {
+                PostResponseDTO postResponseDTO = postService.updatePostInfo(postRequestDTO);
+                responseDTO.setData(postResponseDTO);
+                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.ok().body(responseDTO);
+        }
     }
-}

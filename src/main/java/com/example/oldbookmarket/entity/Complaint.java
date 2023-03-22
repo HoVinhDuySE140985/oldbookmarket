@@ -22,6 +22,7 @@ public class Complaint {
     private String title;
     private String complaintImage;
     private String description;
+    private String userComplained;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

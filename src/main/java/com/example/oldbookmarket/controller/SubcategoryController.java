@@ -25,11 +25,11 @@ public class SubcategoryController {
     public ResponseEntity<ResponseDTO> getSubCategoryByCateId(@PathVariable Long id){
         ResponseDTO responseDTO = new ResponseDTO();
             List<Subcategory> subcategoryList = subCategoryService.getSubCategoryByCategoryId(id);
-            if( subcategoryList != null){
+            try {
                 responseDTO.setData(subcategoryList);
                 responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
+            }catch (Exception e){
+                e.printStackTrace();
             }
         return  ResponseEntity.ok().body(responseDTO);
     }
@@ -45,7 +45,6 @@ public class SubcategoryController {
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.valueOf("400"),"CREATE_FAIL");
         }
         return ResponseEntity.ok().body(responseDTO);
     }

@@ -86,13 +86,12 @@ public class AuthenController {
     @PermitAll
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
-        User user = userService.findByEmail(registerRequestDTO.getEmail());
-        if (user == null) {
+        try {
             RegisterResponseDTO registerResponseDTO = userService.createUser(registerRequestDTO);
             responseDTO.setData(registerResponseDTO);
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-        } else {
-            throw new ResponseStatusException(HttpStatus.valueOf(200), "USER_EXISTED");
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -116,13 +115,12 @@ public class AuthenController {
     public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         User user = userService.findUserById(userId);
-        if (user != null) {
+        try {
             responseDTO.setData(user);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        } else {
-            throw new ResponseStatusException(HttpStatus.valueOf("404"), "USER_NOT_EXISTED");
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
-
     }
 }

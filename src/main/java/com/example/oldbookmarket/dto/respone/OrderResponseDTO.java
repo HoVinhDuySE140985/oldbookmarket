@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -16,7 +17,7 @@ public class OrderResponseDTO {
     private Long postId;
     private String shipAddress;
     private LocalDate orderDate;
-    private Double amount;
+    private BigDecimal amount;
     private String note;
     private String paymentMethod;
     private String deliveryMethod;

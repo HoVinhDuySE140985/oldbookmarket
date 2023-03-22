@@ -26,11 +26,11 @@ public class CategoryController {
     public ResponseEntity<ResponseDTO> getAllCategory(){
         ResponseDTO responseDTO = new ResponseDTO();
             List<Category> categoryList = categoryService.getAllCategory();
-            if (categoryList != null){
+            try {
                 responseDTO.setData(categoryList);
                 responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
+            }catch (Exception e){
+                e.printStackTrace();
             }
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -49,7 +49,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("staff/create-category/{cateName}")
+    @PostMapping("staff/create-category/{cateName}")
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> createNewCategory(@PathVariable String cateName){
         ResponseDTO responseDTO = new ResponseDTO();
