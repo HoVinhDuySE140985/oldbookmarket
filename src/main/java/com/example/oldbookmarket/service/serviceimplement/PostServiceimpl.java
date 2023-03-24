@@ -110,7 +110,7 @@ public class PostServiceimpl implements PostService {
         try {
             postList = postRepo.findAll();
             for (Post post: postList) {
-//                Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
+
                 if(post.getPostStatus().equalsIgnoreCase("active")){
                     PostResponseDTO postResponseDTO = new PostResponseDTO();
                     postResponseDTO.setId(post.getId());
@@ -118,7 +118,7 @@ public class PostServiceimpl implements PostService {
                     postResponseDTO.setForm(post.getForm());
 //                    postResponeDTO.setCategoryId(subcate.getCategory().getId());
 //                    postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
-//                    postResponeDTO.setBookList(post.getBooks());
+                    postResponseDTO.setBookList(post.getBooks());
                     postResponseDTO.setImageUrl(post.getImageUrl());
                     postResponseDTO.setLocation(post.getLocation());
                     postResponseDTO.setPrice(post.getPrice());
@@ -149,7 +149,7 @@ public class PostServiceimpl implements PostService {
                 postResponseDTO.setForm(posts.getForm());
 //                postResponeDTO.setCategoryId(subcate.getCategory().getId());
 //                postResponeDTO.setSubCategoryId(posts.getSubcategory().getId());
-//                postResponeDTO.setBookList(posts.getBooks());
+//                postResponseDTO.getBookList();
                 postResponseDTO.setImageUrl(posts.getImageUrl());
                 postResponseDTO.setLocation(posts.getLocation());
                 postResponseDTO.setPrice(posts.getPrice());

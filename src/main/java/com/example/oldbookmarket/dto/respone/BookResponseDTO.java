@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @Data
 public class BookResponseDTO {
+    private Long bookId;
     private String name;
     private String isbn;
     private List<BookImage> bookImages;

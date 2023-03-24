@@ -25,6 +25,7 @@ public class MomoServiceImpl implements MomoService {
     @Override
     public MomoResponseDTO createLinkMomo(AddOrderRequestDTO addOrderRequestDTO) {
         orderService.createNewOrder(addOrderRequestDTO);
+
         LogUtils.init();
 
 // chinh big decimal
@@ -47,5 +48,4 @@ public class MomoServiceImpl implements MomoService {
                 .build();
         return momoResponseDTO;
     }
-
 }

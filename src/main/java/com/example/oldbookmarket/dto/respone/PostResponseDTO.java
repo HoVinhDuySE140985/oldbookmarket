@@ -1,11 +1,13 @@
 package com.example.oldbookmarket.dto.respone;
 
+import com.example.oldbookmarket.entity.Book;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class PostResponseDTO {
     private String location;
     private String status;
     private String description;
-//    private List<Book> bookList;
+    private List<Book> bookList;
 //    private Double initPrice;
     private BigDecimal price;
 //    private String categoryExchange;

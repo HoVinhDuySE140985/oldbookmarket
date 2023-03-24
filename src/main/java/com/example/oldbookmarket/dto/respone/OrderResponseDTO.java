@@ -24,4 +24,5 @@ public class OrderResponseDTO {
     private Long userId;
     private String status;
     private String paymentStatus;
+    private String url;
 }

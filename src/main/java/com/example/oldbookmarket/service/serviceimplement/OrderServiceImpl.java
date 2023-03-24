@@ -180,6 +180,7 @@ public class OrderServiceImpl implements OrderService {
                         .userId(order.getUser().getId())
                         .status(order.getStatus())
                         .paymentStatus(order.getPaymentStatus())
+                        .url("https://www.youtube.com/")
                         .build();
             }
         }catch (Exception e){
