@@ -8,5 +8,4 @@ import java.util.List;
 public interface AddressRepo extends JpaRepository<Address, Long> {
     List<Address> findAllByUser_Id(Long id);
 
-    Address findAddressByIdAndUserId(Long addressId, Long userId);
 }

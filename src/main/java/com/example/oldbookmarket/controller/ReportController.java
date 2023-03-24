@@ -12,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/report")
 public class ReportController {
@@ -37,6 +39,13 @@ public class ReportController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getAllReport(){
         ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<ReportResponseDTO> reportRequestDTOList = reportService.getAllReport();
+            responseDTO.setData(reportRequestDTOList);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return ResponseEntity.ok().body(responseDTO);
     }
 }

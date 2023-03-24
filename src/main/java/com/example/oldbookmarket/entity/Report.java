@@ -18,7 +18,6 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userReportedId;
     private String reason;
     private LocalDate createAt;
 

@@ -24,6 +24,7 @@ public class PostResponseDTO {
     private BigDecimal price;
 //    private String categoryExchange;
     private Long userId;
+    private String userName;
 //    private Long subCategoryId;
 //    private Long categoryId;
 //    private String reasonReject;

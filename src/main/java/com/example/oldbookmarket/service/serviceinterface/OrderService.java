@@ -12,4 +12,6 @@ public interface OrderService {
     List<Order> getAllOrder(Long userId, String orderStatus);
     Order cancelOrder(Long orderId);
 
+    OrderResponseDTO addToOrder(String orderId, String userId, String addressId);
+
 }

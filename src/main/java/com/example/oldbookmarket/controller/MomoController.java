@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.MomoDTO.MomoRequestDTO;
+import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.respone.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.MomoService;
@@ -18,12 +19,16 @@ public class MomoController {
     @Autowired
     MomoService momoService;
 
-    @PostMapping("create-complaint")
+    @PostMapping("create-link")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewComplaint(@RequestBody MomoRequestDTO momoRequestDTO) {
+    public ResponseEntity<ResponseDTO> createNewLink(@RequestBody AddOrderRequestDTO addOrderRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
-        responseDTO.setData(momoService.createLinkMomo(momoRequestDTO));
-        responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        try {
+            responseDTO.setData(momoService.createLinkMomo(addOrderRequestDTO));
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return ResponseEntity.ok().body(responseDTO);
     }
 }

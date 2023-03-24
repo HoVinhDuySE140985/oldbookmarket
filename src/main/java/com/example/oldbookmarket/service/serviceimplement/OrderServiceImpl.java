@@ -36,26 +36,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponseDTO createNewOrder(AddOrderRequestDTO addOrderRequestDTO) {
-        BigDecimal comparePrice = BigDecimal.valueOf(500000);
+//        BigDecimal comparePrice = BigDecimal.valueOf(500000);
         OrderResponseDTO orderResponseDTO = null;
         try {
-            User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
+//            User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
             Post post = postRepo.findById(addOrderRequestDTO.getPostId()).get();
             post.setPostStatus("deactivate");
             postRepo.save(post);
-            Address address = addressRepo.findAddressByIdAndUserId(addOrderRequestDTO.getAddressId(), addOrderRequestDTO.getUserId());
-            String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
-            if (post.getForm().equalsIgnoreCase("bán")){
+//            Address address = addressRepo.findAddressByIdAndUserId(addOrderRequestDTO.getAddressId(), addOrderRequestDTO.getUserId());
+//            String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
+            if (post.getForm().equalsIgnoreCase("bán")) {
                 Order order = Order.builder()
-                        .shipAddress(shipadrress)
+//                        .shipAddress(shipadrress)
                         .post(post)
                         .orderDate(addOrderRequestDTO.getOrderDate())
-                        .amount(post.getPrice())
+                        .amount(addOrderRequestDTO.getAmount())
                         .note(addOrderRequestDTO.getNote())
                         .paymentMethod("MOMO")
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                         .status("processing")
-                        .user(user)
+//                        .user(user)
                         .build();
                 orderRepo.save(order);
                 orderResponseDTO = OrderResponseDTO.builder()
@@ -67,63 +67,34 @@ public class OrderServiceImpl implements OrderService {
                         .note(order.getNote())
                         .paymentMethod(order.getPaymentMethod())
                         .deliveryMethod(order.getDeliveryMethod())
-                        .userId(order.getUser().getId())
+//                        .userId(order.getUser().getId())
                         .status(order.getStatus())
                         .build();
-            }else{
-                if (post.getInitPrice().compareTo(comparePrice)>=0){
-                    Order order = Order.builder()
-                            .shipAddress(shipadrress)
-                            .post(post)
-                            .orderDate(addOrderRequestDTO.getOrderDate())
-                            .amount(post.getInitPrice().multiply(BigDecimal.valueOf(0.5)))
-                            .note(addOrderRequestDTO.getNote())
-                            .paymentMethod("MOMO")
-                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("processing")
-                            .user(user)
-                            .build();
-                    orderRepo.save(order);
-                    orderResponseDTO = OrderResponseDTO.builder()
-                            .orderId(order.getId())
-                            .postId(order.getPost().getId())
-                            .shipAddress(order.getShipAddress())
-                            .orderDate(order.getOrderDate())
-                            .amount(order.getAmount())
-                            .note(order.getNote())
-                            .paymentMethod(order.getPaymentMethod())
-                            .deliveryMethod(order.getDeliveryMethod())
-                            .userId(order.getUser().getId())
-                            .status(order.getStatus())
-                            .build();
-                    orderRepo.save(order);
-                }else {
-                    Order order = Order.builder()
-                            .shipAddress(shipadrress)
-                            .post(post)
-                            .orderDate(addOrderRequestDTO.getOrderDate())
-                            .amount(post.getInitPrice().multiply(BigDecimal.valueOf(0.3)))
-                            .note(addOrderRequestDTO.getNote())
-                            .paymentMethod("MOMO")
-                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("processing")
-                            .user(user)
-                            .build();
-                    orderRepo.save(order);
-                    orderResponseDTO = OrderResponseDTO.builder()
-                            .orderId(order.getId())
-                            .postId(order.getPost().getId())
-                            .shipAddress(order.getShipAddress())
-                            .orderDate(order.getOrderDate())
-                            .amount(order.getAmount())
-                            .note(order.getNote())
-                            .paymentMethod(order.getPaymentMethod())
-                            .deliveryMethod(order.getDeliveryMethod())
-                            .userId(order.getUser().getId())
-                            .status(order.getStatus())
-                            .build();
-                    orderRepo.save(order);
-                }
+            } else {
+                Order order = Order.builder()
+//                        .shipAddress(shipadrress)
+                        .post(post)
+                        .orderDate(addOrderRequestDTO.getOrderDate())
+                        .amount(addOrderRequestDTO.getAmount())
+                        .note(addOrderRequestDTO.getNote())
+                        .paymentMethod("MOMO")
+                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                        .status("processing")
+//                        .user(user)
+                        .build();
+                orderRepo.save(order);
+                orderResponseDTO = OrderResponseDTO.builder()
+                        .orderId(order.getId())
+                        .postId(order.getPost().getId())
+                        .shipAddress(order.getShipAddress())
+                        .orderDate(order.getOrderDate())
+                        .amount(order.getAmount())
+                        .note(order.getNote())
+                        .paymentMethod(order.getPaymentMethod())
+                        .deliveryMethod(order.getDeliveryMethod())
+//                        .userId(order.getUser().getId())
+                        .status(order.getStatus())
+                        .build();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,15 +108,15 @@ public class OrderServiceImpl implements OrderService {
         try {
             if (order.getStatus().equalsIgnoreCase("processing")) {
                 order.setStatus("packed");
-                return  orderRepo.save(order);
+                return orderRepo.save(order);
             }
             if (order.getStatus().equalsIgnoreCase("packed")) {
                 order.setStatus("delivery");
-                return  orderRepo.save(order);
+                return orderRepo.save(order);
             }
-            if (order.getStatus().equalsIgnoreCase("delivery")){
+            if (order.getStatus().equalsIgnoreCase("delivery")) {
                 order.setStatus("receive");
-                return  orderRepo.save(order);
+                return orderRepo.save(order);
             }
             orderRepo.save(order);
         } catch (Exception e) {
@@ -158,8 +129,8 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> getAllOrder(Long userId, String orderStatus) {
         List<Order> orderList = new ArrayList<>();
         try {
-            orderList = orderRepo.findAllByStatusAndUser_Id(orderStatus,userId);
-        }catch (Exception e){
+            orderList = orderRepo.findAllByStatusAndUser_Id(orderStatus, userId);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return orderList;
@@ -169,18 +140,51 @@ public class OrderServiceImpl implements OrderService {
     public Order cancelOrder(Long orderId) {
         Order order = new Order();
 
-            order = orderRepo.findById(orderId).get();
-            if (order.getStatus().equalsIgnoreCase("processing")){
-                Post post = postRepo.findById(order.getPost().getId()).get();
-                post.setPostStatus("active");
-                postRepo.save(post);
-                order.setStatus("cancel");
-                orderRepo.save(order);
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(200),"Huy Đơn Không Thành Công");
+        order = orderRepo.findById(orderId).get();
+        if (order.getStatus().equalsIgnoreCase("processing")) {
+            Post post = postRepo.findById(order.getPost().getId()).get();
+            post.setPostStatus("active");
+            postRepo.save(post);
+            order.setStatus("cancel");
+            orderRepo.save(order);
+        } else {
+            throw new ResponseStatusException(HttpStatus.valueOf(200), "Huy Đơn Không Thành Công");
 
-            }
+        }
 
         return order;
+    }
+
+    @Override
+    public OrderResponseDTO addToOrder(String orderId, String userId,String addressId) {
+        OrderResponseDTO orderResponseDTO = null;
+        try {
+            Order order = orderRepo.findById(Long.parseLong(orderId)).get();
+            if (order != null){
+                User user = userRepo.findById(Long.parseLong(userId)).get();
+                Address address = addressRepo.findById(Long.parseLong(addressId)).get();
+                String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
+                order.setUser(user);
+                order.setShipAddress(shipadrress);
+                order.setPaymentStatus("PAID");
+                order = orderRepo.save(order);
+                orderResponseDTO = OrderResponseDTO.builder()
+                        .orderId(order.getId())
+                        .postId(order.getPost().getId())
+                        .shipAddress(order.getShipAddress())
+                        .orderDate(order.getOrderDate())
+                        .amount(order.getAmount())
+                        .note(order.getNote())
+                        .paymentMethod(order.getPaymentMethod())
+                        .deliveryMethod(order.getDeliveryMethod())
+                        .userId(order.getUser().getId())
+                        .status(order.getStatus())
+                        .paymentStatus(order.getPaymentStatus())
+                        .build();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return orderResponseDTO;
     }
 }

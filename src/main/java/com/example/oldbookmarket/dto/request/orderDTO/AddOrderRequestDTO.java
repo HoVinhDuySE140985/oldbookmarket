@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -14,12 +15,12 @@ import java.time.LocalDate;
 public class AddOrderRequestDTO {
     private Long postId;
     private Long userId;
-    private Long addressId;
+//    private Long addressId;
     private LocalDate orderDate;
-//    private Double amount;
+    private BigDecimal amount;
     private String note;
-//    private String paymentMethod;
-//    private String deliveryMethod;
+    private String successUrl;
+    private String failUrl;
 //    private String status;
 
 }

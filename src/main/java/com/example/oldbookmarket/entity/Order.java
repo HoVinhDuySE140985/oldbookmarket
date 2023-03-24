@@ -29,6 +29,7 @@ public class Order {
     private String paymentMethod;
     private String deliveryMethod;
     private String status;
+    private String paymentStatus;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)

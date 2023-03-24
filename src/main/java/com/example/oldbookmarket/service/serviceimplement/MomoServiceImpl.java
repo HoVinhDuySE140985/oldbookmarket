@@ -2,6 +2,7 @@ package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.Configuration.Environment;
 import com.example.oldbookmarket.dto.request.MomoDTO.MomoRequestDTO;
+import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.respone.MomoResponseDTO;
 import com.example.oldbookmarket.entity.Order;
 import com.example.oldbookmarket.enumcode.RequestType;
@@ -9,6 +10,7 @@ import com.example.oldbookmarket.models.PaymentResponse;
 import com.example.oldbookmarket.processor.CreateOrderMoMo;
 import com.example.oldbookmarket.repository.OrderRepo;
 import com.example.oldbookmarket.service.serviceinterface.MomoService;
+import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import com.example.oldbookmarket.shared.utils.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +20,11 @@ import java.math.BigDecimal;
 @Service
 public class MomoServiceImpl implements MomoService {
     @Autowired
-    private OrderRepo orderRepo;
+    private OrderService orderService;
+
     @Override
-    public MomoResponseDTO createLinkMomo(MomoRequestDTO momoRequestDTO) {
-        Order order = orderRepo.findById(momoRequestDTO.getOrderId()).get();
+    public MomoResponseDTO createLinkMomo(AddOrderRequestDTO addOrderRequestDTO) {
+        orderService.createNewOrder(addOrderRequestDTO);
         LogUtils.init();
 
 // chinh big decimal
@@ -34,7 +37,8 @@ public class MomoServiceImpl implements MomoService {
         Environment environment = Environment.selectEnv("dev");
         PaymentResponse captureWalletMoMoResponse  = null;
         try {
-            captureWalletMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, BigDecimal.valueOf(50000L).toString(), orderInfo, successMomo(order.getId()), momoRequestDTO.getNotifyURL(), "", RequestType.CAPTURE_WALLET, null);
+
+            captureWalletMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, "50000", orderInfo, "http://localhost:8080/api/order/add_user_to_order/"+ addOrderRequestDTO.getPostId()+"/"+addOrderRequestDTO.getUserId()+"/1", addOrderRequestDTO.getFailUrl(), "", RequestType.CAPTURE_WALLET, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,12 +48,4 @@ public class MomoServiceImpl implements MomoService {
         return momoResponseDTO;
     }
 
-    @Override
-    public String successMomo(Long orderId) {
-        Order order = orderRepo.findById(orderId).get();
-        order.setStatus("PAID");
-        orderRepo.save(order);
-        String url = "https://www.youtube.com/";
-        return url;
-    }
 }

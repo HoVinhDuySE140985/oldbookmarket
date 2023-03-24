@@ -1,10 +1,11 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.MomoDTO.MomoRequestDTO;
+import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.respone.MomoResponseDTO;
 
 public interface MomoService {
-    MomoResponseDTO createLinkMomo(MomoRequestDTO momoRequestDTO);
+    MomoResponseDTO createLinkMomo(AddOrderRequestDTO addOrderRequestDTO);
 
-    String successMomo(Long orderId);
+//    String successMomo(AddOrderRequestDTO addOrderRequestDTO);
 }
