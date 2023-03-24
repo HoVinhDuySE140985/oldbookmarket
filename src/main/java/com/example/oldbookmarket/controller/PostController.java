@@ -59,7 +59,6 @@ public class PostController {
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(responseDTO);
     }
@@ -84,67 +83,81 @@ public class PostController {
         ResponseDTO responseDTO = new ResponseDTO();
         List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
         try {
-                responseDTO.setData(resultList);
-                responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return ResponseEntity.ok().body(responseDTO);
+            responseDTO.setData(resultList);
+            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        @PutMapping("staff/accept-post/{id}")
-        @PreAuthorize("hasRole('STAFF')")
-        public ResponseEntity<ResponseDTO> acceptPost (@PathVariable Long id){
-            ResponseDTO responseDTO = new ResponseDTO();
-            try {
-                PostResponseDTO post = postService.acceptPost(id);
-                responseDTO.setData(post);
-                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return ResponseEntity.ok().body(responseDTO);
-        }
-
-        @PutMapping("staff/reject-post/{id}")
-        @PreAuthorize("hasRole('STAFF')")
-        public ResponseEntity<ResponseDTO> rejectPost (@PathVariable Long id, String reasonReject){
-            ResponseDTO responseDTO = new ResponseDTO();
-            try {
-                PostResponseDTO post = postService.rejectPost(id, reasonReject);
-                responseDTO.setData(post);
-                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return ResponseEntity.ok().body(responseDTO);
-        }
-
-        @PutMapping("update-post-status/{id}")
-        @PreAuthorize("hasRole('CUSTOMER')")
-        public ResponseEntity<ResponseDTO> updatePostStatus (Long id){
-            ResponseDTO responseDTO = new ResponseDTO();
-            try {
-                PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
-                responseDTO.setData(postResponseDTO);
-                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return ResponseEntity.ok().body(responseDTO);
-        }
-
-        @PutMapping("update-post-info")
-        @PreAuthorize("hasRole('CUSTOMER')")
-        public ResponseEntity<ResponseDTO> updatePostInfo (@RequestBody PostRequestDTO postRequestDTO){
-            ResponseDTO responseDTO = new ResponseDTO();
-            try {
-                PostResponseDTO postResponseDTO = postService.updatePostInfo(postRequestDTO);
-                responseDTO.setData(postResponseDTO);
-                responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return ResponseEntity.ok().body(responseDTO);
-        }
+        return ResponseEntity.ok().body(responseDTO);
     }
+
+    @PutMapping("staff/accept-post/{id}")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<ResponseDTO> acceptPost(@PathVariable Long id) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PostResponseDTO post = postService.acceptPost(id);
+            responseDTO.setData(post);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("staff/reject-post/{id}")
+    @PreAuthorize("hasRole('STAFF')")
+    public ResponseEntity<ResponseDTO> rejectPost(@PathVariable Long id, String reasonReject) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PostResponseDTO post = postService.rejectPost(id, reasonReject);
+            responseDTO.setData(post);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("update-post-status/{id}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> updatePostStatus(@PathVariable Long id) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
+            responseDTO.setData(postResponseDTO);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("update-post-info")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> updatePostInfo(@RequestBody PostRequestDTO postRequestDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PostResponseDTO postResponseDTO = postService.updatePostInfo(postRequestDTO);
+            responseDTO.setData(postResponseDTO);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("get_all_post_by/{subcategoryId}")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@PathVariable Long subcategoryId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId);
+            responseDTO.setData(postResponseDTOs);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+}

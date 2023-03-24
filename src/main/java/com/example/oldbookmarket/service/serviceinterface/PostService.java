@@ -13,6 +13,6 @@ public interface PostService {
     PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO);
     List<PostResponseDTO> getAllPost();
     List<PostResponseDTO> getAllMyPosts(Long userId);
-    PostResponseDTO searchPostByTitle(String title);
+    List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId);
     List<PostResponseDTO> searchPostByKeyWord(String keyWord);
 }

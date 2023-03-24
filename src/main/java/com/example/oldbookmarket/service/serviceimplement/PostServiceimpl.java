@@ -61,25 +61,25 @@ public class PostServiceimpl implements PostService {
 
             List<BookRequestDTO> bookRequestDTOS = postRequestDTO.getBookList();
             for (BookRequestDTO bookRequestDTO : bookRequestDTOS) {
-                    Book book = new Book();
-                    book.setName(bookRequestDTO.getName());
-                    book.setIsbn(bookRequestDTO.getIsbn());
-                    book.setAuthor(bookRequestDTO.getAuthor());
-                    book.setPublicationDate(bookRequestDTO.getPublicationDate());
-                    book.setPublicCompany(bookRequestDTO.getPublicCompany());
-                    book.setLanguage(bookRequestDTO.getLanguage());
-                    book.setCoverType(bookRequestDTO.getCoverType());
-                    book.setStatusQuo(bookRequestDTO.getStatusQuo());
+                Book book = new Book();
+                book.setName(bookRequestDTO.getName());
+                book.setIsbn(bookRequestDTO.getIsbn());
+                book.setAuthor(bookRequestDTO.getAuthor());
+                book.setPublicationDate(bookRequestDTO.getPublicationDate());
+                book.setPublicCompany(bookRequestDTO.getPublicCompany());
+                book.setLanguage(bookRequestDTO.getLanguage());
+                book.setCoverType(bookRequestDTO.getCoverType());
+                book.setStatusQuo(bookRequestDTO.getStatusQuo());
 //                    book.setDescription(bookRequestDTO.getDescription());
-                    book.setPost(post);
-                    book = bookRepo.save(book);
-                    List<String> bookImages = bookRequestDTO.getBookImages();
-                    for (String bookImage:bookImages) {
-                        BookImage _bookImage = new BookImage();
-                        _bookImage.setUrl(bookImage);
-                        _bookImage.setBook(book);
-                        bookImageRepo.save(_bookImage);
-                    }
+                book.setPost(post);
+                book = bookRepo.save(book);
+                List<String> bookImages = bookRequestDTO.getBookImages();
+                for (String bookImage : bookImages) {
+                    BookImage _bookImage = new BookImage();
+                    _bookImage.setUrl(bookImage);
+                    _bookImage.setBook(book);
+                    bookImageRepo.save(_bookImage);
+                }
             }
 
 //            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
@@ -97,7 +97,7 @@ public class PostServiceimpl implements PostService {
                     .userId(post.getUser().getId())
                     .status(post.getPostStatus())
                     .build();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postResponseDTO;
@@ -109,9 +109,8 @@ public class PostServiceimpl implements PostService {
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
             postList = postRepo.findAll();
-            for (Post post: postList) {
-
-                if(post.getPostStatus().equalsIgnoreCase("active")){
+            for (Post post : postList) {
+                if (post.getPostStatus().equalsIgnoreCase("active")) {
                     PostResponseDTO postResponseDTO = new PostResponseDTO();
                     postResponseDTO.setId(post.getId());
                     postResponseDTO.setTitle(post.getTitle());
@@ -128,9 +127,9 @@ public class PostServiceimpl implements PostService {
                     postResponseDTOS.add(postResponseDTO);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.valueOf(404),"Chua co bai dang");
+            throw new ResponseStatusException(HttpStatus.valueOf(404), "Chua co bai dang");
         }
         return postResponseDTOS;
     }
@@ -138,55 +137,55 @@ public class PostServiceimpl implements PostService {
     @Override
     public List<PostResponseDTO> getAllMyPosts(Long userId) {
         List<Post> postList = null;
-        List<PostResponseDTO>  myListPosts = new ArrayList<>();
+        List<PostResponseDTO> myListPosts = new ArrayList<>();
         try {
             postList = postRepo.getAllByUser_Id(userId);
-            for (Post posts:postList) {
-//                Subcategory subcate = subcategoryRepo.getById(posts.getSubcategory().getId());
+            for (Post post : postList) {
                 PostResponseDTO postResponseDTO = new PostResponseDTO();
-                postResponseDTO.setId(posts.getId());
-                postResponseDTO.setTitle(posts.getTitle());
-                postResponseDTO.setForm(posts.getForm());
+                postResponseDTO.setId(post.getId());
+                postResponseDTO.setTitle(post.getTitle());
+                postResponseDTO.setForm(post.getForm());
 //                postResponeDTO.setCategoryId(subcate.getCategory().getId());
 //                postResponeDTO.setSubCategoryId(posts.getSubcategory().getId());
 //                postResponseDTO.getBookList();
-                postResponseDTO.setImageUrl(posts.getImageUrl());
-                postResponseDTO.setLocation(posts.getLocation());
-                postResponseDTO.setPrice(posts.getPrice());
-                postResponseDTO.setStatus(posts.getPostStatus());
+                postResponseDTO.setImageUrl(post.getImageUrl());
+                postResponseDTO.setLocation(post.getLocation());
+                postResponseDTO.setPrice(post.getPrice());
+                postResponseDTO.setStatus(post.getPostStatus());
 //                postResponeDTO.setReasonReject(posts.getReasonReject());
-                postResponseDTO.setUserId(posts.getUser().getId());
+                postResponseDTO.setUserId(post.getUser().getId());
                 myListPosts.add(postResponseDTO);
+
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return myListPosts;
     }
 
-    @Override
-    public PostResponseDTO searchPostByTitle(String title) {
-        List<Post> postList = null;
-        PostResponseDTO postResponseDTO = new PostResponseDTO();
-        try {
-            postList = postRepo.findAllByTitle(title);
-            for (Post post: postList) {
-                if(post.getPostStatus().equalsIgnoreCase("active")){
-                    postResponseDTO.setId(post.getId());
-                    postResponseDTO.setTitle(post.getTitle());
-                    postResponseDTO.setForm(post.getForm());
-                    postResponseDTO.setImageUrl(post.getImageUrl());
-                    postResponseDTO.setLocation(post.getLocation());
-                    postResponseDTO.setPrice(post.getPrice());
-                    postResponseDTO.setStatus(post.getPostStatus());
-                    postResponseDTO.setUserId(post.getUser().getId());
-                }
-            }
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.valueOf(404),"Khong tim thay bai dang");
-        }
-        return postResponseDTO;
-    }
+//    @Override
+//    public PostResponseDTO searchPostByTitle(String title) {
+//        List<Post> postList = null;
+//        PostResponseDTO postResponseDTO = new PostResponseDTO();
+//        try {
+//            postList = postRepo.findAllByTitle(title);
+//            for (Post post: postList) {
+//                if(post.getPostStatus().equalsIgnoreCase("active")){
+//                    postResponseDTO.setId(post.getId());
+//                    postResponseDTO.setTitle(post.getTitle());
+//                    postResponseDTO.setForm(post.getForm());
+//                    postResponseDTO.setImageUrl(post.getImageUrl());
+//                    postResponseDTO.setLocation(post.getLocation());
+//                    postResponseDTO.setPrice(post.getPrice());
+//                    postResponseDTO.setStatus(post.getPostStatus());
+//                    postResponseDTO.setUserId(post.getUser().getId());
+//                }
+//            }
+//        }catch (Exception e){
+//            throw new ResponseStatusException(HttpStatus.valueOf(404),"Khong tim thay bai dang");
+//        }
+//        return postResponseDTO;
+//    }
 
     @Override
     public List<PostResponseDTO> searchPostByKeyWord(String keyWord) {
@@ -194,8 +193,8 @@ public class PostServiceimpl implements PostService {
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
             postList = postRepo.findByKeyWord(keyWord);
-            for (Post post: postList) {
-                if(post.getPostStatus().equalsIgnoreCase("active")){
+            for (Post post : postList) {
+                if (post.getPostStatus().equalsIgnoreCase("active")) {
                     PostResponseDTO postResponseDTO = new PostResponseDTO();
                     postResponseDTO.setId(post.getId());
                     postResponseDTO.setTitle(post.getTitle());
@@ -208,8 +207,8 @@ public class PostServiceimpl implements PostService {
                     postResponseDTOS.add(postResponseDTO);
                 }
             }
-        }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.valueOf(404),"Khong tim thay bai dang");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.valueOf(404), "Khong tim thay bai dang");
         }
         return postResponseDTOS;
     }
@@ -233,7 +232,7 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setPrice(post.getPrice());
             postResponseDTO.setStatus(post.getPostStatus());
             postResponseDTO.setUserId(post.getUser().getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postResponseDTO;
@@ -260,7 +259,7 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setStatus(post.getPostStatus());
 //            postResponeDTO.setReasonReject(post.getReasonReject());
             postResponseDTO.setUserId(post.getUser().getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postResponseDTO;
@@ -271,7 +270,7 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         try {
             Post post = postRepo.getById(id);
-            if(post.getPostStatus().equalsIgnoreCase("active")){
+            if (post.getPostStatus().equalsIgnoreCase("active")) {
                 post.setPostStatus("deactivate");
                 postRepo.save(post);
             } else if (post.getPostStatus().equalsIgnoreCase("deactivate")) {
@@ -291,7 +290,7 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setStatus(post.getPostStatus());
 //            postResponeDTO.setReasonReject(post.getReasonReject());
             postResponseDTO.setUserId(post.getUser().getId());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postResponseDTO;
@@ -309,9 +308,37 @@ public class PostServiceimpl implements PostService {
             post.setPrice(postRequestDTO.getPrice());
             post.setDescription(postRequestDTO.getDescription());
             postRepo.save(post);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return postResponseDTO;
+    }
+
+    @Override
+    public List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId) {
+        List<Post> postList = null;
+        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
+        try {
+            postList = postRepo.findAllBySubcategory_Id(subcategoryId);
+            for (Post post : postList) {
+                if (post.getPostStatus().equalsIgnoreCase("active")) {
+                    PostResponseDTO postResponseDTO = new PostResponseDTO();
+                    postResponseDTO.setId(post.getId());
+                    postResponseDTO.setTitle(post.getTitle());
+                    postResponseDTO.setForm(post.getForm());
+                    postResponseDTO.setBookList(post.getBooks());
+                    postResponseDTO.setImageUrl(post.getImageUrl());
+                    postResponseDTO.setLocation(post.getLocation());
+                    postResponseDTO.setPrice(post.getPrice());
+                    postResponseDTO.setUserName(post.getUser().getName());
+                    postResponseDTO.setStatus(post.getPostStatus());
+                    postResponseDTO.setUserId(post.getUser().getId());
+                    postResponseDTOS.add(postResponseDTO);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return postResponseDTOS;
     }
 }
