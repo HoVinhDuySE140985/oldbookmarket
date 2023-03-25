@@ -5,9 +5,11 @@ import com.example.oldbookmarket.dto.respone.BookImageResponseDTO;
 import com.example.oldbookmarket.dto.respone.BookResponseDTO;
 import com.example.oldbookmarket.entity.Book;
 import com.example.oldbookmarket.entity.Post;
+import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.repository.BookImageRepo;
 import com.example.oldbookmarket.repository.BookRepo;
 import com.example.oldbookmarket.repository.PostRepo;
+import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,18 +27,22 @@ public class BookServiceImpl implements BookService {
     PostRepo postRepo;
 
     @Autowired
+    UserRepo userRepo;
+
+    @Autowired
     BookImageRepo bookImageRepo;
 
     @Override
-    public BookResponseDTO getBookInfor(Long postId, Long bookId) {
-        BookResponseDTO bookResponseDTO = null;
+    public List<BookResponseDTO> getBookInfor(Long postId) {
+        List<BookResponseDTO> bookResponseDTOS = new ArrayList<>();
         List<Book> bookList = null;
         try {
+            Post post = postRepo.findById(postId).get();
+            User user = userRepo.findById(post.getUser().getId()).get();
             bookList = bookRepo.findAllByPost_Id(postId);
-            Book  book = new Book();
-            if(bookId == null){
-                book = bookRepo.getFirstByPost_Id(postId);
-                bookResponseDTO = BookResponseDTO.builder()
+            for (Book book : bookList){
+                BookResponseDTO bookResponseDTO = BookResponseDTO.builder()
+                        .bookId(book.getId())
                         .name(book.getName())
                         .isbn(book.getIsbn())
                         .bookImages(book.getImageList())
@@ -45,32 +51,18 @@ public class BookServiceImpl implements BookService {
                         .author(book.getAuthor())
                         .coverType(book.getCoverType())
                         .language(book.getLanguage())
+                        .bookExchange(post.getBookExchange())
                         .statusQuo(book.getStatusQuo())
-//                        .description(book.getDescription())
+                        .description(post.getDescription())
+                        .userId(user.getId())
+                        .userName(user.getName())
                         .build();
-            }else {
-                for (Book books: bookList) {
-                    if(books.getId().equals(bookId)){
-                        book = bookRepo.getById(bookId);
-                        bookResponseDTO = BookResponseDTO.builder()
-                                .name(book.getName())
-                                .isbn(book.getIsbn())
-                                .bookImages(book.getImageList())
-                                .publicationDate(book.getPublicationDate())
-                                .publicCompany(book.getPublicCompany())
-                                .author(book.getAuthor())
-                                .coverType(book.getCoverType())
-                                .language(book.getLanguage())
-                                .statusQuo(book.getStatusQuo())
-//                                .description(book.getDescription())
-                                .build();
-                    }
-                }
+                bookResponseDTOS.add(bookResponseDTO);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return bookResponseDTO;
+        return bookResponseDTOS;
     }
 
     @Override

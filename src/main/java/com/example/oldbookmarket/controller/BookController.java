@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/book")
@@ -19,13 +20,13 @@ public class BookController {
     @Autowired
     BookService bookService;
 
-    @GetMapping("get-book-by/{postId}/{bookId}")
+    @GetMapping("get-book-by/{postId}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getBookInfor(@PathVariable Long postId, Long bookId){
+    public ResponseEntity<ResponseDTO> getBookInfor(@PathVariable Long postId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            BookResponseDTO bookResponseDTO = bookService.getBookInfor(postId,bookId);
-            responseDTO.setData(bookResponseDTO);
+            List<BookResponseDTO> booklist = bookService.getBookInfor(postId);
+            responseDTO.setData(booklist);
             responseDTO.setSuccessCode(SuccessCode.Get_Success);
         }catch (Exception e){
             e.printStackTrace();

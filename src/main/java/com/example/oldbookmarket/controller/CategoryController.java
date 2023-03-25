@@ -2,6 +2,7 @@ package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.respone.CategoryResponseDTO;
 import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.respone.TopCategoryResponeDTO;
 import com.example.oldbookmarket.entity.Category;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.CategoryService;
@@ -63,4 +64,17 @@ public class CategoryController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("get_top_catgetory_publication")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getTopCategoryPublication(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<TopCategoryResponeDTO> topCategoryList = categoryService.getTopCatePublication();
+            responseDTO.setData(topCategoryList);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  ResponseEntity.ok().body(responseDTO);
+    }
 }

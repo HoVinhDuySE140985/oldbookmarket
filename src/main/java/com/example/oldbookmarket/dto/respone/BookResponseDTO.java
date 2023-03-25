@@ -23,6 +23,9 @@ public class BookResponseDTO {
     private String author;
     private String coverType;
     private String language;
+    private String bookExchange;
     private String statusQuo;
     private String description;
+    private Long userId;
+    private String userName;
 }
