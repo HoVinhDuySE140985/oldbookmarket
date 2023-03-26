@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,4 +29,5 @@ public class BookResponseDTO {
     private String description;
     private Long userId;
     private String userName;
+    private BigDecimal price;
 }

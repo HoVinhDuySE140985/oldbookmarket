@@ -51,6 +51,7 @@ public class BookServiceImpl implements BookService {
                         .author(book.getAuthor())
                         .coverType(book.getCoverType())
                         .language(book.getLanguage())
+                        .price(post.getPrice())
                         .bookExchange(post.getBookExchange())
                         .statusQuo(book.getStatusQuo())
                         .description(post.getDescription())
