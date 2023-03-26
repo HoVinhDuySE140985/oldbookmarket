@@ -55,9 +55,10 @@ public class BookServiceImpl implements BookService {
                         .bookExchange(post.getBookExchange())
                         .statusQuo(book.getStatusQuo())
                         .description(post.getDescription())
-                        .subcategyName(post.getSubcategory().getName())
+                        .subcategoryName(post.getSubcategory().getName())
                         .userId(user.getId())
                         .userName(user.getName())
+                        .createAt(post.getCreateAt())
                         .build();
                 bookResponseDTOS.add(bookResponseDTO);
             }
