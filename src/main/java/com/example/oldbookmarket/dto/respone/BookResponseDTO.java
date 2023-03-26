@@ -27,6 +27,7 @@ public class BookResponseDTO {
     private String bookExchange;
     private String statusQuo;
     private String description;
+    private String subcategyName;
     private Long userId;
     private String userName;
     private BigDecimal price;
