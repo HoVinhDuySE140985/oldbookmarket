@@ -147,7 +147,7 @@ public class PostServiceimpl implements PostService {
                 postResponseDTO.setForm(post.getForm());
 //                postResponeDTO.setCategoryId(subcate.getCategory().getId());
 //                postResponeDTO.setSubCategoryId(posts.getSubcategory().getId());
-//                postResponseDTO.getBookList();
+                postResponseDTO.setBookList(post.getBooks());
                 postResponseDTO.setImageUrl(post.getImageUrl());
                 postResponseDTO.setLocation(post.getLocation());
                 postResponseDTO.setPrice(post.getPrice());
@@ -201,14 +201,16 @@ public class PostServiceimpl implements PostService {
                     postResponseDTO.setForm(post.getForm());
                     postResponseDTO.setImageUrl(post.getImageUrl());
                     postResponseDTO.setLocation(post.getLocation());
+                    postResponseDTO.setBookList(post.getBooks());
                     postResponseDTO.setPrice(post.getPrice());
                     postResponseDTO.setStatus(post.getPostStatus());
                     postResponseDTO.setUserId(post.getUser().getId());
+                    postResponseDTO.setUserName(post.getUser().getName());
                     postResponseDTOS.add(postResponseDTO);
                 }
             }
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.valueOf(404), "Khong tim thay bai dang");
+            e.printStackTrace();
         }
         return postResponseDTOS;
     }
