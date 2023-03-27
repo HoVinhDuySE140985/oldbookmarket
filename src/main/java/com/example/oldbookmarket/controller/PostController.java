@@ -63,9 +63,9 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get_all_post") // lấy post ko can có diều kiện trạng thái
+    @GetMapping("get_all_post_no_condition") // lấy post ko can có diều kiện trạng thái
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPostNoCondition(@PathVariable String title){
+    public ResponseEntity<ResponseDTO> getAllPostNoCondition(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> postList = postService.getAllPostNoCondition();
