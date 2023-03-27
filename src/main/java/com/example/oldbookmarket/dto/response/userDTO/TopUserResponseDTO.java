@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.respone;
+package com.example.oldbookmarket.dto.response.userDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-public class TopCategoryResponeDTO {
-    private Long categoryId;
-    private Long quantity;
+@Data
+public class TopUserResponseDTO {
+    private Long userId;
+    private Long count;
 }

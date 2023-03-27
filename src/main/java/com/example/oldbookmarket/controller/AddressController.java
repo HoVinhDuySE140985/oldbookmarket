@@ -2,8 +2,8 @@ package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.addressDTO.AddressRequestDTO;
 import com.example.oldbookmarket.dto.request.addressDTO.UpdateAddressRequestDTO;
-import com.example.oldbookmarket.dto.respone.AddressResponseDTO;
-import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.response.addressDTO.AddressResponseDTO;
+import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.entity.Address;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.AddressService;

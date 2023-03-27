@@ -1,8 +1,8 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
-import com.example.oldbookmarket.dto.respone.PostResponseDTO;
-import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
+import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-post")
+    @GetMapping("get-all-post") // nhung post có trang thái active
     @PermitAll
     public ResponseEntity<ResponseDTO> getAllPost() {
         ResponseDTO responseDTO = new ResponseDTO();
@@ -63,19 +63,19 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("search-post-by-title/{title}")
-//    @PermitAll
-//    public ResponseEntity<ResponseDTO> searchPostByTitle(@PathVariable String title){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//            PostResponseDTO result = postService.searchPostByTitle(title);
-//            if (result.getTitle() != null){
-//                responseDTO.setData(result);
-//                responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-//            }else {
-//                throw new ResponseStatusException(HttpStatus.valueOf(404),"NOT_FOUND");
-//            }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
+    @GetMapping("get_all_post") // lấy post ko can có diều kiện trạng thái
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getAllPostNoCondition(@PathVariable String title){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<PostResponseDTO> postList = postService.getAllPostNoCondition();
+            responseDTO.setData(postList);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
     @GetMapping("search-post-by-Keyword/{keyWord}")
     @PermitAll

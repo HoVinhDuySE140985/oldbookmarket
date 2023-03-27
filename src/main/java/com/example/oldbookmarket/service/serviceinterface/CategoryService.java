@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
-import com.example.oldbookmarket.dto.respone.CategoryResponseDTO;
-import com.example.oldbookmarket.dto.respone.TopCategoryResponeDTO;
+import com.example.oldbookmarket.dto.response.categoryDTO.CategoryResponseDTO;
+import com.example.oldbookmarket.dto.response.categoryDTO.TopCategoryResponeDTO;
 import com.example.oldbookmarket.entity.Category;
 
 import java.util.List;

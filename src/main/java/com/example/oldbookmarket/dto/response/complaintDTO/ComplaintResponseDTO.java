@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.respone;
+package com.example.oldbookmarket.dto.response.complaintDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

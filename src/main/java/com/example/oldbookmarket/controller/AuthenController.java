@@ -4,17 +4,16 @@ import com.example.oldbookmarket.Jwt.JwtConfig;
 import com.example.oldbookmarket.dto.request.userDTO.LoginRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
-import com.example.oldbookmarket.dto.respone.LoginResponseDTO;
-import com.example.oldbookmarket.dto.respone.RegisterResponseDTO;
-import com.example.oldbookmarket.dto.respone.ResponseDTO;
-import com.example.oldbookmarket.dto.respone.UpdateUserResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.LoginResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
+import com.example.oldbookmarket.dto.response.ResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import io.jsonwebtoken.Jwts;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,7 +21,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.time.LocalDate;
@@ -124,5 +122,16 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("get_users_has_highest_order_complete")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getusersHashighestOrder(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
 }

@@ -30,7 +30,7 @@ public class Book {
     private String coverType;
     private String language;
     private String statusQuo; // đồng nghĩa với condition
-//    private String description;
+    private String description;
 
 
 

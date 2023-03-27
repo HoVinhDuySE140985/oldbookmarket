@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.ComplaintDTO.ComplaintRequestDTO;
-import com.example.oldbookmarket.dto.respone.ComplaintResponseDTO;
+import com.example.oldbookmarket.dto.response.complaintDTO.ComplaintResponseDTO;
 import com.example.oldbookmarket.entity.Complaint;
 import com.example.oldbookmarket.entity.Order;
 import com.example.oldbookmarket.entity.User;

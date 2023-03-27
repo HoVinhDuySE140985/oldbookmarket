@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.respone;
+package com.example.oldbookmarket.dto.response;
 
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.respone;
+package com.example.oldbookmarket.dto.response.postDTO;
 
 import com.example.oldbookmarket.entity.Book;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
-import com.example.oldbookmarket.dto.respone.BookImageResponseDTO;
-import com.example.oldbookmarket.dto.respone.BookResponseDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
 import com.example.oldbookmarket.entity.Book;
 import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.entity.User;
@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
                         .price(post.getPrice())
                         .bookExchange(post.getBookExchange())
                         .statusQuo(book.getStatusQuo())
-                        .description(post.getDescription())
+                        .description(book.getDescription())
                         .subcategoryName(post.getSubcategory().getName())
                         .userId(user.getId())
                         .userName(user.getName())

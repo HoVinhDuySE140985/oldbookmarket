@@ -21,4 +21,5 @@ public class BookRequestDTO {
     private String coverType;
     private String language;
     private String statusQuo;
+    private String description;
 }

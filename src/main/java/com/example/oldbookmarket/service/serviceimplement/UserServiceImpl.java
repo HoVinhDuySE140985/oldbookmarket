@@ -2,8 +2,8 @@ package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
-import com.example.oldbookmarket.dto.respone.RegisterResponseDTO;
-import com.example.oldbookmarket.dto.respone.UpdateUserResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.entity.UserStatus;
 import com.example.oldbookmarket.enumcode.StatusCode;

@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.respone;
+package com.example.oldbookmarket.dto.response.categoryDTO;
 
 import com.example.oldbookmarket.entity.Subcategory;
 import lombok.AllArgsConstructor;

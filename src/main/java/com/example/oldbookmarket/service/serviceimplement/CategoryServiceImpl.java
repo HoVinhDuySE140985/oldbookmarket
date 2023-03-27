@@ -1,9 +1,8 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
-import com.example.oldbookmarket.dto.respone.CategoryResponseDTO;
-import com.example.oldbookmarket.dto.respone.TopCategoryResponeDTO;
+import com.example.oldbookmarket.dto.response.categoryDTO.CategoryResponseDTO;
+import com.example.oldbookmarket.dto.response.categoryDTO.TopCategoryResponeDTO;
 import com.example.oldbookmarket.entity.Category;
-import com.example.oldbookmarket.entity.Subcategory;
 import com.example.oldbookmarket.repository.CategoryRepo;
 import com.example.oldbookmarket.repository.SubcategoryRepo;
 import com.example.oldbookmarket.service.serviceinterface.CategoryService;
@@ -67,7 +66,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<TopCategoryResponeDTO> getTopCatePublication() {
         List<TopCategoryResponeDTO> topCategoryResponseDTOS = null;
         try {
-            topCategoryResponseDTOS = categoryRepo.findTopCategoryByPost();
+//            topCategoryResponseDTOS = categoryRepo.findTopCategoryByPost();
         }catch (Exception e){
             e.printStackTrace();
         }

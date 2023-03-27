@@ -1,9 +1,9 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
-import com.example.oldbookmarket.dto.respone.BookImageResponseDTO;
-import com.example.oldbookmarket.dto.respone.BookResponseDTO;
-import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
+import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.BookService;
 import org.springframework.beans.factory.annotation.Autowired;

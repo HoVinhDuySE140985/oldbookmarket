@@ -1,15 +1,13 @@
 package com.example.oldbookmarket.controller;
 
-import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.entity.Subcategory;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
 import java.util.List;

@@ -1,8 +1,7 @@
 package com.example.oldbookmarket.controller;
 
-import com.example.oldbookmarket.dto.request.MomoDTO.MomoRequestDTO;
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
-import com.example.oldbookmarket.dto.respone.ResponseDTO;
+import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.MomoService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.ReportDTO.ReportRequestDTO;
-import com.example.oldbookmarket.dto.respone.ReportResponseDTO;
+import com.example.oldbookmarket.dto.response.reportDTO.ReportResponseDTO;
 import com.example.oldbookmarket.entity.Report;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.repository.ReportRepo;

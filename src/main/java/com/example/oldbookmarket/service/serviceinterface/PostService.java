@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
-import com.example.oldbookmarket.dto.respone.PostResponseDTO;
+import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ public interface PostService {
     PostResponseDTO updatePostStatus(Long id);
     PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO);
     List<PostResponseDTO> getAllPost();
+    List<PostResponseDTO> getAllPostNoCondition();
     List<PostResponseDTO> getAllMyPosts(Long userId);
     List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId);
     List<PostResponseDTO> searchPostByKeyWord(String keyWord);

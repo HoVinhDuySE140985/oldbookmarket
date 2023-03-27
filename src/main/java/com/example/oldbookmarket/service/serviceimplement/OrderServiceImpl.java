@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
-import com.example.oldbookmarket.dto.respone.OrderResponseDTO;
+import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.Address;
 import com.example.oldbookmarket.entity.Order;
 import com.example.oldbookmarket.entity.Post;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,11 +117,15 @@ public class OrderServiceImpl implements OrderService {
                 order.setStatus("receive");
                 return orderRepo.save(order);
             }
+            if (order.getStatus().equalsIgnoreCase("receive")) {
+                order.setStatus("complete");
+                return orderRepo.save(order);
+            }
             orderRepo.save(order);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return order;
     }
 
     @Override

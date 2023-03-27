@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.respone;
+package com.example.oldbookmarket.dto.response.userDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,17 +7,22 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UpdateUserResponseDTO {
-//    private Long id;
+@Data
+public class LoginResponseDTO {
+    private Long id;
     private String name;
-    private String phoneNumber;
     private String email;
+    private String phoneNumber;
     private String gender;
     private String imageUrl;
     private LocalDate dob;
     private String password;
+    private String accesstoken;
+
+
+
+
 }
