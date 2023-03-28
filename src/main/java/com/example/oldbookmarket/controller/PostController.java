@@ -92,7 +92,7 @@ public class PostController {
     }
 
     @PutMapping("staff/accept-post/{id}")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public ResponseEntity<ResponseDTO> acceptPost(@PathVariable Long id) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -106,7 +106,7 @@ public class PostController {
     }
 
     @PutMapping("staff/reject-post/{id}")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public ResponseEntity<ResponseDTO> rejectPost(@PathVariable Long id, String reasonReject) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {

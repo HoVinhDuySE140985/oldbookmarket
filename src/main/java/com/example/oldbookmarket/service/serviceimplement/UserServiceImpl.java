@@ -79,9 +79,8 @@ public class UserServiceImpl implements UserService {
     public UpdateUserResponseDTO updateUserInfo(UpdateUserRequestDTO updateUserRequestDTO) {
         UpdateUserResponseDTO updateUserResponseDTO = null;
         try {
-            User result = userRepo.getById(updateUserRequestDTO.getId());
-            if (result != null){
-                User user = new User();
+            User user = userRepo.getById(updateUserRequestDTO.getId());
+            if (user != null){
                 user.setName(updateUserRequestDTO.getName());
                 user.setEmail(updateUserRequestDTO.getEmail());
                 user.setImageUrl(updateUserRequestDTO.getImageUrl());
