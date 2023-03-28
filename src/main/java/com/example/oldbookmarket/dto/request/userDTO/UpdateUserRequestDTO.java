@@ -19,5 +19,5 @@ public class UpdateUserRequestDTO {
     private String gender;
     private String imageUrl;
     private LocalDate dob;
-    private String password;
+//    private String password;
 }

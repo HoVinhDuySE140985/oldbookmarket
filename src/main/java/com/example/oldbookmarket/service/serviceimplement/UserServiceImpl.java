@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
                 user.setPhoneNumber(updateUserRequestDTO.getPhoneNumber());
                 user.setDob(updateUserRequestDTO.getDob());
                 user.setGender(updateUserRequestDTO.getGender());
-                user.setPassword(encoder.encode(updateUserRequestDTO.getPassword()));
+//                user.setPassword(encoder.encode(updateUserRequestDTO.getPassword()));
                 user = userRepo.save(user);
 
                 updateUserResponseDTO = UpdateUserResponseDTO.builder()
