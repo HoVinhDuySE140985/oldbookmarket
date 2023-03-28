@@ -24,30 +24,63 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressResponseDTO createNewAddress(AddressRequestDTO addressRequestDTO) {
         AddressResponseDTO addressResponseDTO = null;
-//        addressResponseDTO.getProvince();
-//        addressResponseDTO.getWard();
-//        addressResponseDTO.getDistrict();
-//        addressResponseDTO.getCity();
-//        addressResponseDTO.getStreet();
         try {
+            Boolean f = false;
             User user = userRepo.getById(addressRequestDTO.getUserId());
-            Address address = new Address();
-            address.setCity(addressRequestDTO.getCity());
-            address.setDistrict(addressRequestDTO.getDistrict());
-            address.setProvince(addressRequestDTO.getProvince());
-            address.setWard(addressRequestDTO.getWard());
-            address.setStreet(addressRequestDTO.getStreet());
-            address.setStatus("ACTIVATE");
-            address.setUser(user);
-            address = addressRepo.save(address);
-            addressResponseDTO = AddressResponseDTO.builder()
-                    .id(address.getId())
-                    .city(address.getCity())
-                    .province(address.getProvince())
-                    .district(address.getDistrict())
-                    .ward(address.getWard())
-                    .street(address.getStreet())
-                    .build();
+            List<Address> result = addressRepo.findAllByUser_Id(addressRequestDTO.getUserId());
+            for (Address address: result) {
+                if (address.getProvince().equalsIgnoreCase(addressRequestDTO.getProvince()) && address.getCity().equalsIgnoreCase(addressRequestDTO.getCity()) &&
+                        address.getWard().equalsIgnoreCase(addressRequestDTO.getWard()) && address.getDistrict().equalsIgnoreCase(addressRequestDTO.getDistrict()) &&
+                        address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("DEACTIVATE")) {
+                    address.setStatus("ACTIVATE");
+                    addressRepo.save(address);
+                    addressResponseDTO = AddressResponseDTO.builder()
+                            .id(address.getId())
+                            .city(address.getCity())
+                            .province(address.getProvince())
+                            .district(address.getDistrict())
+                            .ward(address.getWard())
+                            .street(address.getStreet())
+                            .build();
+                    f = true;
+                }
+            }
+            if(!f) {
+                Address address = new Address();
+                address.setCity(addressRequestDTO.getCity());
+                address.setDistrict(addressRequestDTO.getDistrict());
+                address.setProvince(addressRequestDTO.getProvince());
+                address.setWard(addressRequestDTO.getWard());
+                address.setStreet(addressRequestDTO.getStreet());
+                address.setStatus("ACTIVATE");
+                address.setUser(user);
+                address = addressRepo.save(address);
+                addressResponseDTO = AddressResponseDTO.builder()
+                        .id(address.getId())
+                        .city(address.getCity())
+                        .province(address.getProvince())
+                        .district(address.getDistrict())
+                        .ward(address.getWard())
+                        .street(address.getStreet())
+                        .build();
+            }
+//            Address address = new Address();
+//            address.setCity(addressRequestDTO.getCity());
+//            address.setDistrict(addressRequestDTO.getDistrict());
+//            address.setProvince(addressRequestDTO.getProvince());
+//            address.setWard(addressRequestDTO.getWard());
+//            address.setStreet(addressRequestDTO.getStreet());
+//            address.setStatus("ACTIVATE");
+//            address.setUser(user);
+//            address = addressRepo.save(address);
+//            addressResponseDTO = AddressResponseDTO.builder()
+//                    .id(address.getId())
+//                    .city(address.getCity())
+//                    .province(address.getProvince())
+//                    .district(address.getDistrict())
+//                    .ward(address.getWard())
+//                    .street(address.getStreet())
+//                    .build();
         }catch (Exception e){
             e.printStackTrace();
         }
