@@ -11,6 +11,7 @@ import com.example.oldbookmarket.service.serviceinterface.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,11 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressResponseDTO createNewAddress(AddressRequestDTO addressRequestDTO) {
         AddressResponseDTO addressResponseDTO = null;
+//        addressResponseDTO.getProvince();
+//        addressResponseDTO.getWard();
+//        addressResponseDTO.getDistrict();
+//        addressResponseDTO.getCity();
+//        addressResponseDTO.getStreet();
         try {
             User user = userRepo.getById(addressRequestDTO.getUserId());
             Address address = new Address();
@@ -31,6 +37,7 @@ public class AddressServiceImpl implements AddressService {
             address.setProvince(addressRequestDTO.getProvince());
             address.setWard(addressRequestDTO.getWard());
             address.setStreet(addressRequestDTO.getStreet());
+            address.setStatus("ACTIVATE");
             address.setUser(user);
             address = addressRepo.save(address);
             addressResponseDTO = AddressResponseDTO.builder()
@@ -74,29 +81,44 @@ public class AddressServiceImpl implements AddressService {
         return addressResponseDTO;
     }
 
-//    @Override
-//    public Address updateAddressStatus(Long addressId) {
-//        Address address = new Address();
-//        try {
-//            address = addressRepo.getById(addressId);
-//            if (address!=null){
-//                address.setStatus("DEFAULT");
-//                address = addressRepo.save(address);
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return address;
-//    }
-
     @Override
-    public List<Address> getAllAddress(Long userId) {
-        List<Address> addressList = null;
+    public Address updateAddressStatus(Long addressId) {
+        Address address = new Address();
         try {
-            addressList = addressRepo.findAllByUser_Id(userId);
+            address = addressRepo.getById(addressId);
+            if (address!=null){
+                address.setStatus("DEACTIVATE");
+                address = addressRepo.save(address);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return addressList;
+        return address;
+    }
+
+    @Override
+    public List<AddressResponseDTO> getAllAddress(Long userId) {
+        List<Address> addressList = null;
+        List<AddressResponseDTO> addressResponseDTOS = new ArrayList<>();
+        try {
+            addressList = addressRepo.findAllByUser_Id(userId);
+            for (Address address: addressList) {
+                if(address.getStatus().equalsIgnoreCase("ACTIVATE")){
+                    AddressResponseDTO addressResponseDTO = AddressResponseDTO.builder()
+                            .id(address.getId())
+                            .province(address.getProvince())
+                            .city(address.getCity())
+                            .ward(address.getWard())
+                            .district(address.getDistrict())
+                            .street(address.getStreet())
+                            .Status(address.getStatus())
+                            .build();
+                    addressResponseDTOS.add(addressResponseDTO);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return addressResponseDTOS;
     }
 }

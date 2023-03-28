@@ -50,26 +50,26 @@ public class AddressController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @PutMapping("update-address-status/{addressId}")
-//    @PreAuthorize("hasRole('CUSTOMER')")
-//    public ResponseEntity<ResponseDTO> updateAddressStatus(@PathVariable Long addressId){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            Address address = addressService.updateAddressStatus(addressId);
-//            responseDTO.setData(address);
-//            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
+    @PutMapping("update-address-status/{addressId}")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> updateAddressStatus(@PathVariable Long addressId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            Address address = addressService.updateAddressStatus(addressId);
+            responseDTO.setData(address);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
     @GetMapping("get-all-address-By/{userId}")
     @PermitAll
     public ResponseEntity<ResponseDTO> getAllAdress(@PathVariable Long userId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<Address> addressList = addressService.getAllAddress(userId);
+            List<AddressResponseDTO> addressList = addressService.getAllAddress(userId);
             responseDTO.setData(addressList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
