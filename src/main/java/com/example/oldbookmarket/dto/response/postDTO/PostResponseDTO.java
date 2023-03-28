@@ -29,5 +29,5 @@ public class PostResponseDTO {
     private String userName;
 //    private Long subCategoryId;
 //    private Long categoryId;
-//    private String reasonReject;
+    private String reasonReject;
 }

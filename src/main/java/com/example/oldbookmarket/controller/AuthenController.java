@@ -7,6 +7,7 @@ import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.response.userDTO.LoginResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.enumcode.SuccessCode;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.PermitAll;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -124,10 +126,12 @@ public class AuthenController {
 
     @GetMapping("get_users_has_highest_order_complete")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getusersHashighestOrder(){
+    public ResponseEntity<ResponseDTO> getUsersHasHighestOrder(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-
+            List<TopUserResponseDTO> topUserResponseDTOS = userService.getAllUsersHasHighestOrder();
+            responseDTO.setData(topUserResponseDTOS);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
             e.printStackTrace();
         }

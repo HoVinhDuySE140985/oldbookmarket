@@ -3,6 +3,7 @@ package com.example.oldbookmarket.service.serviceimplement;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.entity.UserStatus;
@@ -14,6 +15,9 @@ import com.example.oldbookmarket.service.serviceinterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -112,5 +116,16 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return user;
+    }
+
+    @Override
+    public List<TopUserResponseDTO> getAllUsersHasHighestOrder() {
+        List<TopUserResponseDTO> topUserResponseDTOS = new ArrayList<>();
+        try {
+            topUserResponseDTOS = userRepo.findUsersHasHighestOrder();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return topUserResponseDTOS;
     }
 }

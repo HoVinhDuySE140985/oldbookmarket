@@ -3,8 +3,11 @@ package com.example.oldbookmarket.service.serviceinterface;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -15,4 +18,5 @@ public interface UserService {
     UpdateUserResponseDTO updateUserInfo(UpdateUserRequestDTO updateUserRequestDTO);
 
     User findUserById(Long id);
+    List<TopUserResponseDTO> getAllUsersHasHighestOrder();
 }

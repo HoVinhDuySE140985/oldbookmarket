@@ -82,16 +82,11 @@ public class PostServiceimpl implements PostService {
                     bookImageRepo.save(_bookImage);
                 }
             }
-
-//            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
             postResponseDTO = PostResponseDTO.builder()
                     .id(post.getId())
                     .title(post.getTitle())
                     .imageUrl(post.getImageUrl())
                     .form(post.getForm())
-//                    .categoryId(subcate.getCategory().getId())
-//                    .subCategoryId(post.getSubcategory().getId())
-//                    .bookList(post.getBooks())
                     .price(post.getPrice())
                     .location(post.getLocation())
                     .userId(post.getUser().getId())
@@ -175,10 +170,12 @@ public class PostServiceimpl implements PostService {
                 postResponseDTO.setTitle(post.getTitle());
                 postResponseDTO.setForm(post.getForm());
                 postResponseDTO.setImageUrl(post.getImageUrl());
+                postResponseDTO.setBookList(post.getBooks());
                 postResponseDTO.setLocation(post.getLocation());
                 postResponseDTO.setPrice(post.getPrice());
                 postResponseDTO.setStatus(post.getPostStatus());
                 postResponseDTO.setUserId(post.getUser().getId());
+                postResponseDTO.setUserName(post.getUser().getName());
                 postResponseDTOS.add(postResponseDTO);
             }
         } catch (Exception e) {
@@ -259,7 +256,7 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setPrice(post.getPrice());
             postResponseDTO.setLocation(post.getLocation());
             postResponseDTO.setStatus(post.getPostStatus());
-//            postResponeDTO.setReasonReject(post.getReasonReject());
+            postResponseDTO.setReasonReject(post.getReasonReject());
             postResponseDTO.setUserId(post.getUser().getId());
         } catch (Exception e) {
             e.printStackTrace();
