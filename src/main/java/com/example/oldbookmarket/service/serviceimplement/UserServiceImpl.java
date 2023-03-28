@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepo.getById(updateUserRequestDTO.getId());
             if (user != null){
                 user.setName(updateUserRequestDTO.getName());
-                user.setEmail(updateUserRequestDTO.getEmail());
+//                user.setEmail(updateUserRequestDTO.getEmail());
                 user.setImageUrl(updateUserRequestDTO.getImageUrl());
                 user.setPhoneNumber(updateUserRequestDTO.getPhoneNumber());
                 user.setDob(updateUserRequestDTO.getDob());
