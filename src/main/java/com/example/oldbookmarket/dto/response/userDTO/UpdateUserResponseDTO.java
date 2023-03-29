@@ -15,9 +15,9 @@ public class UpdateUserResponseDTO {
 //    private Long id;
     private String name;
     private String phoneNumber;
-    private String email;
+//    private String email;
     private String gender;
     private String imageUrl;
     private LocalDate dob;
-    private String password;
+//    private String password;
 }

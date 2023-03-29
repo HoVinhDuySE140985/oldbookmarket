@@ -92,12 +92,12 @@ public class UserServiceImpl implements UserService {
 
                 updateUserResponseDTO = UpdateUserResponseDTO.builder()
                         .name(user.getName())
-                        .email(user.getEmail())
+//                        .email(user.getEmail())
                         .imageUrl(user.getImageUrl())
                         .phoneNumber(user.getPhoneNumber())
                         .dob(user.getDob())
                         .gender(user.getGender())
-                        .password(user.getPassword())
+//                        .password(user.getPassword())
                         .build();
             }
         }catch (Exception e){
