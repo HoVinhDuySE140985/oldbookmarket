@@ -12,8 +12,6 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     List<Post> findAllByTitle(String title);
     @Query("select p from Post p where p.title LIKE %:keyWord%")
     List<Post> findByKeyWord(String keyWord);
-
     List<Post> findAllBySubcategory_Id(Long subcategoryId);
-
 
 }

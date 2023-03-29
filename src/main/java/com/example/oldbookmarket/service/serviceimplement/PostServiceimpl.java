@@ -245,11 +245,7 @@ public class PostServiceimpl implements PostService {
         List<Post> postList = null;
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
-            if (keyWord == null) {
-                postList = postRepo.findAll();
-            } else {
-                postList = postRepo.findByKeyWord(keyWord);
-            }
+            postList = postRepo.findByKeyWord(keyWord);
             for (Post post : postList) {
                 if (post.getPostStatus().equalsIgnoreCase("active")) {
                     PostResponseDTO postResponseDTO = new PostResponseDTO();
@@ -262,7 +258,6 @@ public class PostServiceimpl implements PostService {
                     postResponseDTO.setStatus(post.getPostStatus());
                     postResponseDTO.setUserId(post.getUser().getId());
                     postResponseDTO.setUserName(post.getUser().getName());
-
                     List<Book> bookList = post.getBooks();
                     List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
                     for (Book book : bookList) {
