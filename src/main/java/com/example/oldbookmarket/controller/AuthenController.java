@@ -1,14 +1,12 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.Jwt.JwtConfig;
+import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.LoginRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
-import com.example.oldbookmarket.dto.response.userDTO.LoginResponseDTO;
-import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.*;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
-import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
-import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
@@ -138,4 +136,17 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PutMapping("change_password")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequestDTO){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            ChangePasswordReponseDTO changePasswordReponseDTO = userService.changePassWord(changePasswordRequestDTO);
+            responseDTO.setData(changePasswordReponseDTO);
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

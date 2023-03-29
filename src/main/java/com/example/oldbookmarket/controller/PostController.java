@@ -6,6 +6,7 @@ import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -79,7 +80,7 @@ public class PostController {
 
     @GetMapping("search-post-by-Keyword/{keyWord}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord) {
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam String keyWord) {
         ResponseDTO responseDTO = new ResponseDTO();
         List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
         try {

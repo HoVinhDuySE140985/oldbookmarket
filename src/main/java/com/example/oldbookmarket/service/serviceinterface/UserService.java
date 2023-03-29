@@ -1,7 +1,9 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
+import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
+import com.example.oldbookmarket.dto.response.userDTO.ChangePasswordReponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
@@ -19,4 +21,6 @@ public interface UserService {
 
     User findUserById(Long id);
     List<TopUserResponseDTO> getAllUsersHasHighestOrder();
+
+    ChangePasswordReponseDTO changePassWord(ChangePasswordRequestDTO changePasswordRequestDTO);
 }
