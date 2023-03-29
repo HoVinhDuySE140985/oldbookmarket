@@ -80,7 +80,7 @@ public class PostController {
 
     @GetMapping("search-post-by-Keyword/{keyWord}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam String keyWord) {
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord) {
         ResponseDTO responseDTO = new ResponseDTO();
         List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
         try {
