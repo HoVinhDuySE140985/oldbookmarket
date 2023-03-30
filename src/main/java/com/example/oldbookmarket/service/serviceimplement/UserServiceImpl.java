@@ -13,6 +13,7 @@ import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.repository.UserStatusRepo;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -126,5 +127,17 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return topUserResponseDTOS;
+    }
+
+    @Override
+    public Boolean isExistUserByEmail(String email) {
+        // TODO Auto-generated method stub
+        // throw new UnsupportedOperationException("Unimplemented method 'isExistUserByEmail'");
+
+        User user = userRepo.findUserByEmail(email);
+        if(user != null){
+            return true;
+        }
+        return false;
     }
 }
