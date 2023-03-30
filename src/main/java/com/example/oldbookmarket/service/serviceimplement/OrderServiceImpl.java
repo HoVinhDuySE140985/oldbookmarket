@@ -159,13 +159,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponseDTO addToOrder(String orderId, String userId,String addressId) {
+    public OrderResponseDTO addToOrder(Long orderId, Long userId,Long addressId) {
         OrderResponseDTO orderResponseDTO = null;
         try {
-            Order order = orderRepo.findById(Long.parseLong(orderId)).get();
+            Order order = orderRepo.findById(orderId).get();
             if (order != null){
-                User user = userRepo.findById(Long.parseLong(userId)).get();
-                Address address = addressRepo.findById(Long.parseLong(addressId)).get();
+                User user = userRepo.findById(userId).get();
+                Address address = addressRepo.findById(addressId).get();
                 String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
                 order.setUser(user);
                 order.setShipAddress(shipadrress);

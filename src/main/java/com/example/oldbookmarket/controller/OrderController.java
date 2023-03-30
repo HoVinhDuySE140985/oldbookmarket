@@ -37,9 +37,9 @@ public class OrderController {
     }
 
     @GetMapping ("add_user_to_order/{orderId}/{userId}/{addressId}")
-    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable String orderId,
-                                                      @PathVariable String userId,
-                                                      @PathVariable String addressId){
+    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable Long orderId,
+                                                      @PathVariable Long userId,
+                                                      @PathVariable Long addressId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             OrderResponseDTO finalOrderResponseDTO = orderService.addToOrder(orderId,userId,addressId);

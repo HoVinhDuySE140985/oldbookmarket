@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class ResponseDTO {
     private SuccessCode successCode;
     private Object data;
+    private Integer result;
 }

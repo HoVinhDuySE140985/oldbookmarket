@@ -85,6 +85,7 @@ public class PostController {
         List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
         try {
             responseDTO.setData(resultList);
+            responseDTO.setResult(resultList.size());
             responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();

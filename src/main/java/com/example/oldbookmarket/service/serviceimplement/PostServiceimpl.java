@@ -7,6 +7,7 @@ import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
+import org.hibernate.annotations.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -242,6 +243,7 @@ public class PostServiceimpl implements PostService {
 
     @Override
     public List<PostResponseDTO> searchPostByKeyWord(String keyWord) {
+//        Integer count = 0;
         List<Post> postList = null;
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
