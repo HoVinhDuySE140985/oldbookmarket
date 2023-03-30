@@ -20,6 +20,9 @@ public interface UserService {
     UpdateUserResponseDTO updateUserInfo(UpdateUserRequestDTO updateUserRequestDTO);
 
     User findUserById(Long id);
+
+    Boolean isExistUserByEmail(String email);
+
     List<TopUserResponseDTO> getAllUsersHasHighestOrder();
 
     ChangePasswordReponseDTO changePassWord(ChangePasswordRequestDTO changePasswordRequestDTO);

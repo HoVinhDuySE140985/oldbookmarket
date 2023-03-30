@@ -95,7 +95,6 @@ public class AuthenController {
     }
 
     @PutMapping("update-user-infor")
-    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {

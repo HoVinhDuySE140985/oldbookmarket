@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MyUserService implements UserDetailsService {
+    
     @Autowired
     UserRepo userRepo;
 

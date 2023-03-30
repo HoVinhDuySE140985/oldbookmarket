@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         return topUserResponseDTOS;
     }
 
-    @Override
+
     public ChangePasswordReponseDTO changePassWord(ChangePasswordRequestDTO changePasswordRequestDTO) {
         ChangePasswordReponseDTO changePasswordReponseDTO = null;
         try {
@@ -161,9 +161,14 @@ public class UserServiceImpl implements UserService {
         }
         return changePasswordReponseDTO;
     }
+    public Boolean isExistUserByEmail(String email) {
+        // TODO Auto-generated method stub
+        // throw new UnsupportedOperationException("Unimplemented method 'isExistUserByEmail'");
 
-//    public static void main(String[] args) {
-//        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        System.out.println(passwordEncoder.matches("1","$2a$12$jIckQMZ5dxnabEPJq/pctu46Wg2wKPB82C9AFNaUbNN3.2Hr/Pr26"));
-//    }
+        User user = userRepo.findUserByEmail(email);
+        if(user != null){
+            return true;
+        }
+        return false;
+    }
 }
