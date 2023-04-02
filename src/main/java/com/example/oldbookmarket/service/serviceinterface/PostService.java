@@ -11,9 +11,9 @@ public interface PostService {
     PostResponseDTO rejectPost(Long id, String reasonReject);
     PostResponseDTO updatePostStatus(Long id);
     PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO);
-    List<PostResponseDTO> getAllPost();
+    List<PostResponseDTO> getAllPost(String sortBy, String filter);
     List<PostResponseDTO> getAllPostNoCondition();
     List<PostResponseDTO> getAllMyPosts(Long userId);
     List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId);
-    List<PostResponseDTO> searchPostByKeyWord(String keyWord);
+    List<PostResponseDTO> searchPostByKeyWord(String keyWord,String sortBy, String filter);
 }

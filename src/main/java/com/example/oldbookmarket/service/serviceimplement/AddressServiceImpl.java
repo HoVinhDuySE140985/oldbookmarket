@@ -3,9 +3,12 @@ package com.example.oldbookmarket.service.serviceimplement;
 import com.example.oldbookmarket.dto.request.addressDTO.AddressRequestDTO;
 import com.example.oldbookmarket.dto.request.addressDTO.UpdateAddressRequestDTO;
 import com.example.oldbookmarket.dto.response.addressDTO.AddressResponseDTO;
+import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.entity.Address;
+import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.repository.AddressRepo;
+import com.example.oldbookmarket.repository.PostRepo;
 import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,11 @@ public class AddressServiceImpl implements AddressService {
     AddressRepo addressRepo;
 
     @Autowired
+    PostRepo postRepo;
+
+    @Autowired
     UserRepo userRepo;
+
     @Override
     public AddressResponseDTO createNewAddress(AddressRequestDTO addressRequestDTO) {
         AddressResponseDTO addressResponseDTO = null;
@@ -64,23 +71,6 @@ public class AddressServiceImpl implements AddressService {
                         .street(address.getStreet())
                         .build();
             }
-//            Address address = new Address();
-//            address.setCity(addressRequestDTO.getCity());
-//            address.setDistrict(addressRequestDTO.getDistrict());
-//            address.setProvince(addressRequestDTO.getProvince());
-//            address.setWard(addressRequestDTO.getWard());
-//            address.setStreet(addressRequestDTO.getStreet());
-//            address.setStatus("ACTIVATE");
-//            address.setUser(user);
-//            address = addressRepo.save(address);
-//            addressResponseDTO = AddressResponseDTO.builder()
-//                    .id(address.getId())
-//                    .city(address.getCity())
-//                    .province(address.getProvince())
-//                    .district(address.getDistrict())
-//                    .ward(address.getWard())
-//                    .street(address.getStreet())
-//                    .build();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -153,5 +143,16 @@ public class AddressServiceImpl implements AddressService {
             e.printStackTrace();
         }
         return addressResponseDTOS;
+    }
+
+    @Override
+    public List<String> getAllCityInPosts() {
+        List<String> listCities = new ArrayList<>();
+        try {
+            listCities = postRepo.findAllCity();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listCities;
     }
 }

@@ -4,6 +4,7 @@ import com.example.oldbookmarket.dto.request.addressDTO.AddressRequestDTO;
 import com.example.oldbookmarket.dto.request.addressDTO.UpdateAddressRequestDTO;
 import com.example.oldbookmarket.dto.response.addressDTO.AddressResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
+import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.entity.Address;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.AddressService;
@@ -76,5 +77,19 @@ public class AddressController {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("get_all_city_in_list_post")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getAllCityInPosts(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<String> listCities = addressService.getAllCityInPosts();
+            responseDTO.setData(listCities);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  ResponseEntity.ok().body(responseDTO);
     }
 }

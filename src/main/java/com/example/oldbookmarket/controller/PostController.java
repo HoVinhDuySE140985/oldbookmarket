@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
+import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
@@ -36,14 +37,16 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-post") // nhung post có trang thái active
+    @GetMapping("get-all-post/{sortBy}/{filter}") // nhung post có trang thái active
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPost() {
+    public ResponseEntity<ResponseDTO> getAllPost( @PathVariable String sortBy,
+                                                   @PathVariable String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> postList = postService.getAllPost();
+            List<PostResponseDTO> postList = postService.getAllPost(sortBy,filter);
             responseDTO.setData(postList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(postList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,6 +61,7 @@ public class PostController {
             List<PostResponseDTO> myPostList = postService.getAllMyPosts(userId);
             responseDTO.setData(myPostList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(myPostList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,11 +82,13 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("search-post-by-Keyword/{keyWord}")
+    @GetMapping("search-post-by-Keyword/{keyWord}/{sortBy}/{filter}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord) {
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord,
+                                                           @PathVariable String sortBy,
+                                                           @PathVariable String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
-        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
+        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord,sortBy,filter);
         try {
             responseDTO.setData(resultList);
             responseDTO.setResult(resultList.size());
@@ -162,4 +168,5 @@ public class PostController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
 }

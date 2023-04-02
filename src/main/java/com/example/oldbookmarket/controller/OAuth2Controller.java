@@ -29,7 +29,7 @@ import com.example.oldbookmarket.service.serviceinterface.UserService;
 import io.jsonwebtoken.Jwts;
 
 @RestController
-@RequestMapping("/api/auth/login_google")
+@RequestMapping("/api/auth")
 public class OAuth2Controller {
 
     private final Logger logger = LoggerFactory.getLogger(OAuth2Controller.class);
@@ -42,15 +42,6 @@ public class OAuth2Controller {
     JwtConfig jwtConfig;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    // @Autowired
-    // public AuthenController(AuthenticationManager authenticationManager,
-    // UserService userService, JwtConfig jwtConfig, PasswordEncoder
-    // passwordEncoder) {
-    // this.authenticationManager = authenticationManager;
-    // this.userService = userService;
-    // this.jwtConfig = jwtConfig;
-    // }
 
     @PostMapping("/login_google")
     public ResponseEntity<ResponseDTO> authenticate(@RequestBody OAuth2Request data) {
