@@ -84,7 +84,7 @@ public class PostController {
 
     @GetMapping("search-post-by-Keyword/{keyWord}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord,
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam(required = false) String keyWord,
                                                            @RequestParam(required = false) String sortBy,
                                                            @RequestParam(required = false) String filter) {
         ResponseDTO responseDTO = new ResponseDTO();

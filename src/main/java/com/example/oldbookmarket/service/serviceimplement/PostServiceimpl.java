@@ -105,7 +105,6 @@ public class PostServiceimpl implements PostService {
     public List<PostResponseDTO> getAllPost(String sortBy, String filter) {
         List<Post> postList = null;
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
-        Boolean check = false;
         try {
             if (sortBy.equalsIgnoreCase("null")) {
                 postList = postRepo.findAll();
@@ -118,7 +117,6 @@ public class PostServiceimpl implements PostService {
             }
             if (!filter.equalsIgnoreCase("null")) {
                 for (Post post : postList) {
-
                     if (post.getPostStatus().equalsIgnoreCase("active") && post.getLocation().equalsIgnoreCase(filter)) {
                         PostResponseDTO postResponseDTO = new PostResponseDTO();
                         postResponseDTO.setId(post.getId());
@@ -295,14 +293,28 @@ public class PostServiceimpl implements PostService {
         List<Post> postList = new ArrayList<>();
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
-            if (sortBy.equalsIgnoreCase("null")) {
+            //nếu key null và sort null
+            if (keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("null")){
+                postList = postRepo.findAll();
+            }
+            //nếu key null và sort tăng
+            if (keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("tăng dần")) {
+                postList = postRepo.findAll(Sort.by("price").ascending());
+            }
+            //nếu key null và sort giảm
+            if (keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("giảm dần")) {
+                postList = postRepo.findAll(Sort.by("price").descending());
+            }
+            //nếu key != null và sort null
+            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("null")) {
                 postList = postRepo.findByKeyWord(keyWord);
-                System.out.println(postList.size());
             }
-            if (sortBy.equalsIgnoreCase("tăng dần")) {
-                postList = postRepo.findByKeyWord(keyWord, Sort.by("price").ascending());
+            // nếu key != null và sort tăng
+            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("tăng dần")){
+                postList = postRepo.findByKeyWord(keyWord,Sort.by("price").ascending());
             }
-            if (sortBy.equalsIgnoreCase("giảm dần")) {
+            // nếu key!= null và sort giam
+            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("giảm dần")){
                 postList = postRepo.findByKeyWord(keyWord, Sort.by("price").descending());
             }
             if (!filter.equalsIgnoreCase("null")) {
