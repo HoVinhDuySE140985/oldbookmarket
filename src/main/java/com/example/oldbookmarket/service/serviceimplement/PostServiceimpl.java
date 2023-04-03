@@ -101,98 +101,98 @@ public class PostServiceimpl implements PostService {
         return postResponseDTO;
     }
 
-    @Override
-    public List<PostResponseDTO> getAllPost(String sortBy, String filter) {
-        List<Post> postList = null;
-        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
-        try {
-            if (sortBy.equalsIgnoreCase("null")) {
-                postList = postRepo.findAll();
-            }
-            if (sortBy.equalsIgnoreCase("giảm dần")) {
-                postList = postRepo.findAll(Sort.by("price").descending());
-            }
-            if (sortBy.equalsIgnoreCase("tăng dần")) {
-                postList = postRepo.findAll(Sort.by("price").ascending());
-            }
-            if (!filter.equalsIgnoreCase("null")) {
-                for (Post post : postList) {
-                    if (post.getPostStatus().equalsIgnoreCase("active") && post.getLocation().equalsIgnoreCase(filter)) {
-                        PostResponseDTO postResponseDTO = new PostResponseDTO();
-                        postResponseDTO.setId(post.getId());
-                        postResponseDTO.setTitle(post.getTitle());
-                        postResponseDTO.setForm(post.getForm());
-                        postResponseDTO.setImageUrl(post.getImageUrl());
-                        postResponseDTO.setLocation(post.getLocation());
-                        postResponseDTO.setPrice(post.getPrice());
-                        postResponseDTO.setStatus(post.getPostStatus());
-                        postResponseDTO.setUserId(post.getUser().getId());
-                        postResponseDTO.setUserName(post.getUser().getName());
-                        List<Book> bookList = post.getBooks();
-                        List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
-                        for (Book book : bookList) {
-                            BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
-                                    .bookId(book.getId())
-                                    .name(book.getName())
-                                    .coverType(book.getCoverType())
-                                    .description(book.getDescription())
-                                    .isbn(book.getIsbn())
-                                    .publicationDate(book.getPublicationDate())
-                                    .bookExchange(post.getBookExchange())
-                                    .publicCompany(book.getPublicCompany())
-                                    .statusQuo(book.getStatusQuo())
-                                    .language(book.getLanguage())
-                                    .author(book.getAuthor())
-                                    .imageBook(book.getImageList())
-                                    .build();
-                            bookPendingResponseDTOS.add(responseDTO);
-                        }
-                        postResponseDTO.setBookList(bookPendingResponseDTOS);
-                        postResponseDTOS.add(postResponseDTO);
-                    }
-                }
-            } else {
-                for (Post post : postList) {
-                    if (post.getPostStatus().equalsIgnoreCase("active")) {
-                        PostResponseDTO postResponseDTO = new PostResponseDTO();
-                        postResponseDTO.setId(post.getId());
-                        postResponseDTO.setTitle(post.getTitle());
-                        postResponseDTO.setForm(post.getForm());
-                        postResponseDTO.setImageUrl(post.getImageUrl());
-                        postResponseDTO.setLocation(post.getLocation());
-                        postResponseDTO.setPrice(post.getPrice());
-                        postResponseDTO.setStatus(post.getPostStatus());
-                        postResponseDTO.setUserId(post.getUser().getId());
-                        postResponseDTO.setUserName(post.getUser().getName());
-                        List<Book> bookList = post.getBooks();
-                        List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
-                        for (Book book : bookList) {
-                            BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
-                                    .bookId(book.getId())
-                                    .name(book.getName())
-                                    .coverType(book.getCoverType())
-                                    .description(book.getDescription())
-                                    .isbn(book.getIsbn())
-                                    .publicationDate(book.getPublicationDate())
-                                    .bookExchange(post.getBookExchange())
-                                    .publicCompany(book.getPublicCompany())
-                                    .statusQuo(book.getStatusQuo())
-                                    .language(book.getLanguage())
-                                    .author(book.getAuthor())
-                                    .imageBook(book.getImageList())
-                                    .build();
-                            bookPendingResponseDTOS.add(responseDTO);
-                        }
-                        postResponseDTO.setBookList(bookPendingResponseDTOS);
-                        postResponseDTOS.add(postResponseDTO);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return postResponseDTOS;
-    }
+//    @Override
+//    public List<PostResponseDTO> getAllPost(String sortBy, String filter) {
+//        List<Post> postList = null;
+//        List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
+//        try {
+//            if (sortBy.equalsIgnoreCase("null")) {
+//                postList = postRepo.findAll();
+//            }
+//            if (sortBy.equalsIgnoreCase("giảm dần")) {
+//                postList = postRepo.findAll(Sort.by("price").descending());
+//            }
+//            if (sortBy.equalsIgnoreCase("tăng dần")) {
+//                postList = postRepo.findAll(Sort.by("price").ascending());
+//            }
+//            if (!filter.equalsIgnoreCase("null")) {
+//                for (Post post : postList) {
+//                    if (post.getPostStatus().equalsIgnoreCase("active") && post.getLocation().equalsIgnoreCase(filter)) {
+//                        PostResponseDTO postResponseDTO = new PostResponseDTO();
+//                        postResponseDTO.setId(post.getId());
+//                        postResponseDTO.setTitle(post.getTitle());
+//                        postResponseDTO.setForm(post.getForm());
+//                        postResponseDTO.setImageUrl(post.getImageUrl());
+//                        postResponseDTO.setLocation(post.getLocation());
+//                        postResponseDTO.setPrice(post.getPrice());
+//                        postResponseDTO.setStatus(post.getPostStatus());
+//                        postResponseDTO.setUserId(post.getUser().getId());
+//                        postResponseDTO.setUserName(post.getUser().getName());
+//                        List<Book> bookList = post.getBooks();
+//                        List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
+//                        for (Book book : bookList) {
+//                            BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+//                                    .bookId(book.getId())
+//                                    .name(book.getName())
+//                                    .coverType(book.getCoverType())
+//                                    .description(book.getDescription())
+//                                    .isbn(book.getIsbn())
+//                                    .publicationDate(book.getPublicationDate())
+//                                    .bookExchange(post.getBookExchange())
+//                                    .publicCompany(book.getPublicCompany())
+//                                    .statusQuo(book.getStatusQuo())
+//                                    .language(book.getLanguage())
+//                                    .author(book.getAuthor())
+//                                    .imageBook(book.getImageList())
+//                                    .build();
+//                            bookPendingResponseDTOS.add(responseDTO);
+//                        }
+//                        postResponseDTO.setBookList(bookPendingResponseDTOS);
+//                        postResponseDTOS.add(postResponseDTO);
+//                    }
+//                }
+//            } else {
+//                for (Post post : postList) {
+//                    if (post.getPostStatus().equalsIgnoreCase("active")) {
+//                        PostResponseDTO postResponseDTO = new PostResponseDTO();
+//                        postResponseDTO.setId(post.getId());
+//                        postResponseDTO.setTitle(post.getTitle());
+//                        postResponseDTO.setForm(post.getForm());
+//                        postResponseDTO.setImageUrl(post.getImageUrl());
+//                        postResponseDTO.setLocation(post.getLocation());
+//                        postResponseDTO.setPrice(post.getPrice());
+//                        postResponseDTO.setStatus(post.getPostStatus());
+//                        postResponseDTO.setUserId(post.getUser().getId());
+//                        postResponseDTO.setUserName(post.getUser().getName());
+//                        List<Book> bookList = post.getBooks();
+//                        List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
+//                        for (Book book : bookList) {
+//                            BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+//                                    .bookId(book.getId())
+//                                    .name(book.getName())
+//                                    .coverType(book.getCoverType())
+//                                    .description(book.getDescription())
+//                                    .isbn(book.getIsbn())
+//                                    .publicationDate(book.getPublicationDate())
+//                                    .bookExchange(post.getBookExchange())
+//                                    .publicCompany(book.getPublicCompany())
+//                                    .statusQuo(book.getStatusQuo())
+//                                    .language(book.getLanguage())
+//                                    .author(book.getAuthor())
+//                                    .imageBook(book.getImageList())
+//                                    .build();
+//                            bookPendingResponseDTOS.add(responseDTO);
+//                        }
+//                        postResponseDTO.setBookList(bookPendingResponseDTOS);
+//                        postResponseDTOS.add(postResponseDTO);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return postResponseDTOS;
+//    }
 
     @Override
     public List<PostResponseDTO> getAllMyPosts(Long userId) {
@@ -294,7 +294,7 @@ public class PostServiceimpl implements PostService {
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
             //nếu key null và sort null
-            if (keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("null")){
+            if (keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("null")) {
                 postList = postRepo.findAll();
             }
             //nếu key null và sort tăng
@@ -310,11 +310,11 @@ public class PostServiceimpl implements PostService {
                 postList = postRepo.findByKeyWord(keyWord);
             }
             // nếu key != null và sort tăng
-            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("tăng dần")){
-                postList = postRepo.findByKeyWord(keyWord,Sort.by("price").ascending());
+            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("tăng dần")) {
+                postList = postRepo.findByKeyWord(keyWord, Sort.by("price").ascending());
             }
             // nếu key!= null và sort giam
-            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("giảm dần")){
+            if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("giảm dần")) {
                 postList = postRepo.findByKeyWord(keyWord, Sort.by("price").descending());
             }
             if (!filter.equalsIgnoreCase("null")) {
@@ -353,7 +353,7 @@ public class PostServiceimpl implements PostService {
                         postResponseDTOS.add(postResponseDTO);
                     }
                 }
-            }else {
+            } else {
                 for (Post post : postList) {
                     if (post.getPostStatus().equalsIgnoreCase("active")) {
                         PostResponseDTO postResponseDTO = new PostResponseDTO();
@@ -497,45 +497,94 @@ public class PostServiceimpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId) {
+    public List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId, String sortBy, String filter) {
         List<Post> postList = null;
         List<PostResponseDTO> postResponseDTOS = new ArrayList<>();
         try {
-            postList = postRepo.findAllBySubcategory_Id(subcategoryId);
-            for (Post post : postList) {
-                PostResponseDTO postResponseDTO = new PostResponseDTO();
-                postResponseDTO.setId(post.getId());
-                postResponseDTO.setTitle(post.getTitle());
-                postResponseDTO.setForm(post.getForm());
-                postResponseDTO.setImageUrl(post.getImageUrl());
-                postResponseDTO.setLocation(post.getLocation());
-                postResponseDTO.setPrice(post.getPrice());
-                postResponseDTO.setStatus(post.getPostStatus());
-                postResponseDTO.setUserId(post.getUser().getId());
-                postResponseDTO.setUserName(post.getUser().getName());
-
-                List<Book> bookList = post.getBooks();
-                List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
-                for (Book book : bookList) {
-                    BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
-                            .bookId(book.getId())
-                            .name(book.getName())
-                            .coverType(book.getCoverType())
-                            .description(book.getDescription())
-                            .isbn(book.getIsbn())
-                            .publicationDate(book.getPublicationDate())
-                            .bookExchange(post.getBookExchange())
-                            .publicCompany(book.getPublicCompany())
-                            .statusQuo(book.getStatusQuo())
-                            .language(book.getLanguage())
-                            .author(book.getAuthor())
-                            .imageBook(book.getImageList())
-                            .build();
-                    bookPendingResponseDTOS.add(responseDTO);
-                }
-                postResponseDTO.setBookList(bookPendingResponseDTOS);
-                postResponseDTOS.add(postResponseDTO);
+            if (sortBy.equalsIgnoreCase("null")) {
+                postList = postRepo.findAllBySubcategory_Id(subcategoryId);
             }
+            if (sortBy.equalsIgnoreCase("tăng dần")) {
+                postList = postRepo.findAllBySubcategory_Id(subcategoryId, Sort.by("price").ascending());
+            }
+            if (sortBy.equalsIgnoreCase("giảm dần")) {
+                postList = postRepo.findAllBySubcategory_Id(subcategoryId, Sort.by("price").descending());
+            }
+            if (!filter.equalsIgnoreCase("null")) {
+                for (Post post : postList) {
+                    if (post.getPostStatus().equalsIgnoreCase("active") && post.getLocation().equalsIgnoreCase(filter)) {
+                        PostResponseDTO postResponseDTO = new PostResponseDTO();
+                        postResponseDTO.setId(post.getId());
+                        postResponseDTO.setTitle(post.getTitle());
+                        postResponseDTO.setForm(post.getForm());
+                        postResponseDTO.setImageUrl(post.getImageUrl());
+                        postResponseDTO.setLocation(post.getLocation());
+                        postResponseDTO.setPrice(post.getPrice());
+                        postResponseDTO.setStatus(post.getPostStatus());
+                        postResponseDTO.setUserId(post.getUser().getId());
+                        postResponseDTO.setUserName(post.getUser().getName());
+
+                        List<Book> bookList = post.getBooks();
+                        List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
+                        for (Book book : bookList) {
+                            BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+                                    .bookId(book.getId())
+                                    .name(book.getName())
+                                    .coverType(book.getCoverType())
+                                    .description(book.getDescription())
+                                    .isbn(book.getIsbn())
+                                    .publicationDate(book.getPublicationDate())
+                                    .bookExchange(post.getBookExchange())
+                                    .publicCompany(book.getPublicCompany())
+                                    .statusQuo(book.getStatusQuo())
+                                    .language(book.getLanguage())
+                                    .author(book.getAuthor())
+                                    .imageBook(book.getImageList())
+                                    .build();
+                            bookPendingResponseDTOS.add(responseDTO);
+                        }
+                        postResponseDTO.setBookList(bookPendingResponseDTOS);
+                        postResponseDTOS.add(postResponseDTO);
+                    }
+                }
+            } else {
+                for (Post post : postList) {
+                    if (post.getPostStatus().equalsIgnoreCase("active")) {
+                        PostResponseDTO postResponseDTO = new PostResponseDTO();
+                        postResponseDTO.setId(post.getId());
+                        postResponseDTO.setTitle(post.getTitle());
+                        postResponseDTO.setForm(post.getForm());
+                        postResponseDTO.setImageUrl(post.getImageUrl());
+                        postResponseDTO.setLocation(post.getLocation());
+                        postResponseDTO.setPrice(post.getPrice());
+                        postResponseDTO.setStatus(post.getPostStatus());
+                        postResponseDTO.setUserId(post.getUser().getId());
+                        postResponseDTO.setUserName(post.getUser().getName());
+                        List<Book> bookList = post.getBooks();
+                        List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
+                        for (Book book : bookList) {
+                            BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+                                    .bookId(book.getId())
+                                    .name(book.getName())
+                                    .coverType(book.getCoverType())
+                                    .description(book.getDescription())
+                                    .isbn(book.getIsbn())
+                                    .publicationDate(book.getPublicationDate())
+                                    .bookExchange(post.getBookExchange())
+                                    .publicCompany(book.getPublicCompany())
+                                    .statusQuo(book.getStatusQuo())
+                                    .language(book.getLanguage())
+                                    .author(book.getAuthor())
+                                    .imageBook(book.getImageList())
+                                    .build();
+                            bookPendingResponseDTOS.add(responseDTO);
+                        }
+                        postResponseDTO.setBookList(bookPendingResponseDTOS);
+                        postResponseDTOS.add(postResponseDTO);
+                    }
+                }
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();

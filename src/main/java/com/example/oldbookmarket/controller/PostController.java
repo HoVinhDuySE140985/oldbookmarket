@@ -37,21 +37,21 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-post") // nhung post có trang thái active
-    @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPost( @RequestParam(required = false) String sortBy,
-                                                   @RequestParam(required = false) String filter) {
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            List<PostResponseDTO> postList = postService.getAllPost(sortBy,filter);
-            responseDTO.setData(postList);
-            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-            responseDTO.setResult(postList.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @GetMapping("get-all-post") // nhung post có trang thái active
+//    @PermitAll
+//    public ResponseEntity<ResponseDTO> getAllPost( @RequestParam(required = false) String sortBy,
+//                                                   @RequestParam(required = false) String filter) {
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            List<PostResponseDTO> postList = postService.getAllPost(sortBy,filter);
+//            responseDTO.setData(postList);
+//            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+//            responseDTO.setResult(postList.size());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     @GetMapping("get-all-my-post/{userId}")
     @PreAuthorize("hasRole('CUSTOMER')")
@@ -157,12 +157,15 @@ public class PostController {
 
     @GetMapping("get_all_post_by/{subcategoryId}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@PathVariable Long subcategoryId){
+    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@PathVariable Long subcategoryId,
+                                                               @RequestParam(required = false) String sortBy,
+                                                               @RequestParam(required = false) String filter){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId);
+            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId,sortBy,filter);
             responseDTO.setData(postResponseDTOs);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(postResponseDTOs.size());
         }catch (Exception e){
             e.printStackTrace();
         }

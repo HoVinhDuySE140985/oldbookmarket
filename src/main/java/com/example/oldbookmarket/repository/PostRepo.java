@@ -22,5 +22,6 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     List<Post> findByKeyWord(String keyWord);
 
     List<Post> findAllBySubcategory_Id(Long subcategoryId);
+    List<Post> findAllBySubcategory_Id(Long subcategoryId,Sort sort);
 
 }
