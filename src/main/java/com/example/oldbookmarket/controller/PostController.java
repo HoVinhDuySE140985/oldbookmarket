@@ -37,10 +37,10 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-post/{sortBy}/{filter}") // nhung post có trang thái active
+    @GetMapping("get-all-post") // nhung post có trang thái active
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPost( @PathVariable String sortBy,
-                                                   @PathVariable String filter) {
+    public ResponseEntity<ResponseDTO> getAllPost( @RequestParam(required = false) String sortBy,
+                                                   @RequestParam(required = false) String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> postList = postService.getAllPost(sortBy,filter);
@@ -85,8 +85,8 @@ public class PostController {
     @GetMapping("search-post-by-Keyword/{keyWord}/{sortBy}/{filter}")
     @PermitAll
     public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord,
-                                                           @PathVariable String sortBy,
-                                                           @PathVariable String filter) {
+                                                           @RequestParam(required = false) String sortBy,
+                                                           @RequestParam(required = false) String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
         List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord,sortBy,filter);
         try {
