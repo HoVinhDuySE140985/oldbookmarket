@@ -15,12 +15,11 @@ import java.time.LocalDate;
 public class AddOrderRequestDTO {
     private Long postId;
     private Long userId;
-//    private Long addressId;
-    private LocalDate orderDate;
-    private BigDecimal amount;
+    private String paymentMethod;
+//    private LocalDate orderDate;
+//    private BigDecimal amount;
     private String note;
     private String successUrl;
     private String failUrl;
-//    private String status;
-
+    private String shipAddress;
 }

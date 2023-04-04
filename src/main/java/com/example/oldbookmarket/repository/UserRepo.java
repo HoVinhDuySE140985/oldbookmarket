@@ -20,4 +20,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
             "order by  count(o.post.id) desc")
     List<TopUserResponseDTO> findUsersHasHighestOrder();
 
+    User findUserByRole_Id(Long id);
+
 }

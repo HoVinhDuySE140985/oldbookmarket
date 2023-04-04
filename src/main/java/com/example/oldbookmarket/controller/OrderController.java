@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.util.List;
 
 @RestController
@@ -52,11 +53,11 @@ public class OrderController {
     }
 
     @PutMapping("convert-order-status/{orderId}")
+    @PermitAll
     public ResponseEntity<ResponseDTO> updateStatus(@PathVariable Long orderId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            Order order = orderService.converOrderStatus(orderId);
-            responseDTO.setData(order);
+            responseDTO.setData(orderService.converOrderStatus(orderId));
             responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();

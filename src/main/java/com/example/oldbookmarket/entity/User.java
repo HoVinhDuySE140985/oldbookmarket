@@ -59,4 +59,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Order> orderList;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "user")
+    private Wallet wallet;
+
 }

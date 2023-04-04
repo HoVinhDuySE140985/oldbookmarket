@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Table(name = "[order]")
-public class Order {
+public class Order implements Serializable {
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
@@ -30,6 +31,7 @@ public class Order {
     private String deliveryMethod;
     private String status;
     private String paymentStatus;
+    private LocalDate resentDate;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)

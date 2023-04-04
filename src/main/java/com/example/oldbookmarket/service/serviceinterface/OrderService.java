@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OrderService {
     OrderResponseDTO createNewOrder(AddOrderRequestDTO addOrderRequestDTO);
-    Order converOrderStatus(Long orderId);
+    Boolean converOrderStatus(Long orderId);
     List<Order> getAllOrder(Long userId, String orderStatus);
     Order cancelOrder(Long orderId);
 
