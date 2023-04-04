@@ -31,7 +31,7 @@ public class Order implements Serializable {
     private String deliveryMethod;
     private String status;
     private String paymentStatus;
-    private LocalDate resentDate;
+//    private LocalDate resentDate;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)
