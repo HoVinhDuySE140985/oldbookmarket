@@ -155,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
                             .paymentMethod("VÍ CỦA TÔI")
                             .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                             .status("pending")
-                            .paymentStatus("DEPOSIT")
+                            .paymentStatus("DEPOSITED")
                             .build();
                     order = orderRepo.save(order);
                     orderResponseDTO = OrderResponseDTO.builder()
@@ -179,8 +179,8 @@ public class OrderServiceImpl implements OrderService {
                     Wallet adminWallet = walletRepo.findById(admin.getId()).get();
                     adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
                     walletRepo.save(adminWallet);
-                    // neu don hang co trang thai thanh cong thi
-                    //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
+                    // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
+                    //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
                 }
             }
         }
@@ -211,7 +211,11 @@ public class OrderServiceImpl implements OrderService {
                 orderRepo.save(order);
                 return true;
             }
-            orderRepo.save(order);
+            if (order.getStatus().equalsIgnoreCase("đã gửi lại")){
+                order.setStatus("người bán đã nhận hàng");
+                orderRepo.save(order);
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -231,9 +235,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order cancelOrder(Long orderId) {
-        Order order = new Order();
-
-        order = orderRepo.findById(orderId).get();
+        Order order =  orderRepo.findById(orderId).get();
         if (order.getStatus().equalsIgnoreCase("processing")) {
             Post post = postRepo.findById(order.getPost().getId()).get();
             post.setPostStatus("active");
@@ -244,7 +246,6 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.valueOf(200), "Huy Đơn Không Thành Công");
 
         }
-
         return order;
     }
 
@@ -280,5 +281,21 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
         return orderResponseDTO;
+    }
+
+    @Override
+    public Boolean updateResentDate(Long orderId, String resentDate) {
+        Order order = orderRepo.findById(orderId).get();
+        try {
+            if(order.getStatus().equalsIgnoreCase("complete")){
+                order.setResentDate(LocalDate.parse(resentDate));
+                order.setStatus("đã gửi lại");
+                orderRepo.save(order);
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }

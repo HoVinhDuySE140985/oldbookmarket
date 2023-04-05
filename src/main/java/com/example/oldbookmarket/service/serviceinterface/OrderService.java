@@ -14,4 +14,6 @@ public interface OrderService {
 
     OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId);
 
+    Boolean updateResentDate(Long orderId, String resentDate);
+
 }

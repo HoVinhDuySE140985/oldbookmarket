@@ -78,6 +78,18 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PutMapping("update_resent_date/{orderId}")
+    public ResponseEntity<ResponseDTO> updateResentDate(@RequestParam(required = true) Long orderId,
+                                                        @RequestParam(required = true) String resentDate){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(orderService.updateResentDate(orderId,resentDate));
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  ResponseEntity.ok().body(responseDTO);
+    }
     @PutMapping("cancel-order/{orderId}")
     public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable Long orderId) {
         ResponseDTO responseDTO = new ResponseDTO();

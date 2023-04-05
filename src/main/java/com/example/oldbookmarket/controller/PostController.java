@@ -155,9 +155,9 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get_all_post_by/{subcategoryId}")
+    @GetMapping("get_all_post_by_subcategoryId")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@PathVariable Long subcategoryId,
+    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@RequestParam Long subcategoryId,
                                                                @RequestParam(required = false) String sortBy,
                                                                @RequestParam(required = false) String filter){
         ResponseDTO responseDTO = new ResponseDTO();
