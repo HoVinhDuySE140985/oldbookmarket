@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.Order;
 
@@ -15,5 +16,6 @@ public interface OrderService {
     OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId);
 
     Boolean updateResentDate(Long orderId, String resentDate);
-
+    List<OrderHistoryResponseDTO> getAllSellOrder(Long userId);
+    List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId);
 }

@@ -53,15 +53,15 @@ public class PostController {
 //        return ResponseEntity.ok().body(responseDTO);
 //    }
 
-    @GetMapping("get-all-my-post/{userId}")
+    @GetMapping("get_all_my_post_by_userId")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllMyPost(long userId) {
+    public ResponseEntity<ResponseDTO> getAllMylPost(@RequestParam Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> myPostList = postService.getAllMyPosts(userId);
-            responseDTO.setData(myPostList);
+            List<PostResponseDTO> mySellPostList = postService.getAllPosts(userId);
+            responseDTO.setData(mySellPostList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-            responseDTO.setResult(myPostList.size());
+            responseDTO.setResult(mySellPostList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }

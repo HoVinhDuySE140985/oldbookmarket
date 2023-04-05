@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.entity.Order;
@@ -99,6 +100,36 @@ public class OrderController {
             Order order = orderService.cancelOrder(orderId,cancelReason);
             responseDTO.setData(order);
             responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("get_All_Sell_Order")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> getAllSellOrder(@RequestParam Long userId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllSellOrder(userId);
+            responseDTO.setData(orderHistoryResponseDTOS);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(orderHistoryResponseDTOS.size());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("get_All_Bought_Order")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> getAllBoughtOrder(@RequestParam Long userId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllBoughtOrder(userId);
+            responseDTO.setData(orderHistoryResponseDTOS);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(orderHistoryResponseDTOS.size());
         }catch (Exception e){
             e.printStackTrace();
         }

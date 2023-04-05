@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
@@ -309,5 +310,63 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<OrderHistoryResponseDTO> getAllSellOrder(Long userId) {
+        List<Order> orderList = new ArrayList<>();
+        List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
+        try {
+            orderList = orderRepo.findAll();
+            for (Order order: orderList) {
+                if (order.getPost().getUser().getId().equals(userId)){
+                    OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                            .order_date(order.getOrderDate())
+                            .cancelReason(order.getCancelReason())
+                            .resentDate(order.getResentDate())
+                            .amount(order.getAmount())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .status(order.getStatus())
+                            .paymentMethod(order.getPaymentMethod())
+                            .shipAddress(order.getShipAddress())
+                            .paymentStatus(order.getPaymentStatus())
+                            .orderId(order.getId())
+                            .build();
+                    orderHistoryResponseDTOS.add(history);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return orderHistoryResponseDTOS;
+    }
+
+    @Override
+    public List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId) {
+        List<Order> orderList = new ArrayList<>();
+        List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
+        try {
+            orderList = orderRepo.findAll();
+            for (Order order: orderList) {
+                if (order.getUser().getId().equals(userId)){
+                    OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                            .order_date(order.getOrderDate())
+                            .cancelReason(order.getCancelReason())
+                            .resentDate(order.getResentDate())
+                            .amount(order.getAmount())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .status(order.getStatus())
+                            .paymentMethod(order.getPaymentMethod())
+                            .shipAddress(order.getShipAddress())
+                            .paymentStatus(order.getPaymentStatus())
+                            .orderId(order.getId())
+                            .build();
+                    orderHistoryResponseDTOS.add(history);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return orderHistoryResponseDTOS;
     }
 }

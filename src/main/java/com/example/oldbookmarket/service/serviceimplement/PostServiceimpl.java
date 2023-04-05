@@ -195,51 +195,53 @@ public class PostServiceimpl implements PostService {
 //    }
 
     @Override
-    public List<PostResponseDTO> getAllMyPosts(Long userId) {
+    public List<PostResponseDTO> getAllPosts(Long userId) {
         List<Post> postList = null;
-        List<PostResponseDTO> myListPosts = new ArrayList<>();
+        List<PostResponseDTO> mySellListPosts = new ArrayList<>();
         try {
             postList = postRepo.findAll();
             for (Post post : postList) {
-                PostResponseDTO postResponseDTO = new PostResponseDTO();
-                postResponseDTO.setId(post.getId());
-                postResponseDTO.setTitle(post.getTitle());
-                postResponseDTO.setForm(post.getForm());
-                postResponseDTO.setImageUrl(post.getImageUrl());
-                postResponseDTO.setLocation(post.getLocation());
-                postResponseDTO.setPrice(post.getPrice());
-                postResponseDTO.setStatus(post.getPostStatus());
-                postResponseDTO.setUserId(post.getUser().getId());
-                postResponseDTO.setUserName(post.getUser().getName());
+                if (post.getUser().getId().equals(userId)){
+                    PostResponseDTO postResponseDTO = new PostResponseDTO();
+                    postResponseDTO.setId(post.getId());
+                    postResponseDTO.setTitle(post.getTitle());
+                    postResponseDTO.setForm(post.getForm());
+                    postResponseDTO.setImageUrl(post.getImageUrl());
+                    postResponseDTO.setLocation(post.getLocation());
+                    postResponseDTO.setPrice(post.getPrice());
+                    postResponseDTO.setStatus(post.getPostStatus());
+                    postResponseDTO.setUserId(post.getUser().getId());
+                    postResponseDTO.setUserName(post.getUser().getName());
 
-                List<Book> bookList = post.getBooks();
-                List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
-                for (Book book : bookList) {
-                    BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
-                            .bookId(book.getId())
-                            .name(book.getName())
-                            .coverType(book.getCoverType())
-                            .description(book.getDescription())
-                            .isbn(book.getIsbn())
-                            .publicationDate(book.getPublicationDate())
-                            .bookExchange(post.getBookExchange())
-                            .publicCompany(book.getPublicCompany())
-                            .statusQuo(book.getStatusQuo())
-                            .language(book.getLanguage())
-                            .author(book.getAuthor())
-                            .imageBook(book.getImageList())
-                            .build();
-                    bookPendingResponseDTOS.add(responseDTO);
+                    List<Book> bookList = post.getBooks();
+                    List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
+                    for (Book book : bookList) {
+                        BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+                                .bookId(book.getId())
+                                .name(book.getName())
+                                .coverType(book.getCoverType())
+                                .description(book.getDescription())
+                                .isbn(book.getIsbn())
+                                .publicationDate(book.getPublicationDate())
+                                .bookExchange(post.getBookExchange())
+                                .publicCompany(book.getPublicCompany())
+                                .statusQuo(book.getStatusQuo())
+                                .language(book.getLanguage())
+                                .author(book.getAuthor())
+                                .imageBook(book.getImageList())
+                                .build();
+                        bookPendingResponseDTOS.add(responseDTO);
+                    }
+                    postResponseDTO.setBookList(bookPendingResponseDTOS);
+                    mySellListPosts.add(postResponseDTO);
                 }
-                postResponseDTO.setBookList(bookPendingResponseDTOS);
-                myListPosts.add(postResponseDTO);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return myListPosts;
+        return mySellListPosts;
     }
+
 
     @Override
     public List<PostResponseDTO> getAllPostNoCondition() {
