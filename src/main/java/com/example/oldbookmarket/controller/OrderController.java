@@ -66,18 +66,18 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-order-by/{userId}/{orderStatus}")
-    public ResponseEntity<ResponseDTO> getAllOrder(@PathVariable Long userId, @PathVariable String orderStatus) {
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            List<Order> orderList = orderService.getAllOrder(userId, orderStatus);
-            responseDTO.setData(orderList);
-            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @GetMapping("get-all-order-by/{userId}/{orderStatus}")
+//    public ResponseEntity<ResponseDTO> getAllOrder(@PathVariable Long userId, @PathVariable String orderStatus) {
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            List<Order> orderList = orderService.getAllOrder(userId, orderStatus);
+//            responseDTO.setData(orderList);
+//            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     @PutMapping("update_resent_date/{orderId}")
     public ResponseEntity<ResponseDTO> updateResentDate(@RequestParam(required = true) Long orderId,
@@ -127,6 +127,22 @@ public class OrderController {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllBoughtOrder(userId);
+            responseDTO.setData(orderHistoryResponseDTOS);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(orderHistoryResponseDTOS.size());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("get_all_order_by_status")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> getAllOrderByStatus(@RequestParam Long userId,
+                                                           @RequestParam String status){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllOrderByStatus(userId,status);
             responseDTO.setData(orderHistoryResponseDTOS);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             responseDTO.setResult(orderHistoryResponseDTOS.size());

@@ -216,8 +216,8 @@ public class OrderServiceImpl implements OrderService {
                 orderRepo.save(order);
                 return true;
             }
-            if (order.getStatus().equalsIgnoreCase("đã gửi lại")){
-                order.setStatus("người bán đã nhận hàng");
+            if (order.getStatus().equalsIgnoreCase("resent")){
+                order.setStatus("seller has been received");
                 orderRepo.save(order);
                 return true;
             }
@@ -349,6 +349,35 @@ public class OrderServiceImpl implements OrderService {
             orderList = orderRepo.findAll();
             for (Order order: orderList) {
                 if (order.getUser().getId().equals(userId)){
+                    OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                            .order_date(order.getOrderDate())
+                            .cancelReason(order.getCancelReason())
+                            .resentDate(order.getResentDate())
+                            .amount(order.getAmount())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .status(order.getStatus())
+                            .paymentMethod(order.getPaymentMethod())
+                            .shipAddress(order.getShipAddress())
+                            .paymentStatus(order.getPaymentStatus())
+                            .orderId(order.getId())
+                            .build();
+                    orderHistoryResponseDTOS.add(history);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return orderHistoryResponseDTOS;
+    }
+
+    @Override
+    public List<OrderHistoryResponseDTO> getAllOrderByStatus(Long userId, String status) {
+        List<Order> orderList = null;
+        List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
+        try {
+            orderList = orderRepo.findAll();
+            for (Order order:orderList) {
+                if (order.getPost().getUser().getId().equals(userId) && order.getStatus().equalsIgnoreCase(status)){
                     OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
                             .order_date(order.getOrderDate())
                             .cancelReason(order.getCancelReason())
