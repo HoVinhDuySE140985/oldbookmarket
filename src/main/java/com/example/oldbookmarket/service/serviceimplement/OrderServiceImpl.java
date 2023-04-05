@@ -242,6 +242,7 @@ public class OrderServiceImpl implements OrderService {
     public Order cancelOrder(Long orderId, String cancelReason) {
         Order order =  orderRepo.findById(orderId).get();
         if (order.getStatus().equalsIgnoreCase("processing")) {
+            User userReceivered  = userRepo.findById(order.getUser().getId()).get();
             Post post = postRepo.findById(order.getPost().getId()).get();
             post.setPostStatus("active");
             postRepo.save(post);
@@ -252,7 +253,7 @@ public class OrderServiceImpl implements OrderService {
                     .order(order)
                     .createAt(LocalDate.now())
                     .amount(order.getAmount())
-                    .receiverId(order.getUser().getId())
+                    .user(userReceivered)
                     .build();
             refundRepo.save(refund);
 

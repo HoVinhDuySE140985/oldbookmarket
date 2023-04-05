@@ -63,4 +63,7 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Wallet wallet;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Refund> refundList;
 }
