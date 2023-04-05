@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -17,7 +18,7 @@ public class Refund {
     @Id
     private Long id;
     private LocalDate createAt;
-    private Double amount;
+    private BigDecimal amount;
     private Long receiverId;
 
     @MapsId

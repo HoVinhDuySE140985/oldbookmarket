@@ -90,11 +90,13 @@ public class OrderController {
         }
         return  ResponseEntity.ok().body(responseDTO);
     }
-    @PutMapping("cancel-order/{orderId}")
-    public ResponseEntity<ResponseDTO> cancelOrder(@PathVariable Long orderId) {
+    @PutMapping("cancel_order_by_orderId")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> cancelOrder(@RequestParam Long orderId,
+                                                   @RequestParam String cancelReason) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            Order order = orderService.cancelOrder(orderId);
+            Order order = orderService.cancelOrder(orderId,cancelReason);
             responseDTO.setData(order);
             responseDTO.setSuccessCode(SuccessCode.CANCEL_SUCCESS);
         }catch (Exception e){

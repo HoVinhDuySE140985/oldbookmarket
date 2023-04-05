@@ -31,7 +31,7 @@ public class ScheduledConfig {
         List<Order> orderList = orderRepo.findAll();
         for (Order order: orderList) {
             User seller = userRepo.findById(order.getPost().getUser().getId()).get();
-            User admin = userRepo.findById(13l).get();
+            User admin = userRepo.findById(14l).get();
             User buyer = userRepo.findById(order.getUser().getId()).get();
             //bán
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){
@@ -41,14 +41,13 @@ public class ScheduledConfig {
                     Wallet adminWallet = walletRepo.findById(admin.getId()).get();
                     BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.80));
                     adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));
-                    System.out.println(adminWallet.getAmount());
                     walletRepo.save(adminWallet);
                     sellerWallet.setAmount(sellerWallet.getAmount().add(amountToBePaid));
                     walletRepo.save(sellerWallet);
                     order.setPaymentStatus("PAYMENT_COMPLETED");
                     orderRepo.save(order);
                 }
-                // đơn hàng cancel
+//                 đơn hàng cancel
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
                     Wallet buyerWallet = walletRepo.findById(buyer.getId()).get();
                     Wallet adminWallet = walletRepo.findById(admin.getId()).get();
@@ -59,7 +58,6 @@ public class ScheduledConfig {
                     walletRepo.save(buyerWallet);
                     order.setPaymentStatus("REFUND _COMPLETED");
                     orderRepo.save(order);
-                    // làm thêm phần lưu vô bảng refund
                 }
             }else {
                 // trao đổi

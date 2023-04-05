@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.sql.Ref;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     WalletRepo walletRepo;
+
+    @Autowired
+    RefundRepo refundRepo;
 
     @Override
     @Transactional
@@ -154,7 +158,7 @@ public class OrderServiceImpl implements OrderService {
                             .note(addOrderRequestDTO.getNote())
                             .paymentMethod("VÍ CỦA TÔI")
                             .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("pending")
+                            .status("processing")
                             .paymentStatus("DEPOSITED")
                             .build();
                     order = orderRepo.save(order);
@@ -189,7 +193,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Boolean converOrderStatus(Long orderId) {
-        Order order = orderRepo.getById(orderId);
+        Order order = orderRepo.findById(orderId).get();
         try {
             if (order.getStatus().equalsIgnoreCase("processing")) {
                 order.setStatus("packed");
@@ -234,17 +238,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order cancelOrder(Long orderId) {
+    public Order cancelOrder(Long orderId, String cancelReason) {
         Order order =  orderRepo.findById(orderId).get();
         if (order.getStatus().equalsIgnoreCase("processing")) {
             Post post = postRepo.findById(order.getPost().getId()).get();
             post.setPostStatus("active");
             postRepo.save(post);
             order.setStatus("cancel");
+            order.setCancelReason(cancelReason);
             orderRepo.save(order);
+            Refund refund = Refund.builder()
+                    .order(order)
+                    .createAt(LocalDate.now())
+                    .amount(order.getAmount())
+                    .receiverId(order.getUser().getId())
+                    .build();
+            refundRepo.save(refund);
+
         } else {
             throw new ResponseStatusException(HttpStatus.valueOf(200), "Huy Đơn Không Thành Công");
-
         }
         return order;
     }
