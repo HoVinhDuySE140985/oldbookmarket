@@ -53,9 +53,9 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("convert-order-status/{orderId}")
+    @PutMapping("convert-order-status_by_orderId")
     @PermitAll
-    public ResponseEntity<ResponseDTO> updateStatus(@PathVariable Long orderId) {
+    public ResponseEntity<ResponseDTO> updateStatus(@RequestParam Long orderId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             responseDTO.setData(orderService.converOrderStatus(orderId));
