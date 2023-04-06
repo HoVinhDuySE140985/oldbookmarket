@@ -38,8 +38,8 @@ public class AddressServiceImpl implements AddressService {
             for (Address address: result) {
                 if (address.getProvince().equalsIgnoreCase(addressRequestDTO.getProvince()) && address.getCity().equalsIgnoreCase(addressRequestDTO.getCity()) &&
                         address.getWard().equalsIgnoreCase(addressRequestDTO.getWard()) && address.getDistrict().equalsIgnoreCase(addressRequestDTO.getDistrict()) &&
-                        address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("DEACTIVATE")) {
-                    address.setStatus("ACTIVATE");
+                        address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("deactive")) {
+                    address.setStatus("active");
                     addressRepo.save(address);
                     addressResponseDTO = AddressResponseDTO.builder()
                             .id(address.getId())
@@ -59,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
                 address.setProvince(addressRequestDTO.getProvince());
                 address.setWard(addressRequestDTO.getWard());
                 address.setStreet(addressRequestDTO.getStreet());
-                address.setStatus("ACTIVATE");
+                address.setStatus("active");
                 address.setUser(user);
                 address = addressRepo.save(address);
                 addressResponseDTO = AddressResponseDTO.builder()
@@ -121,12 +121,12 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressResponseDTO> getAllAddress(Long userId) {
-        List<Address> addressList = null;
+        List<Address> addressList = new ArrayList<>();
         List<AddressResponseDTO> addressResponseDTOS = new ArrayList<>();
         try {
             addressList = addressRepo.findAllByUser_Id(userId);
             for (Address address: addressList) {
-                if(address.getStatus().equalsIgnoreCase("ACTIVATE")){
+                if(address.getStatus().equalsIgnoreCase("active")){
                     AddressResponseDTO addressResponseDTO = AddressResponseDTO.builder()
                             .id(address.getId())
                             .province(address.getProvince())
