@@ -208,6 +208,7 @@ public class PostServiceimpl implements PostService {
                     postResponseDTO.setForm(post.getForm());
                     postResponseDTO.setImageUrl(post.getImageUrl());
                     postResponseDTO.setLocation(post.getLocation());
+                    postResponseDTO.setInitPrice(post.getInitPrice());
                     postResponseDTO.setPrice(post.getPrice());
                     postResponseDTO.setStatus(post.getPostStatus());
                     postResponseDTO.setUserId(post.getUser().getId());
