@@ -14,7 +14,7 @@ public interface OrderService {
     Order cancelOrder(Long orderId, String cancelReason);
     OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId);
     Boolean updateResentDate(Long orderId, String resentDate);
-    List<OrderHistoryResponseDTO> getAllSellOrder(Long userId);
-    List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId);
+    List<OrderHistoryResponseDTO> getAllSellOrder(Long userId, String status);
+    List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId,String status);
     List<OrderHistoryResponseDTO> getAllOrderByStatus(Long userId, String status);
 }

@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
                         .note(addOrderRequestDTO.getNote())
                         .paymentMethod("MOMO")
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                        .status("processing")
+                        .status("WaitingForConfirmation")
                         .build();
                 order = orderRepo.save(order);
                 orderResponseDTO = OrderResponseDTO.builder()
@@ -117,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
                             .note(addOrderRequestDTO.getNote())
                             .paymentMethod("VÍ CỦA TÔI")
                             .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("processing")
+                            .status("WaitingForConfirmation")
                             .paymentStatus("PAID")
                             .build();
                     order = orderRepo.save(order);
@@ -159,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
                             .note(addOrderRequestDTO.getNote())
                             .paymentMethod("VÍ CỦA TÔI")
                             .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("processing")
+                            .status("WaitingForConfirmation")
                             .paymentStatus("DEPOSITED")
                             .build();
                     order = orderRepo.save(order);
@@ -196,13 +196,13 @@ public class OrderServiceImpl implements OrderService {
     public Boolean converOrderStatus(Long orderId) {
         Order order = orderRepo.findById(orderId).get();
         try {
-            if (order.getStatus().equalsIgnoreCase("processing")) {
-                order.setStatus("packed");
+            if (order.getStatus().equalsIgnoreCase("WaitingForConfirmation")) {
+                order.setStatus("processing");
                 orderRepo.save(order);
                 return true;
             }
-            if (order.getStatus().equalsIgnoreCase("packed")) {
-                order.setStatus("delivery");
+            if (order.getStatus().equalsIgnoreCase("processing")) {
+                order.setStatus("packed");
                 orderRepo.save(order);
                 return true;
             }
@@ -217,7 +217,7 @@ public class OrderServiceImpl implements OrderService {
                 return true;
             }
             if (order.getStatus().equalsIgnoreCase("resent")){
-                order.setStatus("seller has been received");
+                order.setStatus("SellerHasBeenReceived");
                 orderRepo.save(order);
                 return true;
             }
@@ -303,7 +303,7 @@ public class OrderServiceImpl implements OrderService {
         try {
             if(order.getStatus().equalsIgnoreCase("complete")){
                 order.setResentDate(LocalDate.parse(resentDate));
-                order.setStatus("đã gửi lại");
+                order.setStatus("resent");
                 orderRepo.save(order);
                 return true;
             }
@@ -314,26 +314,45 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderHistoryResponseDTO> getAllSellOrder(Long userId) {
+    public List<OrderHistoryResponseDTO> getAllSellOrder(Long userId, String status) {
         List<Order> orderList = new ArrayList<>();
         List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
         try {
             orderList = orderRepo.findAll();
             for (Order order: orderList) {
                 if (order.getPost().getUser().getId().equals(userId)){
-                    OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
-                            .order_date(order.getOrderDate())
-                            .cancelReason(order.getCancelReason())
-                            .resentDate(order.getResentDate())
-                            .amount(order.getAmount())
-                            .deliveryMethod(order.getDeliveryMethod())
-                            .status(order.getStatus())
-                            .paymentMethod(order.getPaymentMethod())
-                            .shipAddress(order.getShipAddress())
-                            .paymentStatus(order.getPaymentStatus())
-                            .orderId(order.getId())
-                            .build();
-                    orderHistoryResponseDTOS.add(history);
+                    if (status.equalsIgnoreCase("null")){
+                        OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                                .order_date(order.getOrderDate())
+                                .cancelReason(order.getCancelReason())
+                                .resentDate(order.getResentDate())
+                                .amount(order.getAmount())
+                                .deliveryMethod(order.getDeliveryMethod())
+                                .status(order.getStatus())
+                                .paymentMethod(order.getPaymentMethod())
+                                .shipAddress(order.getShipAddress())
+                                .paymentStatus(order.getPaymentStatus())
+                                .orderId(order.getId())
+                                .build();
+                        orderHistoryResponseDTOS.add(history);
+                    }else {
+                        if (order.getStatus().equalsIgnoreCase(status)){
+                            OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                                    .order_date(order.getOrderDate())
+                                    .cancelReason(order.getCancelReason())
+                                    .resentDate(order.getResentDate())
+                                    .amount(order.getAmount())
+                                    .deliveryMethod(order.getDeliveryMethod())
+                                    .status(order.getStatus())
+                                    .paymentMethod(order.getPaymentMethod())
+                                    .shipAddress(order.getShipAddress())
+                                    .paymentStatus(order.getPaymentStatus())
+                                    .orderId(order.getId())
+                                    .build();
+                            orderHistoryResponseDTOS.add(history);
+                        }
+                    }
+
                 }
             }
         }catch (Exception e){
@@ -343,26 +362,44 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId) {
+    public List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId, String status) {
         List<Order> orderList = new ArrayList<>();
         List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
         try {
             orderList = orderRepo.findAll();
             for (Order order: orderList) {
                 if (order.getUser().getId().equals(userId)){
-                    OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
-                            .order_date(order.getOrderDate())
-                            .cancelReason(order.getCancelReason())
-                            .resentDate(order.getResentDate())
-                            .amount(order.getAmount())
-                            .deliveryMethod(order.getDeliveryMethod())
-                            .status(order.getStatus())
-                            .paymentMethod(order.getPaymentMethod())
-                            .shipAddress(order.getShipAddress())
-                            .paymentStatus(order.getPaymentStatus())
-                            .orderId(order.getId())
-                            .build();
-                    orderHistoryResponseDTOS.add(history);
+                    if (status.equalsIgnoreCase("null")){
+                        OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                                .order_date(order.getOrderDate())
+                                .cancelReason(order.getCancelReason())
+                                .resentDate(order.getResentDate())
+                                .amount(order.getAmount())
+                                .deliveryMethod(order.getDeliveryMethod())
+                                .status(order.getStatus())
+                                .paymentMethod(order.getPaymentMethod())
+                                .shipAddress(order.getShipAddress())
+                                .paymentStatus(order.getPaymentStatus())
+                                .orderId(order.getId())
+                                .build();
+                        orderHistoryResponseDTOS.add(history);
+                    } else {
+                        if (order.getStatus().equalsIgnoreCase(status)){
+                            OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
+                                    .order_date(order.getOrderDate())
+                                    .cancelReason(order.getCancelReason())
+                                    .resentDate(order.getResentDate())
+                                    .amount(order.getAmount())
+                                    .deliveryMethod(order.getDeliveryMethod())
+                                    .status(order.getStatus())
+                                    .paymentMethod(order.getPaymentMethod())
+                                    .shipAddress(order.getShipAddress())
+                                    .paymentStatus(order.getPaymentStatus())
+                                    .orderId(order.getId())
+                                    .build();
+                            orderHistoryResponseDTOS.add(history);
+                        }
+                    }
                 }
             }
         }catch (Exception e){

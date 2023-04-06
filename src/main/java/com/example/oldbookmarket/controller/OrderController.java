@@ -108,10 +108,11 @@ public class OrderController {
 
     @GetMapping("get_All_Sell_Order")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllSellOrder(@RequestParam Long userId){
+    public ResponseEntity<ResponseDTO> getAllSellOrder(@RequestParam Long userId,
+                                                       @RequestParam String status){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllSellOrder(userId);
+            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllSellOrder(userId,status);
             responseDTO.setData(orderHistoryResponseDTOS);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             responseDTO.setResult(orderHistoryResponseDTOS.size());
@@ -123,10 +124,11 @@ public class OrderController {
 
     @GetMapping("get_All_Bought_Order")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllBoughtOrder(@RequestParam Long userId){
+    public ResponseEntity<ResponseDTO> getAllBoughtOrder(@RequestParam Long userId,
+                                                         @RequestParam String status ){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllBoughtOrder(userId);
+            List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllBoughtOrder(userId,status);
             responseDTO.setData(orderHistoryResponseDTOS);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             responseDTO.setResult(orderHistoryResponseDTOS.size());
