@@ -23,6 +23,7 @@ public class PostResponseDTO {
     private String status;
     private String description;
     private List<BookPendingResponseDTO> bookList;
+    private BigDecimal initPrice;
     private BigDecimal price;
     private Long userId;
     private String userName;

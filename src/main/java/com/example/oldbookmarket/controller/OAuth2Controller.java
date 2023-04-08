@@ -43,15 +43,6 @@ public class OAuth2Controller {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // @Autowired
-    // public AuthenController(AuthenticationManager authenticationManager,
-    // UserService userService, JwtConfig jwtConfig, PasswordEncoder
-    // passwordEncoder) {
-    // this.authenticationManager = authenticationManager;
-    // this.userService = userService;
-    // this.jwtConfig = jwtConfig;
-    // }
-
     @PostMapping("/login_google")
     public ResponseEntity<ResponseDTO> authenticate(@RequestBody OAuth2Request data) {
         // GoogleCredentials credentials = new GoogleCredentials(null)

@@ -7,10 +7,9 @@ import com.example.oldbookmarket.service.serviceinterface.MomoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/momo")
@@ -30,4 +29,19 @@ public class MomoController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @PostMapping("deposit_money_into_wallet")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> depositMoneyIntoWallet(@RequestParam Long userId,
+                                                              @RequestParam BigDecimal amount) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(momoService.depositMoneyIntoWallet(userId,amount));
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
 }

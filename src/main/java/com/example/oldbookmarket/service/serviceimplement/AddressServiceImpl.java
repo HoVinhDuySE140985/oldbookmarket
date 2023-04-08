@@ -3,9 +3,12 @@ package com.example.oldbookmarket.service.serviceimplement;
 import com.example.oldbookmarket.dto.request.addressDTO.AddressRequestDTO;
 import com.example.oldbookmarket.dto.request.addressDTO.UpdateAddressRequestDTO;
 import com.example.oldbookmarket.dto.response.addressDTO.AddressResponseDTO;
+import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.entity.Address;
+import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.repository.AddressRepo;
+import com.example.oldbookmarket.repository.PostRepo;
 import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,11 @@ public class AddressServiceImpl implements AddressService {
     AddressRepo addressRepo;
 
     @Autowired
+    PostRepo postRepo;
+
+    @Autowired
     UserRepo userRepo;
+
     @Override
     public AddressResponseDTO createNewAddress(AddressRequestDTO addressRequestDTO) {
         AddressResponseDTO addressResponseDTO = null;
@@ -31,8 +38,8 @@ public class AddressServiceImpl implements AddressService {
             for (Address address: result) {
                 if (address.getProvince().equalsIgnoreCase(addressRequestDTO.getProvince()) && address.getCity().equalsIgnoreCase(addressRequestDTO.getCity()) &&
                         address.getWard().equalsIgnoreCase(addressRequestDTO.getWard()) && address.getDistrict().equalsIgnoreCase(addressRequestDTO.getDistrict()) &&
-                        address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("DEACTIVATE")) {
-                    address.setStatus("ACTIVATE");
+                        address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("deactive")) {
+                    address.setStatus("active");
                     addressRepo.save(address);
                     addressResponseDTO = AddressResponseDTO.builder()
                             .id(address.getId())
@@ -52,7 +59,7 @@ public class AddressServiceImpl implements AddressService {
                 address.setProvince(addressRequestDTO.getProvince());
                 address.setWard(addressRequestDTO.getWard());
                 address.setStreet(addressRequestDTO.getStreet());
-                address.setStatus("ACTIVATE");
+                address.setStatus("active");
                 address.setUser(user);
                 address = addressRepo.save(address);
                 addressResponseDTO = AddressResponseDTO.builder()
@@ -64,23 +71,6 @@ public class AddressServiceImpl implements AddressService {
                         .street(address.getStreet())
                         .build();
             }
-//            Address address = new Address();
-//            address.setCity(addressRequestDTO.getCity());
-//            address.setDistrict(addressRequestDTO.getDistrict());
-//            address.setProvince(addressRequestDTO.getProvince());
-//            address.setWard(addressRequestDTO.getWard());
-//            address.setStreet(addressRequestDTO.getStreet());
-//            address.setStatus("ACTIVATE");
-//            address.setUser(user);
-//            address = addressRepo.save(address);
-//            addressResponseDTO = AddressResponseDTO.builder()
-//                    .id(address.getId())
-//                    .city(address.getCity())
-//                    .province(address.getProvince())
-//                    .district(address.getDistrict())
-//                    .ward(address.getWard())
-//                    .street(address.getStreet())
-//                    .build();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -131,12 +121,12 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public List<AddressResponseDTO> getAllAddress(Long userId) {
-        List<Address> addressList = null;
+        List<Address> addressList = new ArrayList<>();
         List<AddressResponseDTO> addressResponseDTOS = new ArrayList<>();
         try {
             addressList = addressRepo.findAllByUser_Id(userId);
             for (Address address: addressList) {
-                if(address.getStatus().equalsIgnoreCase("ACTIVATE")){
+                if(address.getStatus().equalsIgnoreCase("active")){
                     AddressResponseDTO addressResponseDTO = AddressResponseDTO.builder()
                             .id(address.getId())
                             .province(address.getProvince())
@@ -153,5 +143,16 @@ public class AddressServiceImpl implements AddressService {
             e.printStackTrace();
         }
         return addressResponseDTOS;
+    }
+
+    @Override
+    public List<String> getAllCityInPosts() {
+        List<String> listCities = new ArrayList<>();
+        try {
+            listCities = postRepo.findAllCity();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return listCities;
     }
 }

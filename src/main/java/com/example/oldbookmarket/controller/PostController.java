@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
+import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.enumcode.SuccessCode;
@@ -36,28 +37,31 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-post") // nhung post có trang thái active
-    @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPost() {
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            List<PostResponseDTO> postList = postService.getAllPost();
-            responseDTO.setData(postList);
-            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @GetMapping("get-all-post") // nhung post có trang thái active
+//    @PermitAll
+//    public ResponseEntity<ResponseDTO> getAllPost( @RequestParam(required = false) String sortBy,
+//                                                   @RequestParam(required = false) String filter) {
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            List<PostResponseDTO> postList = postService.getAllPost(sortBy,filter);
+//            responseDTO.setData(postList);
+//            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+//            responseDTO.setResult(postList.size());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
-    @GetMapping("get-all-my-post/{userId}")
+    @GetMapping("get_all_my_post_by_userId")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllMyPost(long userId) {
+    public ResponseEntity<ResponseDTO> getAllMylPost(@RequestParam Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> myPostList = postService.getAllMyPosts(userId);
-            responseDTO.setData(myPostList);
+            List<PostResponseDTO> mySellPostList = postService.getAllPosts(userId);
+            responseDTO.setData(mySellPostList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(mySellPostList.size());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,11 +82,13 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("search-post-by-Keyword/{keyWord}")
+    @GetMapping("search-post-by-Keyword")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@PathVariable String keyWord) {
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam(required = false) String keyWord,
+                                                           @RequestParam(required = false) String sortBy,
+                                                           @RequestParam(required = false) String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
-        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord);
+        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord,sortBy,filter);
         try {
             responseDTO.setData(resultList);
             responseDTO.setResult(resultList.size());
@@ -149,17 +155,21 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get_all_post_by/{subcategoryId}")
+    @GetMapping("get_all_post_by_subcategoryId")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@PathVariable Long subcategoryId){
+    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@RequestParam Long subcategoryId,
+                                                               @RequestParam(required = false) String sortBy,
+                                                               @RequestParam(required = false) String filter){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId);
+            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId,sortBy,filter);
             responseDTO.setData(postResponseDTOs);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+            responseDTO.setResult(postResponseDTOs.size());
         }catch (Exception e){
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
 }
