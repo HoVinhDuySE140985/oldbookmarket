@@ -29,7 +29,7 @@ import com.example.oldbookmarket.service.serviceinterface.UserService;
 import io.jsonwebtoken.Jwts;
 
 @RestController
-@RequestMapping("/api/auth/login_google")
+@RequestMapping("/api/auth")
 public class OAuth2Controller {
 
     private final Logger logger = LoggerFactory.getLogger(OAuth2Controller.class);
