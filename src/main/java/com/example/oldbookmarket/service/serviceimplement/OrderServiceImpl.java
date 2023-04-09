@@ -329,6 +329,8 @@ public class OrderServiceImpl implements OrderService {
                                 .order_date(order.getOrderDate())
                                 .cancelReason(order.getCancelReason())
                                 .resentDate(order.getResentDate())
+                                .postImage(order.getPost().getImageUrl())
+                                .title(order.getPost().getTitle())
                                 .amount(order.getAmount())
                                 .deliveryMethod(order.getDeliveryMethod())
                                 .status(order.getStatus())
@@ -344,6 +346,8 @@ public class OrderServiceImpl implements OrderService {
                                     .order_date(order.getOrderDate())
                                     .cancelReason(order.getCancelReason())
                                     .resentDate(order.getResentDate())
+                                    .postImage(order.getPost().getImageUrl())
+                                    .title(order.getPost().getTitle())
                                     .amount(order.getAmount())
                                     .deliveryMethod(order.getDeliveryMethod())
                                     .status(order.getStatus())
@@ -355,7 +359,6 @@ public class OrderServiceImpl implements OrderService {
                             orderHistoryResponseDTOS.add(history);
                         }
                     }
-
                 }
             }
         }catch (Exception e){
@@ -377,6 +380,8 @@ public class OrderServiceImpl implements OrderService {
                                 .order_date(order.getOrderDate())
                                 .cancelReason(order.getCancelReason())
                                 .resentDate(order.getResentDate())
+                                .postImage(order.getPost().getImageUrl())
+                                .title(order.getPost().getTitle())
                                 .amount(order.getAmount())
                                 .deliveryMethod(order.getDeliveryMethod())
                                 .status(order.getStatus())
@@ -392,6 +397,8 @@ public class OrderServiceImpl implements OrderService {
                                     .order_date(order.getOrderDate())
                                     .cancelReason(order.getCancelReason())
                                     .resentDate(order.getResentDate())
+                                    .postImage(order.getPost().getImageUrl())
+                                    .title(order.getPost().getTitle())
                                     .amount(order.getAmount())
                                     .deliveryMethod(order.getDeliveryMethod())
                                     .status(order.getStatus())
@@ -423,6 +430,8 @@ public class OrderServiceImpl implements OrderService {
                             .order_date(order.getOrderDate())
                             .cancelReason(order.getCancelReason())
                             .resentDate(order.getResentDate())
+                            .postImage(order.getPost().getImageUrl())
+                            .title(order.getPost().getTitle())
                             .amount(order.getAmount())
                             .deliveryMethod(order.getDeliveryMethod())
                             .status(order.getStatus())
