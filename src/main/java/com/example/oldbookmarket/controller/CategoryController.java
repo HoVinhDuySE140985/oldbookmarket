@@ -9,6 +9,7 @@ import com.example.oldbookmarket.service.serviceinterface.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -50,7 +51,7 @@ public class CategoryController {
 
     @PostMapping("staff/create-category/{cateName}")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<ResponseDTO> createNewCategory(@PathVariable String cateName){
+    public ResponseEntity<ResponseDTO> createNewCategory(@PathVariable @Validated String cateName){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             Category category = categoryService.createNewCategory(cateName);

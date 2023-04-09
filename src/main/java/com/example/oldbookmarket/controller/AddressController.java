@@ -11,6 +11,7 @@ import com.example.oldbookmarket.service.serviceinterface.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -25,7 +26,7 @@ public class AddressController {
 
     @PostMapping("create-new-address")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewAddress(@RequestBody AddressRequestDTO addressRequestDTO){
+    public ResponseEntity<ResponseDTO> createNewAddress(@RequestBody @Validated AddressRequestDTO addressRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             AddressResponseDTO addressResponseDTO = addressService.createNewAddress(addressRequestDTO);
@@ -39,7 +40,7 @@ public class AddressController {
 
     @PutMapping("update-address")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updateAddress(@RequestBody UpdateAddressRequestDTO updateAddressRequestDTO){
+    public ResponseEntity<ResponseDTO> updateAddress(@RequestBody @Validated UpdateAddressRequestDTO updateAddressRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             AddressResponseDTO addressResponseDTO = addressService.updateAddress(updateAddressRequestDTO);
@@ -53,7 +54,7 @@ public class AddressController {
 
     @PutMapping("update-address-status/{addressId}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updateAddressStatus(@PathVariable Long addressId){
+    public ResponseEntity<ResponseDTO> updateAddressStatus(@PathVariable @Validated Long addressId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             Address address = addressService.updateAddressStatus(addressId);
@@ -67,7 +68,7 @@ public class AddressController {
 
     @GetMapping("get-all-address-By/{userId}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllAdress(@PathVariable Long userId){
+    public ResponseEntity<ResponseDTO> getAllAdress(@PathVariable @Validated Long userId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<AddressResponseDTO> addressList = addressService.getAllAddress(userId);

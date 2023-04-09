@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,7 +45,7 @@ public class OAuth2Controller {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login_google")
-    public ResponseEntity<ResponseDTO> authenticate(@RequestBody OAuth2Request data) {
+    public ResponseEntity<ResponseDTO> authenticate(@RequestBody @Validated OAuth2Request data) {
         // GoogleCredentials credentials = new GoogleCredentials(null)
         ResponseDTO responseDTO = new ResponseDTO();
         logger.info("The Id = " + data.getId());

@@ -9,6 +9,7 @@ import com.example.oldbookmarket.service.serviceinterface.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -22,7 +23,7 @@ public class BookController {
 
     @GetMapping("get-book-by/{postId}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getBookInfor(@PathVariable Long postId){
+    public ResponseEntity<ResponseDTO> getBookInfor(@PathVariable @Validated Long postId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<BookResponseDTO> booklist = bookService.getBookInfor(postId);
@@ -36,7 +37,7 @@ public class BookController {
 
     @GetMapping("get-all-image-book-by/{postId}")
     @PermitAll
-        public ResponseEntity<ResponseDTO> getAllBookImage(@PathVariable Long postId){
+        public ResponseEntity<ResponseDTO> getAllBookImage(@PathVariable @Validated Long postId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             BookImageResponseDTO bookImageResponseDTO = bookService.getAllImageOfBook(postId);
@@ -50,7 +51,7 @@ public class BookController {
 
     @PutMapping("update-book-information/{postId}/{bookId}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updateBookInformation(UpdateBookResquestDTO updateBookResquestDTO){
+    public ResponseEntity<ResponseDTO> updateBookInformation( @Validated UpdateBookResquestDTO updateBookResquestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             BookResponseDTO bookResponseDTO = bookService.updateBookInfo(updateBookResquestDTO);

@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -44,7 +45,7 @@ public class AuthenController {
 
     @PostMapping("login")
     @PermitAll
-    public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<ResponseDTO> login(@RequestBody @Validated LoginRequestDTO loginRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
 
@@ -82,7 +83,7 @@ public class AuthenController {
 
     @PostMapping("register-user")
     @PermitAll
-    public ResponseEntity<ResponseDTO> registerUser(@RequestBody RegisterRequestDTO registerRequestDTO) {
+    public ResponseEntity<ResponseDTO> registerUser(@RequestBody @Validated RegisterRequestDTO registerRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             RegisterResponseDTO registerResponseDTO = userService.createUser(registerRequestDTO);
@@ -95,7 +96,7 @@ public class AuthenController {
     }
 
     @PutMapping("update-user-infor")
-    public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody UpdateUserRequestDTO updateUserRequestDTO) {
+    public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody @Validated UpdateUserRequestDTO updateUserRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             UpdateUserResponseDTO updateUserResponseDTO = userService.updateUserInfo(updateUserRequestDTO);
@@ -109,7 +110,7 @@ public class AuthenController {
 
     @GetMapping("get-user-info/{userId}")  // loi
     @PreAuthorize("hasAnyRole('CUSTOMER' , 'ADMIN', 'STAFF')")
-    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable Long userId) {
+    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable @Validated Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         User user = userService.findUserById(userId);
         try {
@@ -137,7 +138,7 @@ public class AuthenController {
 
     @PutMapping("change_password")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> changePassword(@RequestBody ChangePasswordRequestDTO changePasswordRequestDTO){
+    public ResponseEntity<ResponseDTO> changePassword(@RequestBody @Validated ChangePasswordRequestDTO changePasswordRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             ChangePasswordReponseDTO changePasswordReponseDTO = userService.changePassWord(changePasswordRequestDTO);

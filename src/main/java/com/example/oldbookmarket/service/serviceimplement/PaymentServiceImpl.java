@@ -4,19 +4,21 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
+import com.example.oldbookmarket.entity.Order;
+import com.example.oldbookmarket.repository.OrderRepo;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.oldbookmarket.dto.request.MomoClientRequest;
-import com.example.oldbookmarket.dto.request.MomoRequest;
-import com.example.oldbookmarket.dto.response.MomoResponse;
-import com.example.oldbookmarket.service.PaymentService;
+import com.example.oldbookmarket.dto.request.MomoDTO.MomoClientRequest;
+import com.example.oldbookmarket.dto.request.MomoDTO.MomoRequest;
+import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
+import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import com.example.oldbookmarket.shared.utils.Common;
 import com.example.oldbookmarket.shared.utils.Utilities;
 
@@ -26,6 +28,8 @@ public class PaymentServiceImpl implements PaymentService{
     
     org.slf4j.Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
 
+    @Autowired
+    OrderRepo orderRepo;
 
     @Override
     public ResponseEntity<MomoResponse> getPaymentMomo(MomoClientRequest request) {
@@ -47,8 +51,8 @@ public class PaymentServiceImpl implements PaymentService{
         MomoRequest momoReq = new MomoRequest();
         // CustomerInfoMomoRequest customerInfo = new CustomerInfoMomoRequest("dat",
         // "0123456789", "dat@gmail.com");
-        List<String> oList = request.getOrderId();
-        String orderId = String.join("-", oList); //12 //23-12-23-32
+        Order order = orderRepo.findById(request.getOrderId()).get() ;
+//        String orderId = String.join("-", oList); //12 //23-12-23-32
         // String requestId = 
         // Order order = orderRepository.getOrderById(Long.parseLong(request.getOrderId()));
 
@@ -65,10 +69,10 @@ public class PaymentServiceImpl implements PaymentService{
         String amount = String.valueOf(df.format(request.getAmount()));
 
         String sign = "accessKey=" + Common.ACCESS_KEY + "&amount=" + amount + "&extraData="
-                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + orderId + "&orderInfo="
+                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + order.getId() + "&orderInfo="
                 + "Thanh toan momo"
                 + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + Common.REDIRECT_URL_MOMO
-                + "&requestId=" + orderId + "&requestType=captureWallet";
+                + "&requestId=" + order.getId() + "&requestType=captureWallet";
 
         // accessKey=$accessKey&amount=$amount&extraData=$extraData
         // &ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo
@@ -89,10 +93,10 @@ public class PaymentServiceImpl implements PaymentService{
         momoReq.setExtraData("");
         momoReq.setIpnUrl(Common.IPN_URL_MOMO);
         momoReq.setLang("vi");
-        momoReq.setOrderId(orderId);
+        momoReq.setOrderId(order.getId().toString());
         momoReq.setOrderInfo("Thanh toan momo");
         momoReq.setRedirectUrl(Common.REDIRECT_URL_MOMO); //* */
-        momoReq.setRequestId(orderId);
+        momoReq.setRequestId(order.getId().toString());
         momoReq.setRequestType("captureWallet");
 
         HttpEntity<MomoRequest> req = new HttpEntity<>(momoReq, headers);

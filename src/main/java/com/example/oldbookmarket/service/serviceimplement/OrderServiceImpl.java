@@ -6,6 +6,7 @@ import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
+import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     RefundRepo refundRepo;
 
+    @Autowired
+    PaymentService paymentService;
+
     @Override
     @Transactional
     public OrderResponseDTO createNewOrder(AddOrderRequestDTO addOrderRequestDTO) {
@@ -69,7 +73,6 @@ public class OrderServiceImpl implements OrderService {
                         .paymentMethod(order.getPaymentMethod())
                         .deliveryMethod(order.getDeliveryMethod())
                         .status(order.getStatus())
-                        .url("https://www.youtube.com/")
                         .build();
             }
 //            else {
@@ -202,22 +205,22 @@ public class OrderServiceImpl implements OrderService {
                 return true;
             }
             if (order.getStatus().equalsIgnoreCase("processing")) {
-                order.setStatus("packed");
+                order.setStatus("delivery");
                 orderRepo.save(order);
                 return true;
             }
             if (order.getStatus().equalsIgnoreCase("delivery")) {
-                order.setStatus("receive");
-                orderRepo.save(order);
-                return true;
-            }
-            if (order.getStatus().equalsIgnoreCase("receive")) {
                 order.setStatus("complete");
                 orderRepo.save(order);
                 return true;
             }
-            if (order.getStatus().equalsIgnoreCase("resent")){
-                order.setStatus("SellerHasBeenReceived");
+            if (order.getStatus().equalsIgnoreCase("resent")) {
+                order.setStatus("received");
+                orderRepo.save(order);
+                return true;
+            }
+            if (order.getStatus().equalsIgnoreCase("complete")){
+                order.setStatus("resent");
                 orderRepo.save(order);
                 return true;
             }

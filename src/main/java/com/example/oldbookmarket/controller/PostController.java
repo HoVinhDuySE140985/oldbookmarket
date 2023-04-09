@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,7 +26,7 @@ public class PostController {
 
     @PostMapping("create-post")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> creatlPost(@RequestBody PostRequestDTO postRequestDTO) {
+    public ResponseEntity<ResponseDTO> creatlPost(@RequestBody @Validated PostRequestDTO postRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO postResponseDTO = postService.createPost(postRequestDTO);
@@ -55,7 +56,7 @@ public class PostController {
 
     @GetMapping("get_all_my_post_by_userId")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllMylPost(@RequestParam Long userId) {
+    public ResponseEntity<ResponseDTO> getAllMylPost(@RequestParam @Validated Long userId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> mySellPostList = postService.getAllPosts(userId);
@@ -84,9 +85,9 @@ public class PostController {
 
     @GetMapping("search-post-by-Keyword")
     @PermitAll
-    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam(required = false) String keyWord,
-                                                           @RequestParam(required = false) String sortBy,
-                                                           @RequestParam(required = false) String filter) {
+    public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam(required = false) @Validated String keyWord,
+                                                           @RequestParam(required = false) @Validated String sortBy,
+                                                           @RequestParam(required = false) @Validated  String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
         List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord,sortBy,filter);
         try {
@@ -101,7 +102,7 @@ public class PostController {
 
     @PutMapping("staff/accept-post/{id}")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public ResponseEntity<ResponseDTO> acceptPost(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO> acceptPost(@PathVariable @Validated Long id) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO post = postService.acceptPost(id);
@@ -115,7 +116,7 @@ public class PostController {
 
     @PutMapping("staff/reject-post/{id}")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public ResponseEntity<ResponseDTO> rejectPost(@PathVariable Long id, String reasonReject) {
+    public ResponseEntity<ResponseDTO> rejectPost(@PathVariable @Validated Long id, @RequestParam @Validated String reasonReject) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO post = postService.rejectPost(id, reasonReject);
@@ -129,7 +130,7 @@ public class PostController {
 
     @PutMapping("update-post-status/{id}")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updatePostStatus(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO> updatePostStatus(@PathVariable @Validated Long id) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
@@ -143,7 +144,7 @@ public class PostController {
 
     @PutMapping("update-post-info")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updatePostInfo(@RequestBody PostRequestDTO postRequestDTO) {
+    public ResponseEntity<ResponseDTO> updatePostInfo(@RequestBody @Validated PostRequestDTO postRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO postResponseDTO = postService.updatePostInfo(postRequestDTO);
@@ -157,9 +158,9 @@ public class PostController {
 
     @GetMapping("get_all_post_by_subcategoryId")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@RequestParam Long subcategoryId,
-                                                               @RequestParam(required = false) String sortBy,
-                                                               @RequestParam(required = false) String filter){
+    public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@RequestParam @Validated Long subcategoryId,
+                                                               @RequestParam(required = false) @Validated String sortBy,
+                                                               @RequestParam(required = false) @Validated String filter){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId,sortBy,filter);

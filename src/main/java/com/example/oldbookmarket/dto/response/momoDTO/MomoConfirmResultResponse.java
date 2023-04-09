@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.response;
+package com.example.oldbookmarket.dto.response.momoDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
