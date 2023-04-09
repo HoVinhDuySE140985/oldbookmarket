@@ -1,6 +1,8 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
+import com.example.oldbookmarket.controller.PaymentController;
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.*;
@@ -9,6 +11,7 @@ import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,157 +46,137 @@ public class OrderServiceImpl implements OrderService {
     PaymentService paymentService;
 
     @Override
-    @Transactional
-    public OrderResponseDTO createNewOrder(AddOrderRequestDTO addOrderRequestDTO) {
-        OrderResponseDTO orderResponseDTO = null;
-        // sử dụng ví momo
-        if (addOrderRequestDTO.getPaymentMethod().equalsIgnoreCase("MOMO")) {
+    public ResponseEntity<MomoResponse> createNewOrderWithMomo(AddOrderRequestDTO addOrderRequestDTO) {
+        ResponseEntity<MomoResponse> response = null;
+        try {
+            User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
             Post post = postRepo.findById(addOrderRequestDTO.getPostId()).get();
             post.setPostStatus("deactivate");
             postRepo.save(post);
             if (post.getForm().equalsIgnoreCase("bán")) {
                 Order order = Order.builder()
+                        .user(user)
                         .shipAddress(addOrderRequestDTO.getShipAddress())
-                        .post(post)
                         .orderDate(LocalDate.now())
+                        .post(post)
                         .amount(post.getPrice())
                         .note(addOrderRequestDTO.getNote())
-                        .paymentMethod("MOMO")
+                        .paymentMethod("VÍ MOMO")
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                         .status("WaitingForConfirmation")
+                        .paymentStatus("PAID")
                         .build();
                 order = orderRepo.save(order);
-                orderResponseDTO = OrderResponseDTO.builder()
-                        .orderId(order.getId())
-                        .postId(order.getPost().getId())
-                        .shipAddress(order.getShipAddress())
-                        .orderDate(order.getOrderDate())
-                        .amount(order.getAmount())
-                        .note(order.getNote())
-                        .paymentMethod(order.getPaymentMethod())
-                        .deliveryMethod(order.getDeliveryMethod())
-                        .status(order.getStatus())
-                        .build();
+                response = paymentService.getPaymentMomo(order.getId(), order.getAmount());
             }
-//            else {
-//                Order order = Order.builder()
-//                        .post(post)
-//                        .orderDate(addOrderRequestDTO.getOrderDate())
-//                        .amount(addOrderRequestDTO.getAmount())
-//                        .note(addOrderRequestDTO.getNote())
-//                        .paymentMethod("MOMO")
-//                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-//                        .status("processing")
-//                        .build();
-//                orderRepo.save(order);
-//                orderResponseDTO = OrderResponseDTO.builder()
-//                        .orderId(order.getId())
-//                        .postId(order.getPost().getId())
-//                        .shipAddress(order.getShipAddress())
-//                        .orderDate(order.getOrderDate())
-//                        .amount(order.getAmount())
-//                        .note(order.getNote())
-//                        .paymentMethod(order.getPaymentMethod())
-//                        .deliveryMethod(order.getDeliveryMethod())
-//                        .status(order.getStatus())
-//                        .build();
-//            }
-        } else {
-            // sử dụng ví trong web
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO) {
+        OrderResponseDTO orderResponseDTO = null;
             User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
             Post post = postRepo.findById(addOrderRequestDTO.getPostId()).get();
             post.setPostStatus("deactivate");
-            if (post.getForm().equalsIgnoreCase("bán")) {
-                // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
-                // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
-                // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
-                Wallet walletBuyer = walletRepo.findById(user.getId()).get();
-                if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
-                    throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+            postRepo.save(post);
+            try {
+                if (post.getForm().equalsIgnoreCase("bán")) {
+                    // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
+                    // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
+                    // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
+                    Wallet walletBuyer = walletRepo.findById(user.getId()).get();
+                    if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
+                        throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+                    } else {
+                        Order order = Order.builder()
+                                .user(user)
+                                .shipAddress(addOrderRequestDTO.getShipAddress())
+                                .orderDate(LocalDate.now())
+                                .post(post)
+                                .amount(post.getPrice())
+                                .note(addOrderRequestDTO.getNote())
+                                .paymentMethod("VÍ CỦA TÔI")
+                                .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                                .status("WaitingForConfirmation")
+                                .paymentStatus("PAID")
+                                .build();
+                        order = orderRepo.save(order);
+                        orderResponseDTO = OrderResponseDTO.builder()
+                                .orderId(order.getId())
+                                .postId(order.getPost().getId())
+                                .userId(order.getUser().getId())
+                                .shipAddress(order.getShipAddress())
+                                .orderDate(order.getOrderDate())
+                                .amount(order.getAmount())
+                                .note(order.getNote())
+                                .paymentMethod(order.getPaymentMethod())
+                                .deliveryMethod(order.getDeliveryMethod())
+                                .status(order.getStatus())
+                                .paymentStatus(order.getPaymentStatus())
+                                .build();
+                        // tru tien trong vi va luu lai
+                        walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
+                        walletRepo.save(walletBuyer);
+                        // cong tien vao vi admin
+                        User admin = userRepo.findUserByRole_Id(1L);
+                        Wallet adminWallet = walletRepo.findById(admin.getId()).get();
+                        adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
+                        walletRepo.save(adminWallet);
+                        // neu don hang co trang thai thanh cong thi
+                        //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
+                    }
                 } else {
-                    Order order = Order.builder()
-                            .user(user)
-                            .shipAddress(addOrderRequestDTO.getShipAddress())
-                            .orderDate(LocalDate.now())
-                            .post(post)
-                            .amount(post.getPrice())
-                            .note(addOrderRequestDTO.getNote())
-                            .paymentMethod("VÍ CỦA TÔI")
-                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("WaitingForConfirmation")
-                            .paymentStatus("PAID")
-                            .build();
-                    order = orderRepo.save(order);
-                    orderResponseDTO = OrderResponseDTO.builder()
-                            .orderId(order.getId())
-                            .postId(order.getPost().getId())
-                            .userId(order.getUser().getId())
-                            .shipAddress(order.getShipAddress())
-                            .orderDate(order.getOrderDate())
-                            .amount(order.getAmount())
-                            .note(order.getNote())
-                            .paymentMethod(order.getPaymentMethod())
-                            .deliveryMethod(order.getDeliveryMethod())
-                            .status(order.getStatus())
-                            .paymentStatus(order.getPaymentStatus())
-                            .build();
-                    // tru tien trong vi va luu lai
-                    walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
-                    walletRepo.save(walletBuyer);
-                    // cong tien vao vi admin
-                    User admin = userRepo.findUserByRole_Id(1L);
-                    Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                    adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
-                    walletRepo.save(adminWallet);
-                    // neu don hang co trang thai thanh cong thi
-                    //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
+                    Wallet walletBuyer = walletRepo.findById(user.getId()).get();
+                    if (walletBuyer.getAmount().compareTo(post.getInitPrice()) < 0) {
+                        throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+                    } else {
+                        Order order = Order.builder()
+                                .user(user)
+                                .shipAddress(addOrderRequestDTO.getShipAddress())
+                                .orderDate(LocalDate.now())
+                                .post(post)
+                                .amount(post.getInitPrice())
+                                .note(addOrderRequestDTO.getNote())
+                                .paymentMethod("VÍ CỦA TÔI")
+                                .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                                .status("WaitingForConfirmation")
+                                .paymentStatus("DEPOSITED")
+                                .build();
+                        order = orderRepo.save(order);
+                        orderResponseDTO = OrderResponseDTO.builder()
+                                .orderId(order.getId())
+                                .postId(order.getPost().getId())
+                                .userId(order.getUser().getId())
+                                .shipAddress(order.getShipAddress())
+                                .orderDate(order.getOrderDate())
+                                .amount(order.getAmount())
+                                .note(order.getNote())
+                                .paymentMethod(order.getPaymentMethod())
+                                .deliveryMethod(order.getDeliveryMethod())
+                                .status(order.getStatus())
+                                .paymentStatus(order.getPaymentStatus())
+                                .build();
+                        // tru tien trong vi va luu lai
+                        walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
+                        walletRepo.save(walletBuyer);
+                        // cong tien vao vi admin
+                        User admin = userRepo.findUserByRole_Id(1L);
+                        Wallet adminWallet = walletRepo.findById(admin.getId()).get();
+                        adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
+                        walletRepo.save(adminWallet);
+                        // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
+                        //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
+                    }
                 }
-            } else {
-                Wallet walletBuyer = walletRepo.findById(user.getId()).get();
-                if (walletBuyer.getAmount().compareTo(post.getInitPrice()) < 0) {
-                    throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
-                } else {
-                    Order order = Order.builder()
-                            .user(user)
-                            .shipAddress(addOrderRequestDTO.getShipAddress())
-                            .orderDate(LocalDate.now())
-                            .post(post)
-                            .amount(post.getInitPrice())
-                            .note(addOrderRequestDTO.getNote())
-                            .paymentMethod("VÍ CỦA TÔI")
-                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("WaitingForConfirmation")
-                            .paymentStatus("DEPOSITED")
-                            .build();
-                    order = orderRepo.save(order);
-                    orderResponseDTO = OrderResponseDTO.builder()
-                            .orderId(order.getId())
-                            .postId(order.getPost().getId())
-                            .userId(order.getUser().getId())
-                            .shipAddress(order.getShipAddress())
-                            .orderDate(order.getOrderDate())
-                            .amount(order.getAmount())
-                            .note(order.getNote())
-                            .paymentMethod(order.getPaymentMethod())
-                            .deliveryMethod(order.getDeliveryMethod())
-                            .status(order.getStatus())
-                            .paymentStatus(order.getPaymentStatus())
-                            .build();
-                    // tru tien trong vi va luu lai
-                    walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
-                    walletRepo.save(walletBuyer);
-                    // cong tien vao vi admin
-                    User admin = userRepo.findUserByRole_Id(1L);
-                    Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                    adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
-                    walletRepo.save(adminWallet);
-                    // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
-                    //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
-                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }
         return orderResponseDTO;
-    }
+        }
 
     @Override
     public Boolean converOrderStatus(Long orderId) {

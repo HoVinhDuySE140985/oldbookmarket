@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -39,7 +41,7 @@ public class MomoRequest {
     
     private String signature;
     
-    private long amount;
+    private BigDecimal amount;
     
     private CustomerInfoMomoRequest userInfo;
 }

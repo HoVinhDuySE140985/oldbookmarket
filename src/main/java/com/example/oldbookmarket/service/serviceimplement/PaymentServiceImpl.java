@@ -1,5 +1,6 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService{
     OrderRepo orderRepo;
 
     @Override
-    public ResponseEntity<MomoResponse> getPaymentMomo(MomoClientRequest request) {
+    public ResponseEntity<MomoResponse> getPaymentMomo(Long orderId, BigDecimal money) {
 
         // request url
         String url = Common.MOMO_URI;
@@ -51,7 +52,6 @@ public class PaymentServiceImpl implements PaymentService{
         MomoRequest momoReq = new MomoRequest();
         // CustomerInfoMomoRequest customerInfo = new CustomerInfoMomoRequest("dat",
         // "0123456789", "dat@gmail.com");
-        Order order = orderRepo.findById(request.getOrderId()).get() ;
 //        String orderId = String.join("-", oList); //12 //23-12-23-32
         // String requestId = 
         // Order order = orderRepository.getOrderById(Long.parseLong(request.getOrderId()));
@@ -66,13 +66,13 @@ public class PaymentServiceImpl implements PaymentService{
 
         DecimalFormat df = new DecimalFormat("#");
 
-        String amount = String.valueOf(df.format(request.getAmount()));
+        String amount = String.valueOf(df.format(money));
 
         String sign = "accessKey=" + Common.ACCESS_KEY + "&amount=" + amount + "&extraData="
-                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + order.getId() + "&orderInfo="
+                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + orderId + "&orderInfo="
                 + "Thanh toan momo"
                 + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + Common.REDIRECT_URL_MOMO
-                + "&requestId=" + order.getId() + "&requestType=captureWallet";
+                + "&requestId=" + orderId + "&requestType=captureWallet";
 
         // accessKey=$accessKey&amount=$amount&extraData=$extraData
         // &ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo
@@ -89,14 +89,14 @@ public class PaymentServiceImpl implements PaymentService{
 
         momoReq.setPartnerCode(Common.PARTNER_CODE);
         momoReq.setSignature(signatureHmac);
-        momoReq.setAmount(Long.valueOf(amount));
+        momoReq.setAmount(money);
         momoReq.setExtraData("");
         momoReq.setIpnUrl(Common.IPN_URL_MOMO);
         momoReq.setLang("vi");
-        momoReq.setOrderId(order.getId().toString());
+        momoReq.setOrderId(orderId.toString());
         momoReq.setOrderInfo("Thanh toan momo");
         momoReq.setRedirectUrl(Common.REDIRECT_URL_MOMO); //* */
-        momoReq.setRequestId(order.getId().toString());
+        momoReq.setRequestId(orderId.toString());
         momoReq.setRequestType("captureWallet");
 
         HttpEntity<MomoRequest> req = new HttpEntity<>(momoReq, headers);

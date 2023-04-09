@@ -23,6 +23,7 @@ import com.example.oldbookmarket.shared.utils.Common;
 import com.example.oldbookmarket.shared.utils.Utilities;
 
 import javax.annotation.security.PermitAll;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -38,8 +39,8 @@ public class PaymentController {
     @PostMapping("/momo")
     @PreAuthorize("hasRole('CUSTOMER')")
 //    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestBody MomoClientRequest request) {
-    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestBody MomoClientRequest request) {
-        return paymentService.getPaymentMomo(request);
+    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestParam Long orderId, @RequestParam BigDecimal money) {
+        return paymentService.getPaymentMomo(orderId,money);
     }
 
 

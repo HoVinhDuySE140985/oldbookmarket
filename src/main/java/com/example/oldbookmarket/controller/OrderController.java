@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
@@ -23,12 +24,26 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @PostMapping("create-new-order")
+    @PostMapping("create-new-order-with-momo")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewOrder(@RequestBody @Validated AddOrderRequestDTO addOrderRequestDTO) {
+    public ResponseEntity<ResponseDTO> createNewOrderWithMomo(@RequestBody @Validated AddOrderRequestDTO addOrderRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            OrderResponseDTO orderResponseDTO = orderService.createNewOrder(addOrderRequestDTO);
+            ResponseEntity<MomoResponse> response = orderService.createNewOrderWithMomo(addOrderRequestDTO);
+            responseDTO.setData(response);
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PostMapping("create-new-order-with-my-wallet")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> createNewOrderWithYMyWallet(@RequestBody @Validated AddOrderRequestDTO addOrderRequestDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            OrderResponseDTO orderResponseDTO = orderService.createNewOrderWithMyWallet(addOrderRequestDTO);
             if (orderResponseDTO != null) {
                 responseDTO.setData(orderResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);

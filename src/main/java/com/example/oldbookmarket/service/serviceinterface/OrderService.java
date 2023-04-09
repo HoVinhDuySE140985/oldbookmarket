@@ -1,14 +1,17 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.Order;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface OrderService {
-    OrderResponseDTO createNewOrder(AddOrderRequestDTO addOrderRequestDTO);
+    ResponseEntity<MomoResponse> createNewOrderWithMomo(AddOrderRequestDTO addOrderRequestDTO);
+    OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO);
     Boolean converOrderStatus(Long orderId);
     List<Order> getAllOrder(Long userId, String orderStatus);
     Order cancelOrder(Long orderId, String cancelReason);
