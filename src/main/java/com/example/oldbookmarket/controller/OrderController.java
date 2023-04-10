@@ -95,7 +95,7 @@ public class OrderController {
 //        return ResponseEntity.ok().body(responseDTO);
 //    }
 
-    @PutMapping("update_resent_date/{orderId}")
+    @PutMapping("update_resent_date")
     public ResponseEntity<ResponseDTO> updateResentDate(@RequestParam(required = true) @Validated Long orderId,
                                                         @RequestParam(required = true) @Validated String resentDate){
         ResponseDTO responseDTO = new ResponseDTO();
