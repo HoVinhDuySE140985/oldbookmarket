@@ -158,6 +158,7 @@ public class OrderServiceImpl implements OrderService {
                                 .paymentMethod(order.getPaymentMethod())
                                 .deliveryMethod(order.getDeliveryMethod())
                                 .status(order.getStatus())
+                                .form(order.getPost().getForm())
                                 .paymentStatus(order.getPaymentStatus())
                                 .build();
                         // tru tien trong vi va luu lai
@@ -274,7 +275,6 @@ public class OrderServiceImpl implements OrderService {
                         .userId(order.getUser().getId())
                         .status(order.getStatus())
                         .paymentStatus(order.getPaymentStatus())
-                        .url("https://www.youtube.com/")
                         .build();
             }
         } catch (Exception e) {
