@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
                 order = orderRepo.save(order);
                 response = paymentService.getPaymentMomo(order.getId(), order.getAmount());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return response;
@@ -79,105 +79,101 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO) {
         OrderResponseDTO orderResponseDTO = null;
-            User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
-            Post post = postRepo.findById(addOrderRequestDTO.getPostId()).get();
-            post.setPostStatus("deactivate");
-            postRepo.save(post);
-            try {
-                if (post.getForm().equalsIgnoreCase("bán")) {
-                    // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
-                    // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
-                    // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
-                    Wallet walletBuyer = walletRepo.findById(user.getId()).get();
-                    if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
-                        throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
-                    } else {
-                        Order order = Order.builder()
-                                .user(user)
-                                .shipAddress(addOrderRequestDTO.getShipAddress())
-                                .orderDate(LocalDate.now())
-                                .post(post)
-                                .amount(post.getPrice())
-                                .note(addOrderRequestDTO.getNote())
-                                .paymentMethod("VÍ CỦA TÔI")
-                                .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                                .status("WaitingForConfirmation")
-                                .paymentStatus("PAID")
-                                .build();
-                        order = orderRepo.save(order);
-                        orderResponseDTO = OrderResponseDTO.builder()
-                                .orderId(order.getId())
-                                .postId(order.getPost().getId())
-                                .userId(order.getUser().getId())
-                                .shipAddress(order.getShipAddress())
-                                .orderDate(order.getOrderDate())
-                                .amount(order.getAmount())
-                                .note(order.getNote())
-                                .paymentMethod(order.getPaymentMethod())
-                                .deliveryMethod(order.getDeliveryMethod())
-                                .status(order.getStatus())
-                                .paymentStatus(order.getPaymentStatus())
-                                .build();
-                        // tru tien trong vi va luu lai
-                        walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
-                        walletRepo.save(walletBuyer);
-                        // cong tien vao vi admin
-                        User admin = userRepo.findUserByRole_Id(1L);
-                        Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                        adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
-                        walletRepo.save(adminWallet);
-                        // neu don hang co trang thai thanh cong thi
-                        //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
-                    }
-                } else {
-                    Wallet walletBuyer = walletRepo.findById(user.getId()).get();
-                    if (walletBuyer.getAmount().compareTo(post.getInitPrice()) < 0) {
-                        throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
-                    } else {
-                        Order order = Order.builder()
-                                .user(user)
-                                .shipAddress(addOrderRequestDTO.getShipAddress())
-                                .orderDate(LocalDate.now())
-                                .post(post)
-                                .amount(post.getInitPrice())
-                                .note(addOrderRequestDTO.getNote())
-                                .paymentMethod("VÍ CỦA TÔI")
-                                .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                                .status("WaitingForConfirmation")
-                                .paymentStatus("DEPOSITED")
-                                .build();
-                        order = orderRepo.save(order);
-                        orderResponseDTO = OrderResponseDTO.builder()
-                                .orderId(order.getId())
-                                .postId(order.getPost().getId())
-                                .userId(order.getUser().getId())
-                                .shipAddress(order.getShipAddress())
-                                .orderDate(order.getOrderDate())
-                                .amount(order.getAmount())
-                                .note(order.getNote())
-                                .paymentMethod(order.getPaymentMethod())
-                                .deliveryMethod(order.getDeliveryMethod())
-                                .status(order.getStatus())
-                                .form(order.getPost().getForm())
-                                .paymentStatus(order.getPaymentStatus())
-                                .build();
-                        // tru tien trong vi va luu lai
-                        walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
-                        walletRepo.save(walletBuyer);
-                        // cong tien vao vi admin
-                        User admin = userRepo.findUserByRole_Id(1L);
-                        Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                        adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
-                        walletRepo.save(adminWallet);
-                        // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
-                        //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
+        User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        post.setPostStatus("deactivate");
+        postRepo.save(post);
+        if (post.getForm().equalsIgnoreCase("bán")) {
+            // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
+            // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
+            // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
+            Wallet walletBuyer = walletRepo.findById(user.getId()).get();
+            if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
+                throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+            } else {
+                Order order = Order.builder()
+                        .user(user)
+                        .shipAddress(addOrderRequestDTO.getShipAddress())
+                        .orderDate(LocalDate.now())
+                        .post(post)
+                        .amount(post.getPrice())
+                        .note(addOrderRequestDTO.getNote())
+                        .paymentMethod("VÍ CỦA TÔI")
+                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                        .status("WaitingForConfirmation")
+                        .paymentStatus("PAID")
+                        .build();
+                order = orderRepo.save(order);
+                orderResponseDTO = OrderResponseDTO.builder()
+                        .orderId(order.getId())
+                        .postId(order.getPost().getId())
+                        .userId(order.getUser().getId())
+                        .shipAddress(order.getShipAddress())
+                        .orderDate(order.getOrderDate())
+                        .amount(order.getAmount())
+                        .note(order.getNote())
+                        .paymentMethod(order.getPaymentMethod())
+                        .deliveryMethod(order.getDeliveryMethod())
+                        .status(order.getStatus())
+                        .paymentStatus(order.getPaymentStatus())
+                        .build();
+                // tru tien trong vi va luu lai
+                walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
+                walletRepo.save(walletBuyer);
+                // cong tien vao vi admin
+                User admin = userRepo.findUserByRole_Id(1L);
+                Wallet adminWallet = walletRepo.findById(admin.getId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
+                walletRepo.save(adminWallet);
+                // neu don hang co trang thai thanh cong thi
+                //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
             }
-        return orderResponseDTO;
+        } else {
+            Wallet walletBuyer = walletRepo.findById(user.getId()).get();
+            if (walletBuyer.getAmount().compareTo(post.getInitPrice()) < 0) {
+                throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+            } else {
+                Order order = Order.builder()
+                        .user(user)
+                        .shipAddress(addOrderRequestDTO.getShipAddress())
+                        .orderDate(LocalDate.now())
+                        .post(post)
+                        .amount(post.getInitPrice())
+                        .note(addOrderRequestDTO.getNote())
+                        .paymentMethod("VÍ CỦA TÔI")
+                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                        .status("WaitingForConfirmation")
+                        .paymentStatus("DEPOSITED")
+                        .build();
+                order = orderRepo.save(order);
+                orderResponseDTO = OrderResponseDTO.builder()
+                        .orderId(order.getId())
+                        .postId(order.getPost().getId())
+                        .userId(order.getUser().getId())
+                        .shipAddress(order.getShipAddress())
+                        .orderDate(order.getOrderDate())
+                        .amount(order.getAmount())
+                        .note(order.getNote())
+                        .paymentMethod(order.getPaymentMethod())
+                        .deliveryMethod(order.getDeliveryMethod())
+                        .status(order.getStatus())
+                        .form(post.getForm())
+                        .paymentStatus(order.getPaymentStatus())
+                        .build();
+                // tru tien trong vi va luu lai
+                walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
+                walletRepo.save(walletBuyer);
+                // cong tien vao vi admin
+                User admin = userRepo.findUserByRole_Id(1L);
+                Wallet adminWallet = walletRepo.findById(admin.getId()).get();
+                adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
+                walletRepo.save(adminWallet);
+                // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
+                //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
+            }
         }
+        return orderResponseDTO;
+    }
 
     @Override
     public Boolean converOrderStatus(Long orderId) {
@@ -203,7 +199,7 @@ public class OrderServiceImpl implements OrderService {
                 orderRepo.save(order);
                 return true;
             }
-            if (order.getStatus().equalsIgnoreCase("complete")){
+            if (order.getStatus().equalsIgnoreCase("complete")) {
                 order.setStatus("resent");
                 orderRepo.save(order);
                 return true;
@@ -227,9 +223,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order cancelOrder(Long orderId, String cancelReason) {
-        Order order =  orderRepo.findById(orderId).get();
+        Order order = orderRepo.findById(orderId).get();
         if (order.getStatus().equalsIgnoreCase("processing")) {
-            User userReceivered  = userRepo.findById(order.getUser().getId()).get();
+            User userReceivered = userRepo.findById(order.getUser().getId()).get();
             Post post = postRepo.findById(order.getPost().getId()).get();
             post.setPostStatus("active");
             postRepo.save(post);
@@ -287,13 +283,13 @@ public class OrderServiceImpl implements OrderService {
     public Boolean updateResentDate(Long orderId, String resentDate) {
         Order order = orderRepo.findById(orderId).get();
         try {
-            if(order.getStatus().equalsIgnoreCase("complete")){
+            if (order.getStatus().equalsIgnoreCase("complete")) {
                 order.setResentDate(LocalDate.parse(resentDate));
                 order.setStatus("resent");
                 orderRepo.save(order);
                 return true;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -305,9 +301,9 @@ public class OrderServiceImpl implements OrderService {
         List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
         try {
             orderList = orderRepo.findAll();
-            for (Order order: orderList) {
-                if (order.getPost().getUser().getId().equals(userId)){
-                    if (status.equalsIgnoreCase("null")){
+            for (Order order : orderList) {
+                if (order.getPost().getUser().getId().equals(userId)) {
+                    if (status.equalsIgnoreCase("null")) {
                         OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
                                 .order_date(order.getOrderDate())
                                 .cancelReason(order.getCancelReason())
@@ -323,8 +319,8 @@ public class OrderServiceImpl implements OrderService {
                                 .orderId(order.getId())
                                 .build();
                         orderHistoryResponseDTOS.add(history);
-                    }else {
-                        if (order.getStatus().equalsIgnoreCase(status)){
+                    } else {
+                        if (order.getStatus().equalsIgnoreCase(status)) {
                             OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
                                     .order_date(order.getOrderDate())
                                     .cancelReason(order.getCancelReason())
@@ -344,7 +340,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return orderHistoryResponseDTOS;
@@ -356,9 +352,9 @@ public class OrderServiceImpl implements OrderService {
         List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
         try {
             orderList = orderRepo.findAll();
-            for (Order order: orderList) {
-                if (order.getUser().getId().equals(userId)){
-                    if (status.equalsIgnoreCase("null")){
+            for (Order order : orderList) {
+                if (order.getUser().getId().equals(userId)) {
+                    if (status.equalsIgnoreCase("null")) {
                         OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
                                 .order_date(order.getOrderDate())
                                 .cancelReason(order.getCancelReason())
@@ -376,7 +372,7 @@ public class OrderServiceImpl implements OrderService {
                                 .build();
                         orderHistoryResponseDTOS.add(history);
                     } else {
-                        if (order.getStatus().equalsIgnoreCase(status)){
+                        if (order.getStatus().equalsIgnoreCase(status)) {
                             OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
                                     .order_date(order.getOrderDate())
                                     .cancelReason(order.getCancelReason())
@@ -389,6 +385,7 @@ public class OrderServiceImpl implements OrderService {
                                     .paymentMethod(order.getPaymentMethod())
                                     .shipAddress(order.getShipAddress())
                                     .paymentStatus(order.getPaymentStatus())
+                                    .form(order.getPost().getForm())
                                     .orderId(order.getId())
                                     .build();
                             orderHistoryResponseDTOS.add(history);
@@ -396,7 +393,7 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return orderHistoryResponseDTOS;
@@ -408,8 +405,8 @@ public class OrderServiceImpl implements OrderService {
         List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = new ArrayList<>();
         try {
             orderList = orderRepo.findAll();
-            for (Order order:orderList) {
-                if (order.getPost().getUser().getId().equals(userId) && order.getStatus().equalsIgnoreCase(status)){
+            for (Order order : orderList) {
+                if (order.getPost().getUser().getId().equals(userId) && order.getStatus().equalsIgnoreCase(status)) {
                     OrderHistoryResponseDTO history = OrderHistoryResponseDTO.builder()
                             .order_date(order.getOrderDate())
                             .cancelReason(order.getCancelReason())
@@ -427,7 +424,7 @@ public class OrderServiceImpl implements OrderService {
                     orderHistoryResponseDTOS.add(history);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return orderHistoryResponseDTOS;
