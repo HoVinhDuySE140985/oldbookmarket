@@ -372,6 +372,7 @@ public class OrderServiceImpl implements OrderService {
                                 .shipAddress(order.getShipAddress())
                                 .paymentStatus(order.getPaymentStatus())
                                 .orderId(order.getId())
+                                .form(order.getPost().getForm())
                                 .build();
                         orderHistoryResponseDTOS.add(history);
                     } else {
