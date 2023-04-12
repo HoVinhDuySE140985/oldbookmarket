@@ -73,6 +73,8 @@ public class PaymentController {
                   msg = "giao dich thanh cong";
                 } else if (resultCode == 9000) {
                     msg = "giao dich duoc xac nhan, giao dich thang cong!";
+
+                    
                 }
                 logger.info("" + msg);
                 System.out.println(resultCode);

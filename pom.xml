@@ -178,6 +178,12 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>5.1.6.RELEASE</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-admin</artifactId>
+			<version>6.9.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
