@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.request;
+package com.example.oldbookmarket.dto.request.MomoDTO;
 
 import java.util.List;
 
@@ -14,22 +14,21 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MomoClientRequest {
-         
- 
-//      private String partnerName; // option
-      
-//      private String storeId;   // option
-      
-//      private String requestId; // == orderId
-      
-//      private String ipnUrl;
-      
-//      private String redirectUrl;
-      
-private long amount;
-      
-private List<String> orderId;
 
+
+//      private String partnerName; // option
+
+//      private String storeId;   // option
+
+//      private String requestId; // == orderId
+
+//      private String ipnUrl;
+
+//      private String redirectUrl;
+
+    private Long amount;
+
+    private Long orderId;
 
 
 // private String orderInfo;

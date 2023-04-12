@@ -7,6 +7,7 @@ import com.example.oldbookmarket.service.serviceinterface.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -20,7 +21,7 @@ public class SubcategoryController {
 
     @GetMapping("get-all-subcategory/{id}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getSubCategoryByCateId(@PathVariable Long id){
+    public ResponseEntity<ResponseDTO> getSubCategoryByCateId(@PathVariable @Validated Long id){
         ResponseDTO responseDTO = new ResponseDTO();
             List<Subcategory> subcategoryList = subCategoryService.getSubCategoryByCategoryId(id);
             try {
@@ -34,8 +35,8 @@ public class SubcategoryController {
 
     @PutMapping("staff/create-subcategory/{cateId}/{subCateName}")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<ResponseDTO> createNewSubCategory(@PathVariable Long cateId,
-                                                            @PathVariable String subCateName){
+    public ResponseEntity<ResponseDTO> createNewSubCategory(@PathVariable @Validated Long cateId,
+                                                            @PathVariable @Validated String subCateName){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             Subcategory subcategory = subCategoryService.createNewSubcategory(cateId, subCateName);

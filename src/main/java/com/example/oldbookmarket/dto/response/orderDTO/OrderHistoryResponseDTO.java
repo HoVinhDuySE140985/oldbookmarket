@@ -15,6 +15,8 @@ import java.time.LocalDate;
 public class OrderHistoryResponseDTO {
     private Long orderId;
     private LocalDate order_date;
+    private String postImage;
+    private String title;
     private BigDecimal amount;
     private String deliveryMethod;
     private String paymentMethod;
@@ -23,4 +25,5 @@ public class OrderHistoryResponseDTO {
     private String cancelReason;
     private LocalDate resentDate;
     private String shipAddress;
+    private String form;
 }

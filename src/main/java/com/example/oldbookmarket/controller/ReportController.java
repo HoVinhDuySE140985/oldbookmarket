@@ -8,6 +8,7 @@ import com.example.oldbookmarket.service.serviceinterface.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class ReportController {
 
     @PostMapping("createNewReport")
     @PreAuthorize("hasRole('STAFF')")
-    public ResponseEntity<ResponseDTO> createNewReport(@RequestBody ReportRequestDTO reportRequestDTO){
+    public ResponseEntity<ResponseDTO> createNewReport(@RequestBody @Validated ReportRequestDTO reportRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         ReportResponseDTO reportResponseDTO = reportService.createNewReport(reportRequestDTO);
         try {

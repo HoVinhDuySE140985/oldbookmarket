@@ -47,7 +47,7 @@ public class ScheduledConfig {
                     order.setPaymentStatus("PAYMENT_COMPLETED");
                     orderRepo.save(order);
                 }
-//                 đơn hàng cancel
+                //đơn hàng cancel
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
                     Wallet buyerWallet = walletRepo.findById(buyer.getId()).get();
                     Wallet adminWallet = walletRepo.findById(admin.getId()).get();
@@ -56,12 +56,13 @@ public class ScheduledConfig {
                     walletRepo.save(adminWallet);
                     buyerWallet.setAmount(buyerWallet.getAmount().add(amountToBePaid));
                     walletRepo.save(buyerWallet);
-                    order.setPaymentStatus("REFUND _COMPLETED");
+                    order.setPaymentStatus("REFUND_COMPLETED");
+                    order.setStatus("REFUND");
                     orderRepo.save(order);
                 }
             }else {
                 // trao đổi
-                if (order.getStatus().equalsIgnoreCase("người bán đã nhận hàng") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
+                if (order.getStatus().equalsIgnoreCase("Received") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
                     Wallet buyerWallet = walletRepo.findById(buyer.getId()).get();
                     Wallet adminWallet = walletRepo.findById(admin.getId()).get();
                     BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.90));
@@ -80,7 +81,8 @@ public class ScheduledConfig {
                     walletRepo.save(adminWallet);
                     buyerWallet.setAmount(buyerWallet.getAmount().add(amountToBePaid));
                     walletRepo.save(buyerWallet);
-                    order.setPaymentStatus("REFUND _COMPLETED");
+                    order.setPaymentStatus("REFUND_COMPLETED");
+                    order.setStatus("REFUND");
                     orderRepo.save(order);
                     // làm thêm phần lưu vô bảng refund
                 }

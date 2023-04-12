@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
@@ -10,6 +11,7 @@ import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
@@ -22,12 +24,26 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-    @PostMapping("create-new-order")
+    @PostMapping("create-new-order-with-momo")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewOrder(@RequestBody AddOrderRequestDTO addOrderRequestDTO) {
+    public ResponseEntity<ResponseDTO> createNewOrderWithMomo(@RequestBody @Validated AddOrderRequestDTO addOrderRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            OrderResponseDTO orderResponseDTO = orderService.createNewOrder(addOrderRequestDTO);
+            ResponseEntity<MomoResponse> response = orderService.createNewOrderWithMomo(addOrderRequestDTO);
+            responseDTO.setData(response);
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PostMapping("create-new-order-with-my-wallet")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> createNewOrderWithYMyWallet(@RequestBody @Validated AddOrderRequestDTO addOrderRequestDTO) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            OrderResponseDTO orderResponseDTO = orderService.createNewOrderWithMyWallet(addOrderRequestDTO);
             if (orderResponseDTO != null) {
                 responseDTO.setData(orderResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
@@ -39,9 +55,9 @@ public class OrderController {
     }
 
     @GetMapping ("add_user_to_order/{orderId}/{userId}/{addressId}")
-    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable Long orderId,
-                                                      @PathVariable Long userId,
-                                                      @PathVariable Long addressId){
+    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable @Validated Long orderId,
+                                                      @PathVariable @Validated Long userId,
+                                                      @PathVariable @Validated Long addressId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             OrderResponseDTO finalOrderResponseDTO = orderService.addToOrder(orderId,userId,addressId);
@@ -79,9 +95,9 @@ public class OrderController {
 //        return ResponseEntity.ok().body(responseDTO);
 //    }
 
-    @PutMapping("update_resent_date/{orderId}")
-    public ResponseEntity<ResponseDTO> updateResentDate(@RequestParam(required = true) Long orderId,
-                                                        @RequestParam(required = true) String resentDate){
+    @PutMapping("update_resent_date")
+    public ResponseEntity<ResponseDTO> updateResentDate(@RequestParam(required = true) @Validated Long orderId,
+                                                        @RequestParam(required = true) @Validated String resentDate){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             responseDTO.setData(orderService.updateResentDate(orderId,resentDate));
@@ -108,8 +124,8 @@ public class OrderController {
 
     @GetMapping("get_All_Sell_Order")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllSellOrder(@RequestParam Long userId,
-                                                       @RequestParam String status){
+    public ResponseEntity<ResponseDTO> getAllSellOrder(@RequestParam @Validated Long userId,
+                                                       @RequestParam @Validated String status){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllSellOrder(userId,status);
@@ -124,8 +140,8 @@ public class OrderController {
 
     @GetMapping("get_All_Bought_Order")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllBoughtOrder(@RequestParam Long userId,
-                                                         @RequestParam String status ){
+    public ResponseEntity<ResponseDTO> getAllBoughtOrder(@RequestParam @Validated Long userId,
+                                                         @RequestParam @Validated String status ){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllBoughtOrder(userId,status);
@@ -140,8 +156,8 @@ public class OrderController {
 
     @GetMapping("get_all_order_by_status")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllOrderByStatus(@RequestParam Long userId,
-                                                           @RequestParam String status){
+    public ResponseEntity<ResponseDTO> getAllOrderByStatus(@RequestParam @Validated Long userId,
+                                                           @RequestParam @Validated String status){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<OrderHistoryResponseDTO> orderHistoryResponseDTOS = orderService.getAllOrderByStatus(userId,status);

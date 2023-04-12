@@ -1,10 +1,13 @@
-package com.example.oldbookmarket.dto.request;
+package com.example.oldbookmarket.dto.request.MomoDTO;
 
+import com.example.oldbookmarket.dto.request.MomoDTO.CustomerInfoMomoRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +41,7 @@ public class MomoRequest {
     
     private String signature;
     
-    private long amount;
+    private BigDecimal amount;
     
     private CustomerInfoMomoRequest userInfo;
 }

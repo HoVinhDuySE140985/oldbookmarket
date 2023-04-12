@@ -9,10 +9,12 @@ import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.entity.UserStatus;
+import com.example.oldbookmarket.entity.Wallet;
 import com.example.oldbookmarket.enumcode.StatusCode;
 import com.example.oldbookmarket.repository.RoleRepo;
 import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.repository.UserStatusRepo;
+import com.example.oldbookmarket.repository.WalletRepo;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     RoleRepo roleRepo;
+
+    @Autowired
+    WalletRepo walletRepo;
 
     @Override
     public User findByEmail(String email) {
@@ -69,6 +75,11 @@ public class UserServiceImpl implements UserService {
                         .name(StatusCode.ACTIVATE.toString())
                         .build();
                 userStatusRepo.save(userStatus);
+                Wallet wallet = Wallet.builder()
+                        .user(user)
+                        .amount(BigDecimal.valueOf(0))
+                        .build();
+                walletRepo.save(wallet);
 
                 registerResponseDTO = RegisterResponseDTO.builder()
                         .userId(user.getId())
