@@ -96,6 +96,7 @@ public class AuthenController {
     }
 
     @PutMapping("update-user-info-by-email")
+    @PermitAll
     public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody @Validated UpdateUserRequestDTO updateUserRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
