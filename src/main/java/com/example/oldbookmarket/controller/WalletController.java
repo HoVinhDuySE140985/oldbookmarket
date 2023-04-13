@@ -1,17 +1,15 @@
 package com.example.oldbookmarket.controller;
 
-import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
-import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.enumcode.SuccessCode;
-import com.example.oldbookmarket.repository.WalletRepo;
+import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import com.example.oldbookmarket.service.serviceinterface.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.math.BigDecimal;
 
 @RestController
@@ -23,11 +21,10 @@ public class WalletController {
     @PostMapping("/recharge-into-wallet")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> rechargeIntoWallet(@RequestParam Long userId,
-                                                          @RequestParam Long purchaseId,
                                                           @RequestParam BigDecimal depositAmount) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            responseDTO.setData(walletService.rechargeIntoWallet(userId,purchaseId,depositAmount));
+            responseDTO.setData(walletService.rechargeIntoWalletMoMo(userId,depositAmount));
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,4 +44,5 @@ public class WalletController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
 }

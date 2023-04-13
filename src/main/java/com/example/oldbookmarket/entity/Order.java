@@ -33,6 +33,7 @@ public class Order implements Serializable {
     private String paymentStatus;
     private LocalDate resentDate;
     private String cancelReason;
+    private String codeOrder;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)

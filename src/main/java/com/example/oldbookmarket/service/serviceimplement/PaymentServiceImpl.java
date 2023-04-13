@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService{
     OrderRepo orderRepo;
 
     @Override
-    public ResponseEntity<MomoResponse> getPaymentMomo(Long orderId, BigDecimal money) {
+    public ResponseEntity<MomoResponse> getPaymentMomo(String codeOrder, BigDecimal money, Long userId, String type) {
 
         // request url
         String url = Common.MOMO_URI;
@@ -69,10 +69,10 @@ public class PaymentServiceImpl implements PaymentService{
         String amount = String.valueOf(df.format(money));
 
         String sign = "accessKey=" + Common.ACCESS_KEY + "&amount=" + amount + "&extraData="
-                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + orderId + "&orderInfo="
+                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + codeOrder + "&orderInfo="
                 + "Thanh toan momo"
-                + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + Common.REDIRECT_URL_MOMO
-                + "&requestId=" + orderId + "&requestType=captureWallet";
+                + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + Common.REDIRECT_URL_MOMO+"/"+type+"/"+userId
+                + "&requestId=" + codeOrder + "&requestType=captureWallet";
 
         // accessKey=$accessKey&amount=$amount&extraData=$extraData
         // &ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo
@@ -93,10 +93,10 @@ public class PaymentServiceImpl implements PaymentService{
         momoReq.setExtraData("");
         momoReq.setIpnUrl(Common.IPN_URL_MOMO);
         momoReq.setLang("vi");
-        momoReq.setOrderId(orderId.toString());
+        momoReq.setOrderId(codeOrder);
         momoReq.setOrderInfo("Thanh toan momo");
-        momoReq.setRedirectUrl(Common.REDIRECT_URL_MOMO); //* */
-        momoReq.setRequestId(orderId.toString());
+        momoReq.setRedirectUrl(Common.REDIRECT_URL_MOMO+"/"+type+"/"+userId); //* */
+        momoReq.setRequestId(codeOrder);
         momoReq.setRequestType("captureWallet");
 
         HttpEntity<MomoRequest> req = new HttpEntity<>(momoReq, headers);

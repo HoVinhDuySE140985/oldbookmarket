@@ -19,6 +19,7 @@ public class BookPendingResponseDTO {
     private List<BookImage> imageBook;
     private LocalDate publicationDate;
     private String publicCompany;
+    private String reprints;
     private String author;
     private String coverType;
     private String language;

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.oldbookmarket.dto.request.PnsRequest;
+import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.example.oldbookmarket.service.FcmService;
 import com.google.firebase.messaging.BatchResponse;
 

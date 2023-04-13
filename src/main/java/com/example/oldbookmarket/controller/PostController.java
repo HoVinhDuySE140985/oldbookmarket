@@ -38,28 +38,12 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("get-all-post") // nhung post có trang thái active
-//    @PermitAll
-//    public ResponseEntity<ResponseDTO> getAllPost( @RequestParam(required = false) String sortBy,
-//                                                   @RequestParam(required = false) String filter) {
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            List<PostResponseDTO> postList = postService.getAllPost(sortBy,filter);
-//            responseDTO.setData(postList);
-//            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-//            responseDTO.setResult(postList.size());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
-
-    @GetMapping("get_all_my_post_by_userId")
+    @GetMapping("get_all_my_post_by_email")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getAllMylPost(@RequestParam @Validated Long userId) {
+    public ResponseEntity<ResponseDTO> getAllMylPost(@RequestParam @Validated String email) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> mySellPostList = postService.getAllPosts(userId);
+            List<PostResponseDTO> mySellPostList = postService.getAllPosts(email);
             responseDTO.setData(mySellPostList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             responseDTO.setResult(mySellPostList.size());

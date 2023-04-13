@@ -2,18 +2,15 @@ package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
+import com.example.oldbookmarket.service.serviceinterface.WalletService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.oldbookmarket.dto.request.MomoDTO.MomoClientRequest;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoConfirmResultResponse;
@@ -24,6 +21,7 @@ import com.example.oldbookmarket.shared.utils.Utilities;
 
 import javax.annotation.security.PermitAll;
 import java.math.BigDecimal;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -33,20 +31,27 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
+//    @Autowired
+//    OrderService orderService;
     @Autowired
-    OrderService orderService;
+    WalletService walletService;
 
     @PostMapping("/momo")
     @PreAuthorize("hasRole('CUSTOMER')")
 //    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestBody MomoClientRequest request) {
-    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestParam Long orderId, @RequestParam BigDecimal money) {
-        return paymentService.getPaymentMomo(orderId,money);
+    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestParam String codeOrder,
+                                                        @RequestParam BigDecimal money,
+                                                        @RequestParam Long userId,
+                                                        @RequestParam String type) {
+        return paymentService.getPaymentMomo(codeOrder,money,userId,type);
     }
 
 
-    @GetMapping("/MomoConfirm")
+    @GetMapping("/MomoConfirm/{type}/{userId}")
     @PermitAll
     public ResponseEntity<MomoConfirmResultResponse> momoConfirm(
+            @PathVariable String type,
+            @PathVariable Long userId,
             @RequestParam("partnerCode") String partnerCode,
             @RequestParam("orderId") String orderId,
             @RequestParam("requestId") String requestId,
@@ -82,12 +87,17 @@ public class PaymentController {
             msg = "giao dich thanh cong";
         } else if (resultCode == 9000) {
             msg = "giao dich duoc xac nhan, giao dich thang cong!";
+            if (type.equalsIgnoreCase("Nạp Tiền")){
+                walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount));
+            }
         }
         logger.info("" + msg);
         System.out.println(resultCode);
         System.out.println(msg);
         // accessKey=WehkypIRwPP14mHb&orderId=23&partnerCode=MOMODJMX20220717&requestId=48468005-6de1-4140-839f-5f2d8d77a001
-        return new ResponseEntity<>(momoConfirmResultResponse, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create("https://www.youtube.com/")); // deploy lên thì chạy về trang cần trả về
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
 }

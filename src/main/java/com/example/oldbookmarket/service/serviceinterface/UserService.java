@@ -19,7 +19,7 @@ public interface UserService {
 
     UpdateUserResponseDTO updateUserInfo(UpdateUserRequestDTO updateUserRequestDTO);
 
-    User findUserById(Long id);
+    User findUserByEmail(String email);
 
     Boolean isExistUserByEmail(String email);
 

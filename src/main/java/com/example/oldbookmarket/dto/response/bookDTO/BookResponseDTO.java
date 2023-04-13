@@ -23,6 +23,7 @@ public class BookResponseDTO {
     private String publicCompany;
     private String author;
     private String coverType;
+    private String reprint;
     private String language;
     private String bookExchange;
     private String statusQuo;

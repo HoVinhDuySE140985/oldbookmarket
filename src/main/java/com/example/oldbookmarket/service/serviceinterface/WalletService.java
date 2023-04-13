@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 
 public interface WalletService {
-    ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, Long purchaseId, BigDecimal depositAmount);
+    ResponseEntity<MomoResponse> rechargeIntoWalletMoMo(Long userId, BigDecimal depositAmount);
+    ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, BigDecimal depositAmount);
     WalletResponseDTO viewWallet(Long userId);
 }

@@ -10,5 +10,5 @@ import java.math.BigDecimal;
 public interface PaymentService {
     
 //    ResponseEntity<MomoResponse> getPaymentMomo(MomoClientRequest request);
-    ResponseEntity<MomoResponse> getPaymentMomo(Long orderId, BigDecimal money);
+    ResponseEntity<MomoResponse> getPaymentMomo(String codeOrder, BigDecimal money, Long userId, String type);
 }

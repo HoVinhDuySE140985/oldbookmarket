@@ -95,7 +95,7 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("update-user-infor")
+    @PutMapping("update-user-info-by-email")
     public ResponseEntity<ResponseDTO> updateUserInfo(@RequestBody @Validated UpdateUserRequestDTO updateUserRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -108,11 +108,11 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-user-info/{userId}")  // loi
+    @GetMapping("get-user-info-by-email")
     @PreAuthorize("hasAnyRole('CUSTOMER' , 'ADMIN', 'STAFF')")
-    public ResponseEntity<ResponseDTO> getUserInfo(@PathVariable @Validated Long userId) {
+    public ResponseEntity<ResponseDTO> getUserInfo(@RequestParam @Validated String email) {
         ResponseDTO responseDTO = new ResponseDTO();
-        User user = userService.findUserById(userId);
+        User user = userService.findUserByEmail(email);
         try {
             responseDTO.setData(user);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);

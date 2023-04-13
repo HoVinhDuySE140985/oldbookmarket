@@ -9,6 +9,7 @@ import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import com.example.oldbookmarket.service.serviceinterface.PaymentService;
+import com.example.oldbookmarket.shared.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.sql.Ref;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -49,6 +51,8 @@ public class OrderServiceImpl implements OrderService {
     public ResponseEntity<MomoResponse> createNewOrderWithMomo(AddOrderRequestDTO addOrderRequestDTO) {
         ResponseEntity<MomoResponse> response = null;
         try {
+            String code = Utilities.randomAlphaNumeric(10);
+//            response = paymentService.getPaymentMomo(code, addOrderRequestDTO.getAmount());
             User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
             Post post = postRepo.findById(addOrderRequestDTO.getPostId()).get();
             post.setPostStatus("deactivate");
@@ -59,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
                         .shipAddress(addOrderRequestDTO.getShipAddress())
                         .orderDate(LocalDate.now())
                         .post(post)
+                        .codeOrder(code)
                         .amount(post.getPrice())
                         .note(addOrderRequestDTO.getNote())
                         .paymentMethod("VÍ MOMO")
@@ -66,8 +71,7 @@ public class OrderServiceImpl implements OrderService {
                         .status("WaitingForConfirmation")
                         .paymentStatus("PAID")
                         .build();
-                order = orderRepo.save(order);
-                response = paymentService.getPaymentMomo(order.getId(), order.getAmount());
+                orderRepo.save(order);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,8 +83,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO) {
         OrderResponseDTO orderResponseDTO = null;
-        User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+        User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         post.setPostStatus("deactivate");
         postRepo.save(post);
         if (post.getForm().equalsIgnoreCase("bán")) {
@@ -122,7 +126,7 @@ public class OrderServiceImpl implements OrderService {
                 walletRepo.save(walletBuyer);
                 // cong tien vao vi admin
                 User admin = userRepo.findUserByRole_Id(1L);
-                Wallet adminWallet = walletRepo.findById(admin.getId()).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                Wallet adminWallet = walletRepo.findById(admin.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
                 adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
                 walletRepo.save(adminWallet);
                 // neu don hang co trang thai thanh cong thi

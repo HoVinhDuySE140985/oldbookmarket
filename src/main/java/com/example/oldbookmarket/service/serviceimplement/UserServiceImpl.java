@@ -99,25 +99,21 @@ public class UserServiceImpl implements UserService {
     public UpdateUserResponseDTO updateUserInfo(UpdateUserRequestDTO updateUserRequestDTO) {
         UpdateUserResponseDTO updateUserResponseDTO = null;
         try {
-            User user = userRepo.getById(updateUserRequestDTO.getId());
+            User user = userRepo.findUserByEmail(updateUserRequestDTO.getEmail());
             if (user != null) {
                 user.setName(updateUserRequestDTO.getName());
-//                user.setEmail(updateUserRequestDTO.getEmail());
                 user.setImageUrl(updateUserRequestDTO.getImageUrl());
                 user.setPhoneNumber(updateUserRequestDTO.getPhoneNumber());
                 user.setDob(updateUserRequestDTO.getDob());
                 user.setGender(updateUserRequestDTO.getGender());
-//                user.setPassword(encoder.encode(updateUserRequestDTO.getPassword()));
                 user = userRepo.save(user);
-
                 updateUserResponseDTO = UpdateUserResponseDTO.builder()
                         .name(user.getName())
-//                        .email(user.getEmail())
+                        .email(user.getEmail())
                         .imageUrl(user.getImageUrl())
                         .phoneNumber(user.getPhoneNumber())
                         .dob(user.getDob())
                         .gender(user.getGender())
-//                        .password(user.getPassword())
                         .build();
             }
         } catch (Exception e) {
@@ -127,10 +123,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(Long id) {
+    public User findUserByEmail(String email) {
         User user = new User();
         try {
-            user = userRepo.findById(id).get();
+            user = userRepo.findUserByEmail(email);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -175,7 +171,6 @@ public class UserServiceImpl implements UserService {
     public Boolean isExistUserByEmail(String email) {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method 'isExistUserByEmail'");
-
         User user = userRepo.findUserByEmail(email);
         if(user != null){
             return true;

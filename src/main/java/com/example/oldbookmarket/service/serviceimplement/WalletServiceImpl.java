@@ -8,6 +8,7 @@ import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.repository.WalletRepo;
 import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import com.example.oldbookmarket.service.serviceinterface.WalletService;
+import com.example.oldbookmarket.shared.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,22 @@ public class WalletServiceImpl implements WalletService {
     PaymentService paymentService;
 
     @Override
-    public ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, Long purchaseId, BigDecimal depositAmount) {
+    public ResponseEntity<MomoResponse> rechargeIntoWalletMoMo(Long userId, BigDecimal depositAmount) {
         ResponseEntity<MomoResponse> response = null;
         try {
-            Wallet wallet = walletRepo.findById(userId).get();
-            wallet.setAmount(wallet.getAmount().add(depositAmount));
-            walletRepo.save(wallet);
-            response = paymentService.getPaymentMomo(purchaseId,depositAmount);
+            String orderCode = Utilities.randomAlphaNumeric(10);
+            response = paymentService.getPaymentMomo(orderCode,depositAmount,userId,"NẠP TIỀN");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }    @Override
+    public ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, BigDecimal depositAmount) {
+        ResponseEntity<MomoResponse> response = null;
+        try {
+                Wallet wallet = walletRepo.findById(userId).get();
+                wallet.setAmount(wallet.getAmount().add(depositAmount));
+                walletRepo.save(wallet);
         }catch (Exception e){
             e.printStackTrace();
         }

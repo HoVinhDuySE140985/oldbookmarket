@@ -82,19 +82,6 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("get-all-order-by/{userId}/{orderStatus}")
-//    public ResponseEntity<ResponseDTO> getAllOrder(@PathVariable Long userId, @PathVariable String orderStatus) {
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            List<Order> orderList = orderService.getAllOrder(userId, orderStatus);
-//            responseDTO.setData(orderList);
-//            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
-
     @PutMapping("update_resent_date")
     public ResponseEntity<ResponseDTO> updateResentDate(@RequestParam(required = true) @Validated Long orderId,
                                                         @RequestParam(required = true) @Validated String resentDate){

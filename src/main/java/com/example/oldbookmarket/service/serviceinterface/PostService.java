@@ -13,7 +13,7 @@ public interface PostService {
     PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO);
 //    List<PostResponseDTO> getAllPost(String sortBy, String filter);
     List<PostResponseDTO> getAllPostNoCondition();
-    List<PostResponseDTO> getAllPosts(Long userId);
+    List<PostResponseDTO> getAllPosts(String email);
 
     List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId, String sortBy, String filter);
     List<PostResponseDTO> searchPostByKeyWord(String keyWord,String sortBy, String filter);

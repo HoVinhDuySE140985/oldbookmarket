@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.request;
+package com.example.oldbookmarket.dto.request.NotiRequestDTO;
 
 public class PnsRequest {
     private String token;

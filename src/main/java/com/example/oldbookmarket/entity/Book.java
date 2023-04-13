@@ -25,8 +25,8 @@ public class Book {
     private String name;
     private String isbn;
     private LocalDate publicationDate;
+    private String reprints; // lần tái bản
     private String publicCompany;
-    private String author;
     private String coverType;
     private String language;
     private String statusQuo; // đồng nghĩa với condition
@@ -42,4 +42,9 @@ public class Book {
     @JsonIgnore
     @OneToMany(mappedBy = "book")
     private List<BookImage> imageList;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "authorId")
+    private BookAuthor bookAuthor;
 }

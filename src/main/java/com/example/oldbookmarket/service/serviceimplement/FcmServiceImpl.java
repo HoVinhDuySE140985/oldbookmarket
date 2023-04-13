@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import com.example.oldbookmarket.dto.request.PnsRequest;
+import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.example.oldbookmarket.service.FcmService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
