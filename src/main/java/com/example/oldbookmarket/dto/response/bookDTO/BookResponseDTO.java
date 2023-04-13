@@ -31,6 +31,7 @@ public class BookResponseDTO {
     private String subcategoryName;
     private Long userId;
     private String userName;
+    private String phoneNumber;
     private BigDecimal price;
     private LocalDate createAt;
 }

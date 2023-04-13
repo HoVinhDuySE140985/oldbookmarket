@@ -63,6 +63,7 @@ public class BookServiceImpl implements BookService {
                         .subcategoryName(post.getSubcategory().getName())
                         .userId(user.getId())
                         .userName(user.getName())
+                        .phoneNumber(user.getPhoneNumber())
                         .createAt(post.getCreateAt())
                         .build();
                 bookResponseDTOS.add(bookResponseDTO);
