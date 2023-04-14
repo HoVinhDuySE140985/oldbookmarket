@@ -24,6 +24,8 @@ public class OrderHistoryResponseDTO {
     private String status;
     private String cancelReason;
     private LocalDate resentDate;
+    private String receiverName;
+    private String phoneNumber;
     private String shipAddress;
     private String form;
 }
