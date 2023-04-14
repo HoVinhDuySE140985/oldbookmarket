@@ -377,6 +377,7 @@ public class OrderServiceImpl implements OrderService {
                                 .paymentStatus(order.getPaymentStatus())
                                 .orderId(order.getId())
                                 .form(order.getPost().getForm())
+                                .sellerName(order.getPost().getUser().getName())
                                 .build();
                         orderHistoryResponseDTOS.add(history);
                     } else {
@@ -395,6 +396,7 @@ public class OrderServiceImpl implements OrderService {
                                     .paymentStatus(order.getPaymentStatus())
                                     .form(order.getPost().getForm())
                                     .orderId(order.getId())
+                                    .sellerName(order.getPost().getUser().getName())
                                     .build();
                             orderHistoryResponseDTOS.add(history);
                         }
