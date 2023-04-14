@@ -419,6 +419,8 @@ public class PostServiceimpl implements PostService {
             post.setImageUrl(postRequestDTO.getImageUrl());
             post.setLocation(postRequestDTO.getLocation());
             post.setPrice(postRequestDTO.getPrice());
+            post.setInitPrice(postRequestDTO.getInitPrice());
+            post.setBookExchange(postRequestDTO.getBookExchange());
             postRepo.save(post);
         } catch (Exception e) {
             e.printStackTrace();

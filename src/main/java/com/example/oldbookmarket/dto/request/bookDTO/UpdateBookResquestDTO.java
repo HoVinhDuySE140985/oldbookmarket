@@ -20,6 +20,7 @@ public class UpdateBookResquestDTO {
     private List<BookImage> bookImages;
     private LocalDate publicationDate;
     private String publicCompany;
+    private String reprints;
     private String author;
     private String coverType;
     private String language;

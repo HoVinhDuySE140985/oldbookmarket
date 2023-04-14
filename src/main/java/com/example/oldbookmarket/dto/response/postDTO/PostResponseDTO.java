@@ -25,6 +25,7 @@ public class PostResponseDTO {
     private List<BookPendingResponseDTO> bookList;
     private BigDecimal initPrice;
     private BigDecimal price;
+    private String bookExchange;
     private Long userId;
     private String userName;
     private String reasonReject;

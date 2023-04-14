@@ -18,7 +18,6 @@ public class PostRequestDTO {
     private Long id;
     private String title;
     private String imageUrl;
-//    private LocalDate createAt;
     private String form;
     private List<BookRequestDTO> bookList;
     private BigDecimal initPrice;

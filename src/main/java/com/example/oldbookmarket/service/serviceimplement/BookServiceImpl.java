@@ -56,6 +56,7 @@ public class BookServiceImpl implements BookService {
                         .author(book.getBookAuthor().getName())
                         .coverType(book.getCoverType())
                         .language(book.getLanguage())
+                        .initPrice(post.getInitPrice())
                         .price(post.getPrice())
                         .bookExchange(post.getBookExchange())
                         .statusQuo(book.getStatusQuo())
@@ -92,6 +93,7 @@ public class BookServiceImpl implements BookService {
                         book.setName(updateBookResquestDTO.getName());
                         book.setIsbn(updateBookResquestDTO.getIsbn());
                         book.setImageList(updateBookResquestDTO.getBookImages());
+                        book.setReprints(updateBookResquestDTO.getReprints());
                         book.setPublicationDate(updateBookResquestDTO.getPublicationDate());
                         book.setPublicCompany(updateBookResquestDTO.getPublicCompany());
                         book.setBookAuthor(bookAuthor);
@@ -104,6 +106,7 @@ public class BookServiceImpl implements BookService {
                                 .name(book.getName())
                                 .isbn(book.getIsbn())
                                 .bookImages(book.getImageList())
+                                .reprint(book.getReprints())
                                 .publicationDate(book.getPublicationDate())
                                 .publicCompany(book.getPublicCompany())
                                 .author(book.getBookAuthor().getName())
@@ -120,6 +123,7 @@ public class BookServiceImpl implements BookService {
                         book.setName(updateBookResquestDTO.getName());
                         book.setIsbn(updateBookResquestDTO.getIsbn());
                         book.setImageList(updateBookResquestDTO.getBookImages());
+                        book.setReprints(updateBookResquestDTO.getReprints());
                         book.setPublicationDate(updateBookResquestDTO.getPublicationDate());
                         book.setPublicCompany(updateBookResquestDTO.getPublicCompany());
                         book.setBookAuthor(author);
@@ -132,6 +136,7 @@ public class BookServiceImpl implements BookService {
                                 .name(book.getName())
                                 .isbn(book.getIsbn())
                                 .bookImages(book.getImageList())
+                                .reprint(book.getReprints())
                                 .publicationDate(book.getPublicationDate())
                                 .publicCompany(book.getPublicCompany())
                                 .author(book.getBookAuthor().getName())
