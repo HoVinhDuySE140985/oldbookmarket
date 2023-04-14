@@ -31,9 +31,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Address> addressList;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "user")
-//    private List<User_Role> userRoles;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
@@ -66,4 +63,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Refund> refundList;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<PostNotification> postNotifications;
 }
