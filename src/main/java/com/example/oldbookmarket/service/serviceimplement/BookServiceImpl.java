@@ -11,7 +11,7 @@ import com.example.oldbookmarket.repository.BookImageRepo;
 import com.example.oldbookmarket.repository.BookRepo;
 import com.example.oldbookmarket.repository.PostRepo;
 import com.example.oldbookmarket.repository.UserRepo;
-import com.example.oldbookmarket.service.serviceinterface.BookAuthorRepo;
+import com.example.oldbookmarket.repository.BookAuthorRepo;
 import com.example.oldbookmarket.service.serviceinterface.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

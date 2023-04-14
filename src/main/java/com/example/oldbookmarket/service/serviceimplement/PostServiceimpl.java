@@ -6,18 +6,12 @@ import com.example.oldbookmarket.dto.response.bookDTO.BookPendingResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
-import com.example.oldbookmarket.service.serviceinterface.BookAuthorRepo;
+import com.example.oldbookmarket.repository.BookAuthorRepo;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
-import org.hibernate.annotations.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -288,7 +282,7 @@ public class PostServiceimpl implements PostService {
                                     .publicCompany(book.getPublicCompany())
                                     .statusQuo(book.getStatusQuo())
                                     .language(book.getLanguage())
-//                                    .author(book.getAuthor())
+                                    .author(book.getBookAuthor().getName())
                                     .imageBook(book.getImageList())
                                     .build();
                             bookPendingResponseDTOS.add(responseDTO);
@@ -324,7 +318,7 @@ public class PostServiceimpl implements PostService {
                                     .publicCompany(book.getPublicCompany())
                                     .statusQuo(book.getStatusQuo())
                                     .language(book.getLanguage())
-//                                    .author(book.getAuthor())
+                                    .author( book.getBookAuthor().getName())
                                     .imageBook(book.getImageList())
                                     .build();
                             bookPendingResponseDTOS.add(responseDTO);
@@ -369,18 +363,14 @@ public class PostServiceimpl implements PostService {
             post.setPostStatus("reject");
             post.setReasonReject(reasonReject);
             postRepo.save(post);
-            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
             postResponseDTO.setId(post.getId());
             postResponseDTO.setTitle(post.getTitle());
             postResponseDTO.setForm(post.getForm());
-//            postResponeDTO.setCategoryId(subcate.getCategory().getId());
-//            postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
-//            postResponeDTO.setBookList(post.getBooks());
             postResponseDTO.setImageUrl(post.getImageUrl());
             postResponseDTO.setPrice(post.getPrice());
             postResponseDTO.setLocation(post.getLocation());
             postResponseDTO.setStatus(post.getPostStatus());
-//            postResponeDTO.setReasonReject(post.getReasonReject());
+            postResponseDTO.setReasonReject(post.getReasonReject());
             postResponseDTO.setUserId(post.getUser().getId());
         } catch (Exception e) {
             e.printStackTrace();

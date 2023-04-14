@@ -4,7 +4,10 @@ import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
+import com.example.oldbookmarket.dto.response.bookauthorDTO.BookAuthorResponseDTO;
+import com.example.oldbookmarket.entity.BookAuthor;
 import com.example.oldbookmarket.enumcode.SuccessCode;
+import com.example.oldbookmarket.service.serviceinterface.BookAuthorService;
 import com.example.oldbookmarket.service.serviceinterface.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,9 @@ import java.util.List;
 public class BookController {
     @Autowired
     BookService bookService;
+
+    @Autowired
+    BookAuthorService bookAuthorService;
 
     @GetMapping("get-book-by/{postId}")
     @PermitAll
@@ -63,4 +69,17 @@ public class BookController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("get-all-author-by-Key-word")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> getAllAuthorBykeyWord(@RequestParam String keyWord){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<BookAuthorResponseDTO> authorList = bookAuthorService.getAllAuthor(keyWord);
+            responseDTO.setData(authorList);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

@@ -250,38 +250,38 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    @Override
-    public OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId) {
-        OrderResponseDTO orderResponseDTO = null;
-        try {
-            Order order = orderRepo.findById(orderId).get();
-            if (order != null) {
-                User user = userRepo.findById(userId).get();
-                Address address = addressRepo.findById(addressId).get();
-                String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
-                order.setUser(user);
-                order.setShipAddress(shipadrress);
-                order.setPaymentStatus("PAID");
-                order = orderRepo.save(order);
-                orderResponseDTO = OrderResponseDTO.builder()
-                        .orderId(order.getId())
-                        .postId(order.getPost().getId())
-                        .shipAddress(order.getShipAddress())
-                        .orderDate(order.getOrderDate())
-                        .amount(order.getAmount())
-                        .note(order.getNote())
-                        .paymentMethod(order.getPaymentMethod())
-                        .deliveryMethod(order.getDeliveryMethod())
-                        .userId(order.getUser().getId())
-                        .status(order.getStatus())
-                        .paymentStatus(order.getPaymentStatus())
-                        .build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return orderResponseDTO;
-    }
+//    @Override
+//    public OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId) {
+//        OrderResponseDTO orderResponseDTO = null;
+//        try {
+//            Order order = orderRepo.findById(orderId).get();
+//            if (order != null) {
+//                User user = userRepo.findById(userId).get();
+//                Address address = addressRepo.findById(addressId).get();
+//                String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
+//                order.setUser(user);
+//                order.setShipAddress(shipadrress);
+//                order.setPaymentStatus("PAID");
+//                order = orderRepo.save(order);
+//                orderResponseDTO = OrderResponseDTO.builder()
+//                        .orderId(order.getId())
+//                        .postId(order.getPost().getId())
+//                        .shipAddress(order.getShipAddress())
+//                        .orderDate(order.getOrderDate())
+//                        .amount(order.getAmount())
+//                        .note(order.getNote())
+//                        .paymentMethod(order.getPaymentMethod())
+//                        .deliveryMethod(order.getDeliveryMethod())
+//                        .userId(order.getUser().getId())
+//                        .status(order.getStatus())
+//                        .paymentStatus(order.getPaymentStatus())
+//                        .build();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return orderResponseDTO;
+//    }
 
     @Override
     public Boolean updateResentDate(Long orderId, String resentDate) {

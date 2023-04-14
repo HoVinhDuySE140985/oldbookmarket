@@ -54,20 +54,20 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping ("add_user_to_order/{orderId}/{userId}/{addressId}")
-    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable @Validated Long orderId,
-                                                      @PathVariable @Validated Long userId,
-                                                      @PathVariable @Validated Long addressId){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            OrderResponseDTO finalOrderResponseDTO = orderService.addToOrder(orderId,userId,addressId);
-            responseDTO.setData(finalOrderResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @GetMapping ("add_user_to_order/{orderId}/{userId}/{addressId}")
+//    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable @Validated Long orderId,
+//                                                      @PathVariable @Validated Long userId,
+//                                                      @PathVariable @Validated Long addressId){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            OrderResponseDTO finalOrderResponseDTO = orderService.addToOrder(orderId,userId,addressId);
+//            responseDTO.setData(finalOrderResponseDTO);
+//            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     @PutMapping("convert-order-status_by_orderId")
     @PermitAll

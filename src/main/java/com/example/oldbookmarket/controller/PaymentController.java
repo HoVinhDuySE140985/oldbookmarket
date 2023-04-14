@@ -65,6 +65,7 @@ public class PaymentController {
             @RequestParam("responseTime") String responseTime,
             @RequestParam("extraData") String extraData,
             @RequestParam("signature") String signature) {
+        String redirectUrl = "https://www.nimo.tv/";
         String sign = "accessKey=" +
                 Common.ACCESS_KEY + "&orderId=" + orderId + "&partnerCode=" + Common.PARTNER_CODE
                 + "&requestId=" + requestId;
@@ -90,13 +91,16 @@ public class PaymentController {
             if (type.equalsIgnoreCase("Nạp Tiền")){
                 walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount));
             }
+        }else if (resultCode == 1006){
+            msg = "người dùng từ chối giao dịch!";
+            redirectUrl = "https://www.youtube.com/";
         }
         logger.info("" + msg);
         System.out.println(resultCode);
         System.out.println(msg);
         // accessKey=WehkypIRwPP14mHb&orderId=23&partnerCode=MOMODJMX20220717&requestId=48468005-6de1-4140-839f-5f2d8d77a001
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("https://www.youtube.com/")); // deploy lên thì chạy về trang cần trả về
+        headers.setLocation(URI.create(redirectUrl)); // deploy lên thì chạy về trang cần trả về
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
