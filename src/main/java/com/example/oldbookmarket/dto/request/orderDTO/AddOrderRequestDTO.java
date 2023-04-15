@@ -19,4 +19,5 @@ public class AddOrderRequestDTO {
     private String paymentMethod;
     private String note;
     private String shipAddress;
+
 }

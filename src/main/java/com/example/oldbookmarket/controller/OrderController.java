@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -26,11 +27,15 @@ public class OrderController {
 
     @PostMapping("create-new-order-with-momo")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewOrderWithMomo(@RequestBody @Validated AddOrderRequestDTO addOrderRequestDTO) {
+    public ResponseEntity<ResponseDTO> createNewOrderWithMomo(@RequestParam @Validated Long postId,
+                                                              @RequestParam @Validated Long userId,
+                                                              @RequestParam @Validated BigDecimal amount,
+                                                              @RequestParam @Validated String paymentMethod,
+                                                              @RequestParam @Validated String note,
+                                                              @RequestParam @Validated String shipAddress){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            ResponseEntity<MomoResponse> response = orderService.createNewOrderWithMomo(addOrderRequestDTO);
-            responseDTO.setData(response);
+            responseDTO.setData(orderService.createNewOrderWithMomo(postId,userId,amount,paymentMethod,note,shipAddress));
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,21 +58,6 @@ public class OrderController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
-
-//    @GetMapping ("add_user_to_order/{orderId}/{userId}/{addressId}")
-//    public ResponseEntity<ResponseDTO> addUserToOrder(@PathVariable @Validated Long orderId,
-//                                                      @PathVariable @Validated Long userId,
-//                                                      @PathVariable @Validated Long addressId){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            OrderResponseDTO finalOrderResponseDTO = orderService.addToOrder(orderId,userId,addressId);
-//            responseDTO.setData(finalOrderResponseDTO);
-//            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
 
     @PutMapping("convert-order-status_by_orderId")
     @PermitAll

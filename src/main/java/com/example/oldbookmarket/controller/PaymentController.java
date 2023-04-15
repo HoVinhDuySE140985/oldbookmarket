@@ -31,8 +31,8 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
-//    @Autowired
-//    OrderService orderService;
+    @Autowired
+    OrderService orderService;
     @Autowired
     WalletService walletService;
 
@@ -47,11 +47,15 @@ public class PaymentController {
     }
 
 
-    @GetMapping("/MomoConfirm/{type}/{userId}")
+    @GetMapping("/MomoConfirm/{type}/{userId}/{postId}/{paymentMethod}/{note}/{shipAddress}")
     @PermitAll
     public ResponseEntity<MomoConfirmResultResponse> momoConfirm(
             @PathVariable String type,
             @PathVariable Long userId,
+            @PathVariable Long postId,
+            @PathVariable String paymentMethod,
+            @PathVariable String note,
+            @PathVariable String shipAddress,
             @RequestParam("partnerCode") String partnerCode,
             @RequestParam("orderId") String orderId,
             @RequestParam("requestId") String requestId,
@@ -90,10 +94,12 @@ public class PaymentController {
             msg = "giao dich duoc xac nhan, giao dich thang cong!";
             if (type.equalsIgnoreCase("Nạp Tiền")){
                 walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount));
+            }else {
+                orderService.createNewOrder(userId,postId,BigDecimal.valueOf(amount),paymentMethod,note,shipAddress,orderId);
             }
         }else if (resultCode == 1006){
             msg = "người dùng từ chối giao dịch!";
-            redirectUrl = "https://www.youtube.com/";
+//            redirectUrl = "https://www.youtube.com/";
         }
         logger.info("" + msg);
         System.out.println(resultCode);

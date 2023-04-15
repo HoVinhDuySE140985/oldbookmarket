@@ -7,10 +7,12 @@ import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.entity.Order;
 import org.springframework.http.ResponseEntity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderService {
-    ResponseEntity<MomoResponse> createNewOrderWithMomo(AddOrderRequestDTO addOrderRequestDTO);
+    ResponseEntity<MomoResponse> createNewOrderWithMomo(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress);
+    ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress, String orderCode);
     OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO);
     Boolean converOrderStatus(Long orderId);
     List<Order> getAllOrder(Long userId, String orderStatus);

@@ -48,24 +48,36 @@ public class OrderServiceImpl implements OrderService {
     PaymentService paymentService;
 
     @Override
-    public ResponseEntity<MomoResponse> createNewOrderWithMomo(AddOrderRequestDTO addOrderRequestDTO) {
+    @Transactional
+    public ResponseEntity<MomoResponse> createNewOrderWithMomo(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress) {
         ResponseEntity<MomoResponse> response = null;
         try {
-            String code = Utilities.randomAlphaNumeric(10);
-//            response = paymentService.getPaymentMomo(code, addOrderRequestDTO.getAmount());
-            User user = userRepo.findById(addOrderRequestDTO.getUserId()).get();
-            Post post = postRepo.findById(addOrderRequestDTO.getPostId()).get();
+            String orderCode = Utilities.randomAlphaNumeric(10);
+            response = paymentService.getPaymentMomoV1(orderCode,postId,userId,amount,paymentMethod,note,shipAddress,"Thanh Toán");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress, String orderCode) {
+        ResponseEntity<MomoResponse> response = null;
+        System.out.println(userId);
+        try {
+            User user = userRepo.findById(userId).get();
+            Post post = postRepo.findById(postId).get();
             post.setPostStatus("deactivate");
             postRepo.save(post);
             if (post.getForm().equalsIgnoreCase("bán")) {
                 Order order = Order.builder()
                         .user(user)
-                        .shipAddress(addOrderRequestDTO.getShipAddress())
+                        .shipAddress(shipAddress)
                         .orderDate(LocalDate.now())
                         .post(post)
-                        .codeOrder(code)
                         .amount(post.getPrice())
-                        .note(addOrderRequestDTO.getNote())
+                        .note(note)
+                        .codeOrder(orderCode)
                         .paymentMethod("VÍ MOMO")
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                         .status("WaitingForConfirmation")
@@ -249,39 +261,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return order;
     }
-
-//    @Override
-//    public OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId) {
-//        OrderResponseDTO orderResponseDTO = null;
-//        try {
-//            Order order = orderRepo.findById(orderId).get();
-//            if (order != null) {
-//                User user = userRepo.findById(userId).get();
-//                Address address = addressRepo.findById(addressId).get();
-//                String shipadrress = address.getCity() + "," + address.getProvince() + "," + address.getDistrict() + "," + address.getWard() + "," + address.getStreet();
-//                order.setUser(user);
-//                order.setShipAddress(shipadrress);
-//                order.setPaymentStatus("PAID");
-//                order = orderRepo.save(order);
-//                orderResponseDTO = OrderResponseDTO.builder()
-//                        .orderId(order.getId())
-//                        .postId(order.getPost().getId())
-//                        .shipAddress(order.getShipAddress())
-//                        .orderDate(order.getOrderDate())
-//                        .amount(order.getAmount())
-//                        .note(order.getNote())
-//                        .paymentMethod(order.getPaymentMethod())
-//                        .deliveryMethod(order.getDeliveryMethod())
-//                        .userId(order.getUser().getId())
-//                        .status(order.getStatus())
-//                        .paymentStatus(order.getPaymentStatus())
-//                        .build();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return orderResponseDTO;
-//    }
 
     @Override
     public Boolean updateResentDate(Long orderId, String resentDate) {

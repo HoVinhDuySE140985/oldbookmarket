@@ -24,11 +24,11 @@ public class WalletServiceImpl implements WalletService {
     PaymentService paymentService;
 
     @Override
-    public ResponseEntity<MomoResponse> rechargeIntoWalletMoMo(Long userId, BigDecimal depositAmount) {
+    public ResponseEntity<MomoResponse> rechargeIntoWalletMoMo(Long userId, BigDecimal amount) {
         ResponseEntity<MomoResponse> response = null;
         try {
             String orderCode = Utilities.randomAlphaNumeric(10);
-            response = paymentService.getPaymentMomo(orderCode,depositAmount,userId,"NẠP TIỀN");
+            response = paymentService.getPaymentMomoV1(orderCode,userId,222234453L,amount,"null","null","null","NẠP TIỀN");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -36,6 +36,7 @@ public class WalletServiceImpl implements WalletService {
     }    @Override
     public ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, BigDecimal depositAmount) {
         ResponseEntity<MomoResponse> response = null;
+        System.out.println(userId);
         try {
                 Wallet wallet = walletRepo.findById(userId).get();
                 wallet.setAmount(wallet.getAmount().add(depositAmount));

@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
+import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.entity.Order;
 import com.example.oldbookmarket.repository.OrderRepo;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,10 @@ public class PaymentServiceImpl implements PaymentService{
 
         // request url
         String url = Common.MOMO_URI;
+        String redirectUrl = "";
+        if(type.equalsIgnoreCase("Nạp Tiền")){
+            redirectUrl = Common.REDIRECT_URL_MOMO + "/" + type + "/"  +  userId;
+        }
 
         // create an instance of RestTemplate
         RestTemplate restTemplate = new RestTemplate();
@@ -71,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService{
         String sign = "accessKey=" + Common.ACCESS_KEY + "&amount=" + amount + "&extraData="
                 + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + codeOrder + "&orderInfo="
                 + "Thanh toan momo"
-                + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + Common.REDIRECT_URL_MOMO+"/"+type+"/"+userId
+                + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + redirectUrl
                 + "&requestId=" + codeOrder + "&requestType=captureWallet";
 
         // accessKey=$accessKey&amount=$amount&extraData=$extraData
@@ -95,7 +100,7 @@ public class PaymentServiceImpl implements PaymentService{
         momoReq.setLang("vi");
         momoReq.setOrderId(codeOrder);
         momoReq.setOrderInfo("Thanh toan momo");
-        momoReq.setRedirectUrl(Common.REDIRECT_URL_MOMO+"/"+type+"/"+userId); //* */
+        momoReq.setRedirectUrl(redirectUrl); //* */
         momoReq.setRequestId(codeOrder);
         momoReq.setRequestType("captureWallet");
 
@@ -113,6 +118,95 @@ public class PaymentServiceImpl implements PaymentService{
             String ar[] = arr[1].split(":");
             String message = ar[1].replaceAll("\"", "");
             System.out.println("" + e.getMessage());
+            // throw new AppException(HttpStatus.BAD_REQUEST.value(),
+            //         new CustomResponseObject(Common.ADDING_FAIL, message));
+            logger.error("Bad request !!!");
+
+        }
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<MomoResponse> getPaymentMomoV1(String codeOrder, Long postId, Long userId, BigDecimal _amount, String paymentMethod,String note, String shipAddress, String type) {
+
+        // request url
+        String url = Common.MOMO_URI;
+        String redirectUrl = Common.REDIRECT_URL_MOMO + "/" + type + "/" + postId + "/" +  userId + "/" + paymentMethod + "/" + note + "/" + shipAddress;
+        // create an instance of RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        // create headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        // create a post object
+
+        // build the request
+        MomoRequest momoReq = new MomoRequest();
+        // CustomerInfoMomoRequest customerInfo = new CustomerInfoMomoRequest("dat",
+        // "0123456789", "dat@gmail.com");
+//        String orderId = String.join("-", oList); //12 //23-12-23-32
+        // String requestId =
+        // Order order = orderRepository.getOrderById(Long.parseLong(request.getOrderId()));
+
+        // long amount = 200000;
+        // byte[] array = new byte[10]; // length is bounded by 7
+        // new Random().nextBytes(array);
+
+
+        // String requestId = new String(array, Charset.forName("UTF-8"));
+        // String requestId = String.valueOf(order.getId());
+
+        DecimalFormat df = new DecimalFormat("#");
+
+        String amount = String.valueOf(df.format(_amount));
+
+        String sign = "accessKey=" + Common.ACCESS_KEY + "&amount=" + amount + "&extraData="
+                + "&ipnUrl=" + Common.IPN_URL_MOMO + "&orderId=" + codeOrder + "&orderInfo="
+                + "Thanh toan momo"
+                + "&partnerCode=" + Common.PARTNER_CODE + "&redirectUrl=" + redirectUrl
+                + "&requestId=" + codeOrder + "&requestType=captureWallet";
+
+        // accessKey=$accessKey&amount=$amount&extraData=$extraData
+        // &ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo
+        // &partnerCode=$partnerCode&redirectUrl=$redirectUrl
+        // &requestId=$requestId&requestType=$requestType
+
+        String signatureHmac = "";
+        try {
+            signatureHmac = Utilities.calculateHMac(sign, Common.HMACSHA256, Common.SECRET_KEY);
+            System.out.println("signature: " + signatureHmac + "   ");
+        } catch (Exception e) {
+            logger.error("signatureHmac loi !");
+        }
+
+        momoReq.setPartnerCode(Common.PARTNER_CODE);
+        momoReq.setSignature(signatureHmac);
+        momoReq.setAmount(_amount);
+        momoReq.setExtraData("");
+        momoReq.setIpnUrl(Common.IPN_URL_MOMO);
+        momoReq.setLang("vi");
+        momoReq.setOrderId(codeOrder);
+        momoReq.setOrderInfo("Thanh toan momo");
+        momoReq.setRedirectUrl(redirectUrl); //* */
+        momoReq.setRequestId(codeOrder);
+        momoReq.setRequestType("captureWallet");
+
+        HttpEntity<MomoRequest> req = new HttpEntity<>(momoReq, headers);
+
+        // send POST request
+        try {
+            ResponseEntity<MomoResponse> response = restTemplate.postForEntity(url, req, MomoResponse.class);
+
+            if (response != null) {
+                return response;
+            }
+        } catch (Exception e) {
+            String arr[] = String.valueOf(e.getMessage()).split(",");
+            String ar[] = arr[1].split(":");
+            String message = ar[1].replaceAll("\"", "");
+            System.out.println(" " + e.getMessage());
             // throw new AppException(HttpStatus.BAD_REQUEST.value(),
             //         new CustomResponseObject(Common.ADDING_FAIL, message));
             logger.error("Bad request !!!");
