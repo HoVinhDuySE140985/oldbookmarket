@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.repository;
 
 import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
+import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.entity.Post;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,5 +28,9 @@ public interface PostRepo extends JpaRepository<Post, Long> {
 
     List<Post> findAllBySubcategory_Id(Long subcategoryId);
     List<Post> findAllBySubcategory_Id(Long subcategoryId,Sort sort);
-
+    @Query("Select p \n" +
+            "from Post as p \n" +
+            "where p.postStatus = 'active' \n" +
+            "order by p.createAt desc ")
+    List<Post> findAllNewPost();
 }

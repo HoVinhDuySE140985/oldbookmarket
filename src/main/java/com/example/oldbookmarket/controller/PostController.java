@@ -4,6 +4,7 @@ import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
 import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
+import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,4 +158,17 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("get-all-new-post")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getAllNewPost(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<Post> postLists = postService.getAllNewPost();
+            responseDTO.setData(postLists);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

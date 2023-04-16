@@ -529,4 +529,14 @@ public class PostServiceimpl implements PostService {
         return postResponseDTOS;
     }
 
+    @Override
+    public List<Post> getAllNewPost() {
+        List<Post> postResponseDTOS = new ArrayList<>();
+        try {
+            postResponseDTOS = postRepo.findAllNewPost();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return postResponseDTOS;
+    }
 }
