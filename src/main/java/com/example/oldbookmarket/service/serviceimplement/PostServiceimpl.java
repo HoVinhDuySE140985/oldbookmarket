@@ -533,7 +533,7 @@ public class PostServiceimpl implements PostService {
     public List<Post> getAllNewPost() {
         List<Post> postResponseDTOS = new ArrayList<>();
         try {
-            postResponseDTOS = postRepo.findAllNewPost();
+            postResponseDTOS = postRepo.findTop10ByPostStatusOrderByCreateAtDesc("active");
         }catch (Exception e){
             e.printStackTrace();
         }

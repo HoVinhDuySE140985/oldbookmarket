@@ -28,9 +28,10 @@ public interface PostRepo extends JpaRepository<Post, Long> {
 
     List<Post> findAllBySubcategory_Id(Long subcategoryId);
     List<Post> findAllBySubcategory_Id(Long subcategoryId,Sort sort);
-    @Query("Select p \n" +
-            "from Post as p \n" +
-            "where p.postStatus = 'active' \n" +
-            "order by p.createAt desc ")
-    List<Post> findAllNewPost();
+//    @Query("Select p \n" +
+//            "from Post as p \n" +
+//            "where p.postStatus = 'active' \n" +
+//            "order by p.createAt desc \n" +
+//            "Limit 0, 10, na")
+    List<Post> findTop10ByPostStatusOrderByCreateAtDesc(String Status);
 }
