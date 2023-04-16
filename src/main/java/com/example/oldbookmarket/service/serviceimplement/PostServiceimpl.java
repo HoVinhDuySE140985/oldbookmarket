@@ -41,6 +41,9 @@ public class PostServiceimpl implements PostService {
     @Autowired
     BookAuthorRepo bookAuthorRepo;
 
+    @Autowired
+    PostNotificationRepo postNotificationRepo;
+
     @Override
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
         PostResponseDTO postResponseDTO = null;
@@ -349,6 +352,8 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setPrice(post.getPrice());
             postResponseDTO.setStatus(post.getPostStatus());
             postResponseDTO.setUserId(post.getUser().getId());
+            List<User> userList = postNotificationRepo.findByBookNoty(post.getTitle());
+            // chạy vòng fore lấy userid trong list xong gửi thông báo đến list userid
         } catch (Exception e) {
             e.printStackTrace();
         }

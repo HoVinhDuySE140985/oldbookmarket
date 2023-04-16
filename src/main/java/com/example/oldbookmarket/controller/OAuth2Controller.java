@@ -3,7 +3,6 @@ package com.example.oldbookmarket.controller;
 import java.time.LocalDate;
 import java.util.Date;
 
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,9 +6,11 @@ import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.dto.response.bookauthorDTO.BookAuthorResponseDTO;
 import com.example.oldbookmarket.entity.BookAuthor;
+import com.example.oldbookmarket.entity.PostNotification;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.BookAuthorService;
 import com.example.oldbookmarket.service.serviceinterface.BookService;
+import com.example.oldbookmarket.service.serviceinterface.PostNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +28,9 @@ public class BookController {
 
     @Autowired
     BookAuthorService bookAuthorService;
+
+    @Autowired
+    PostNotificationService postNotificationService;
 
     @GetMapping("get-book-by/{postId}")
     @PermitAll
@@ -82,4 +87,19 @@ public class BookController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @PostMapping("create-book-to-get-noti")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> createBookToGetNoti(@RequestParam Long userId,
+                                                           @RequestParam String bookReceive ){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(postNotificationService.createBookToGetNoty(userId,bookReceive));
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  ResponseEntity.ok().body(responseDTO);
+    }
+
 }

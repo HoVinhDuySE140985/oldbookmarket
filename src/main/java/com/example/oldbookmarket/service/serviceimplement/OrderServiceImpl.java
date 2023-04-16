@@ -226,16 +226,16 @@ public class OrderServiceImpl implements OrderService {
         return false;
     }
 
-    @Override
-    public List<Order> getAllOrder(Long userId, String orderStatus) {
-        List<Order> orderList = new ArrayList<>();
-        try {
-            orderList = orderRepo.findAllByStatusAndUser_Id(orderStatus, userId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return orderList;
-    }
+//    @Override
+//    public List<Order> getAllOrder(Long userId, String orderStatus) {
+//        List<Order> orderList = new ArrayList<>();
+//        try {
+//            orderList = orderRepo.findAllByStatusAndUser_Id(orderStatus, userId);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return orderList;
+//    }
 
     @Override
     public Order cancelOrder(Long orderId, String cancelReason) {
@@ -298,6 +298,7 @@ public class OrderServiceImpl implements OrderService {
                                 .status(order.getStatus())
                                 .paymentMethod(order.getPaymentMethod())
                                 .receiverName(order.getUser().getName())
+                                .orderCode(order.getCodeOrder())
                                 .phoneNumber(order.getUser().getPhoneNumber())
                                 .shipAddress(order.getShipAddress())
                                 .paymentStatus(order.getPaymentStatus())
@@ -315,6 +316,7 @@ public class OrderServiceImpl implements OrderService {
                                     .amount(order.getAmount())
                                     .deliveryMethod(order.getDeliveryMethod())
                                     .status(order.getStatus())
+                                    .orderCode(order.getCodeOrder())
                                     .paymentMethod(order.getPaymentMethod())
                                     .receiverName(order.getUser().getName())
                                     .phoneNumber(order.getUser().getPhoneNumber())
@@ -352,6 +354,7 @@ public class OrderServiceImpl implements OrderService {
                                 .deliveryMethod(order.getDeliveryMethod())
                                 .status(order.getStatus())
                                 .paymentMethod(order.getPaymentMethod())
+                                .orderCode(order.getCodeOrder())
                                 .shipAddress(order.getShipAddress())
                                 .paymentStatus(order.getPaymentStatus())
                                 .orderId(order.getId())
@@ -366,6 +369,7 @@ public class OrderServiceImpl implements OrderService {
                                     .cancelReason(order.getCancelReason())
                                     .resentDate(order.getResentDate())
                                     .postImage(order.getPost().getImageUrl())
+                                    .orderCode(order.getCodeOrder())
                                     .title(order.getPost().getTitle())
                                     .amount(order.getAmount())
                                     .deliveryMethod(order.getDeliveryMethod())
@@ -406,6 +410,7 @@ public class OrderServiceImpl implements OrderService {
                             .deliveryMethod(order.getDeliveryMethod())
                             .status(order.getStatus())
                             .paymentMethod(order.getPaymentMethod())
+                            .orderCode(order.getCodeOrder())
                             .shipAddress(order.getShipAddress())
                             .paymentStatus(order.getPaymentStatus())
                             .orderId(order.getId())

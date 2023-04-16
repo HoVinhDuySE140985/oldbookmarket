@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class TopUserResponseDTO {
     private Long userId;
+    private String userImage;
     private Long count;
 }

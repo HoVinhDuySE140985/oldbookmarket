@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<TopCategoryResponeDTO> getTopCatePublication() {
-        List<TopCategoryResponeDTO> topCategoryResponseDTOS = null;
+        List<TopCategoryResponeDTO> topCategoryResponseDTOS = new ArrayList<>();
         try {
             topCategoryResponseDTOS = categoryRepo.findTopCategoryByPost();
         }catch (Exception e){

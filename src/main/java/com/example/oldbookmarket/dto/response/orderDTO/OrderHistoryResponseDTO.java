@@ -29,4 +29,5 @@ public class OrderHistoryResponseDTO {
     private String phoneNumber;
     private String shipAddress;
     private String form;
+    private String orderCode;
 }

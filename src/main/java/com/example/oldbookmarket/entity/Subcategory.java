@@ -20,6 +20,7 @@ public class Subcategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String subcateImage;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

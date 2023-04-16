@@ -26,7 +26,7 @@ public class PostController {
 
     @PostMapping("create-post")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> creatlPost(@RequestBody @Validated PostRequestDTO postRequestDTO) {
+    public ResponseEntity<ResponseDTO> creatPost(@RequestBody @Validated PostRequestDTO postRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO postResponseDTO = postService.createPost(postRequestDTO);

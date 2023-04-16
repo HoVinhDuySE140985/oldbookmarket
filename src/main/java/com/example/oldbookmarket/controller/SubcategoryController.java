@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.response.ResponseDTO;
+import com.example.oldbookmarket.dto.response.subcategoryResponseDTO.SubcategoryResponseDTO;
 import com.example.oldbookmarket.entity.Subcategory;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.SubCategoryService;
@@ -42,6 +43,20 @@ public class SubcategoryController {
             Subcategory subcategory = subCategoryService.createNewSubcategory(cateId, subCateName);
             responseDTO.setData(subcategory);
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("get-publication-subcategory")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> getPublicationSubcategory(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<SubcategoryResponseDTO> subcategoryResponseDTOList = subCategoryService.getPublicationSubcategories();
+            responseDTO.setData(subcategoryResponseDTOList);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -37,7 +37,7 @@ public class ScheduledConfig {
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){
                 // dơn thành công
                 if (order.getStatus().equalsIgnoreCase("complete") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
-                    Wallet sellerWallet = walletRepo.findById(seller.getId()).get();
+                    Wallet sellerWallet = walletRepo.findById(seller.getId()).get() ;
                     Wallet adminWallet = walletRepo.findById(admin.getId()).get();
                     BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.80));
                     adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));

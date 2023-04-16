@@ -18,7 +18,7 @@ public class PostNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postNotyId;
     private String email;
-    private String bookExchange;
+    private String bookNoty;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

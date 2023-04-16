@@ -1,5 +1,6 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
+import com.example.oldbookmarket.dto.response.subcategoryResponseDTO.SubcategoryResponseDTO;
 import com.example.oldbookmarket.entity.Category;
 import com.example.oldbookmarket.entity.Subcategory;
 import com.example.oldbookmarket.repository.CategoryRepo;
@@ -9,6 +10,7 @@ import com.example.oldbookmarket.service.serviceinterface.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class SubCategoryServiceImpl implements SubCategoryService {
@@ -43,5 +45,16 @@ public class SubCategoryServiceImpl implements SubCategoryService {
             e.printStackTrace();
         }
         return subcategory;
+    }
+
+    @Override
+    public List<SubcategoryResponseDTO> getPublicationSubcategories() {
+        List<SubcategoryResponseDTO> subcategoryResponseDTOList = new ArrayList<>();
+        try {
+            subcategoryResponseDTOList = subcategoryRepo.findAllPublicationSubcategories();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return subcategoryResponseDTOList;
     }
 }

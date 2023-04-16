@@ -13,11 +13,12 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     User findUserByName(String name);
 
-    @Query("SELECT new com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO(u.id, count(o.post.id)) \n" +
-            "from User u, Post p, Order o \n" +
-            "where u.id = p.user.id and p.id = o.post.id and o.status = 'completed' \n" +
+    @Query("Select distinct  new com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO(u.id, u.imageUrl,count(p.id))\n" +
+            "from User as u join Post as p on u.id = p.user.id\n" +
+            "               join Order as o on o.post.id = p.id\n" +
+            "where o.status like 'complete'\n" +
             "group by u.id \n" +
-            "order by  count(o.post.id) desc")
+            "order by count(p.id) desc")
     List<TopUserResponseDTO> findUsersHasHighestOrder();
 
     User findUserByRole_Id(Long id);
