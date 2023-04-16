@@ -32,7 +32,7 @@ public class ComplaintServiceimpl implements ComplaintService {
         try {
             User userComplained = userRepo.findUserByName(complaintRequestDTO.getUserComplained());
             User sender = userRepo.findById(complaintRequestDTO.getSenderId()).get();
-            Order order = orderRepo.findById(complaintRequestDTO.getOrderId()).get();
+            Order order = orderRepo.findByCodeOrder(complaintRequestDTO.getOrderCode());
             Complaint complaint = Complaint.builder()
                     .createAt(LocalDate.now())
                     .title(complaintRequestDTO.getTitle())

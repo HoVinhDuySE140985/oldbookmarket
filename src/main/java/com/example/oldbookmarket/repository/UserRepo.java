@@ -13,7 +13,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
     User findUserByName(String name);
 
-    @Query("Select distinct  new com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO(u.id, u.imageUrl,count(p.id))\n" +
+    @Query("Select distinct  new com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO(u.id, u.name, u.imageUrl, count(p.id))\n" +
             "from User as u join Post as p on u.id = p.user.id\n" +
             "               join Order as o on o.post.id = p.id\n" +
             "where o.status like 'complete'\n" +
