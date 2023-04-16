@@ -30,7 +30,6 @@ public class ComplaintServiceimpl implements ComplaintService {
     public ComplaintResponseDTO createComplaint(ComplaintRequestDTO complaintRequestDTO) {
         ComplaintResponseDTO complaintResponseDTO = null;
         try {
-            User userComplained = userRepo.findUserByName(complaintRequestDTO.getUserComplained());
             User sender = userRepo.findById(complaintRequestDTO.getSenderId()).get();
             Order order = orderRepo.findByCodeOrder(complaintRequestDTO.getOrderCode());
             Complaint complaint = Complaint.builder()
@@ -38,7 +37,7 @@ public class ComplaintServiceimpl implements ComplaintService {
                     .title(complaintRequestDTO.getTitle())
                     .complaintImage(complaintRequestDTO.getComplaintImage())
                     .description(complaintRequestDTO.getDescription())
-                    .userComplained(userComplained.getName())
+                    .userComplained(order.getPost().getUser().getName())
                     .order(order)
                     .user(sender)
                     .build();
@@ -50,7 +49,6 @@ public class ComplaintServiceimpl implements ComplaintService {
                     .complaintImage(complaint.getComplaintImage())
                     .description(complaint.getDescription())
                     .userComplained(complaint.getUserComplained())
-                    .orderId(complaint.getOrder().getId())
                     .senderId(complaint.getUser().getId())
                     .build();
         }catch (Exception e){
@@ -72,7 +70,7 @@ public class ComplaintServiceimpl implements ComplaintService {
                         .title(complaint.getTitle())
                         .complaintImage(complaint.getComplaintImage())
                         .createAt(complaint.getCreateAt())
-                        .orderId(complaint.getOrder().getId())
+                        .orderCode(complaint.getOrder().getCodeOrder())
                         .description(complaint.getDescription())
                         .userComplained(complaint.getUserComplained())
                         .senderId(complaint.getUser().getId())

@@ -16,7 +16,6 @@ public class ComplaintRequestDTO {
     private String title;
     private String complaintImage;
     private String description;
-    private String userComplained;
     private String orderCode;
     private Long senderId;
 }

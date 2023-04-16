@@ -18,6 +18,6 @@ public class ComplaintResponseDTO {
     private String complaintImage;
     private String description;
     private String userComplained;
-    private Long orderId;
+    private String orderCode;
     private Long senderId;
 }
