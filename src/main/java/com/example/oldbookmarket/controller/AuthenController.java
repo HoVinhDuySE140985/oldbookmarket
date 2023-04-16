@@ -150,4 +150,8 @@ public class AuthenController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+//    @GetMapping("get-all-user")
+//    @PreAuthorize("has('Admin')")
+//    public ResponseEntity
 }

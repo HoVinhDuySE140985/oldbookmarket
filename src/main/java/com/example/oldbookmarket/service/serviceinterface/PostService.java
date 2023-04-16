@@ -17,5 +17,5 @@ public interface PostService {
     List<PostResponseDTO> getAllPosts(String email);
     List<PostResponseDTO> getAllPostBySubcategory(Long subcategoryId, String sortBy, String filter);
     List<PostResponseDTO> searchPostByKeyWord(String keyWord,String sortBy, String filter);
-    List<Post> getAllNewPost ();
+    List<PostResponseDTO> getAllNewPost ();
 }

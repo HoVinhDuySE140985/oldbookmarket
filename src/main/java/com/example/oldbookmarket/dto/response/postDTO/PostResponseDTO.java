@@ -21,7 +21,6 @@ public class PostResponseDTO {
     private String imageUrl;
     private String location;
     private String status;
-    private String description;
     private List<BookPendingResponseDTO> bookList;
     private BigDecimal initPrice;
     private BigDecimal price;

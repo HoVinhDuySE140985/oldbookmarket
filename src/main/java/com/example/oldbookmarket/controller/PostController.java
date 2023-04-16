@@ -163,7 +163,7 @@ public class PostController {
     public ResponseEntity<ResponseDTO> getAllNewPost(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<Post> postLists = postService.getAllNewPost();
+            List<PostResponseDTO> postLists = postService.getAllNewPost();
             responseDTO.setData(postLists);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
