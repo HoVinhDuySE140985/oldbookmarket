@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Data
-public class LoginResponseDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class UserLoginResponseDTO {
     private Long id;
     private String name;
     private String email;
@@ -21,9 +21,4 @@ public class LoginResponseDTO {
     private LocalDate dob;
     private String password;
     private String status;
-    private String accesstoken;
-
-
-
-
 }

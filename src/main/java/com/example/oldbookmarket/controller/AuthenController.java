@@ -51,10 +51,8 @@ public class AuthenController {
 
         try {
             Authentication authenticate = authenticationManager.authenticate(authentication);
-            System.out.println(authenticate.getName());
-
             if (authenticate.isAuthenticated()) {
-                User userAuthenticated = userService.findByEmail(authenticate.getName());
+                UserLoginResponseDTO userAuthenticated = userService.findByEmail(authenticate.getName());
                 String token = Jwts.builder().setSubject(authenticate.getName())
                         .claim(("authorities"), authenticate.getAuthorities())
                         .claim("id", userAuthenticated.getId())
@@ -69,6 +67,7 @@ public class AuthenController {
                         .gender(userAuthenticated.getGender())
                         .imageUrl(userAuthenticated.getImageUrl())
                         .dob(userAuthenticated.getDob())
+                        .status(userAuthenticated.getStatus())
                         .password(userAuthenticated.getPassword())
                         .accesstoken(jwtConfig.getTokenPrefix() + token)
                         .build();
@@ -151,7 +150,30 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("get-all-user")
-//    @PreAuthorize("has('Admin')")
-//    public ResponseEntity
+    @GetMapping("get-all-user")
+    @PreAuthorize("hasAnyRole('Admin','STAFF')")
+    public ResponseEntity<ResponseDTO> getAllUser(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<UserResponseDTO> userList = userService.getAllUser();
+            responseDTO.setData(userList);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("ban-user")
+    @PreAuthorize("hasAnyRole('Admin','STAFF')")
+    public ResponseEntity<ResponseDTO> banUser(@RequestParam String email){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try{
+            responseDTO.setData(userService.banUser(email));
+            responseDTO.setSuccessCode(SuccessCode.Ban_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

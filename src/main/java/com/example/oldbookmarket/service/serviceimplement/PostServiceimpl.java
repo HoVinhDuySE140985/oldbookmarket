@@ -180,7 +180,6 @@ public class PostServiceimpl implements PostService {
         return mySellListPosts;
     }
 
-
     @Override
     public List<PostResponseDTO> getAllPostNoCondition() {
         List<Post> postList = null;

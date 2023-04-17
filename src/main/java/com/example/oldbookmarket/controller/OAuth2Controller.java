@@ -3,6 +3,7 @@ package com.example.oldbookmarket.controller;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.example.oldbookmarket.dto.response.userDTO.UserLoginResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class OAuth2Controller {
             Authentication authenticate = authenticationManager.authenticate(authentication);
             System.out.println(authenticate.getName());
             if (authenticate.isAuthenticated()) {
-                User userAuthenticated = userService.findByEmail(authenticate.getName());
+                UserLoginResponseDTO userAuthenticated = userService.findByEmail(authenticate.getName());
                 String token = Jwts.builder().setSubject(authenticate.getName())
                         .claim(("authorities"), authenticate.getAuthorities())
                         .claim("id", userAuthenticated.getId())
@@ -86,6 +87,7 @@ public class OAuth2Controller {
                         .imageUrl(userAuthenticated.getImageUrl())
                         .dob(userAuthenticated.getDob())
                         .password(userAuthenticated.getPassword())
+                        .status(userAuthenticated.getStatus())
                         .accesstoken(jwtConfig.getTokenPrefix() + token)
                         .build();
                 responseDTO.setData(loginResponseDTO);

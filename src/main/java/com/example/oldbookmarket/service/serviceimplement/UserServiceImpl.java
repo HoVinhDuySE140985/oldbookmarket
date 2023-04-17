@@ -3,18 +3,13 @@ package com.example.oldbookmarket.service.serviceimplement;
 import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
-import com.example.oldbookmarket.dto.response.userDTO.ChangePasswordReponseDTO;
-import com.example.oldbookmarket.dto.response.userDTO.RegisterResponseDTO;
-import com.example.oldbookmarket.dto.response.userDTO.TopUserResponseDTO;
-import com.example.oldbookmarket.dto.response.userDTO.UpdateUserResponseDTO;
+import com.example.oldbookmarket.dto.response.userDTO.*;
+import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.entity.UserStatus;
 import com.example.oldbookmarket.entity.Wallet;
 import com.example.oldbookmarket.enumcode.StatusCode;
-import com.example.oldbookmarket.repository.RoleRepo;
-import com.example.oldbookmarket.repository.UserRepo;
-import com.example.oldbookmarket.repository.UserStatusRepo;
-import com.example.oldbookmarket.repository.WalletRepo;
+import com.example.oldbookmarket.repository.*;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,15 +39,30 @@ public class UserServiceImpl implements UserService {
     @Autowired
     WalletRepo walletRepo;
 
+    @Autowired
+    PostRepo postRepo;
+
     @Override
-    public User findByEmail(String email) {
-        User user = new User();
+    public UserLoginResponseDTO findByEmail(String email) {
+        UserLoginResponseDTO responseDTO = null;
         try {
-            user = userRepo.findUserByEmail(email);
+            User user = userRepo.findUserByEmail(email);
+            UserStatus userStatus = userStatusRepo.findByUserId(user.getId());
+            responseDTO = UserLoginResponseDTO.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
+                    .dob(user.getDob())
+                    .imageUrl(user.getImageUrl())
+                    .name(user.getName())
+                    .status(userStatus.getName())
+                    .gender(user.getGender())
+                    .password(user.getPassword())
+                    .build();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return user;
+        return responseDTO;
     }
 
     @Override
@@ -173,6 +183,48 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findUserByEmail(email);
         if(user != null){
             return true;
+        }
+        return false;
+    }
+
+    @Override
+    public List<UserResponseDTO> getAllUser() {
+        List<User> userList = null;
+        List<UserResponseDTO> userResponseDTOS = new ArrayList<>();
+        try {
+            userList = userRepo.findAll();
+            for (User user: userList){
+                UserResponseDTO userResponseDTO = UserResponseDTO.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .name(user.getName())
+                        .build();
+                userResponseDTOS.add(userResponseDTO);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return userResponseDTOS;
+    }
+
+    @Override
+    public Boolean banUser(String email) {
+        try {
+            User user = userRepo.findUserByEmail(email);
+            UserStatus userStatus = userStatusRepo.findByUserId(user.getId());
+            if (userStatus.getName().equalsIgnoreCase("active")){
+                userStatus.setName("deactive");
+                userStatusRepo.save(userStatus);
+                List<Post> postList = postRepo.findAllByUser_Id(user.getId());
+                for (Post post: postList) {
+                    if (post.getPostStatus().equalsIgnoreCase("active")){
+                        post.setPostStatus("deactive");
+                        postRepo.save(post);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return false;
     }
