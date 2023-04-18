@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface BookRepo extends JpaRepository<Book, Long> {
         List<Book> findAllByPost_Id(Long id);
-        Book getFirstByPost_Id(Long id);
 }

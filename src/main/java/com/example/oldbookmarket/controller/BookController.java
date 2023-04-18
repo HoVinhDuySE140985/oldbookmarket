@@ -32,12 +32,12 @@ public class BookController {
     @Autowired
     PostNotificationService postNotificationService;
 
-    @GetMapping("get-book-by/{postId}")
+    @GetMapping("get-all-book-by/{postId}")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getBookInfor(@PathVariable @Validated Long postId){
+    public ResponseEntity<ResponseDTO> getBookInfo(@PathVariable @Validated Long postId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<BookResponseDTO> booklist = bookService.getBookInfor(postId);
+            List<BookResponseDTO> booklist = bookService.getBookInfo(postId);
             responseDTO.setData(booklist);
             responseDTO.setSuccessCode(SuccessCode.Get_Success);
         }catch (Exception e){
@@ -46,23 +46,23 @@ public class BookController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-all-image-book-by/{postId}")
-    @PermitAll
-        public ResponseEntity<ResponseDTO> getAllBookImage(@PathVariable @Validated Long postId){
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            BookImageResponseDTO bookImageResponseDTO = bookService.getAllImageOfBook(postId);
-            responseDTO.setData(bookImageResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @GetMapping("get-all-image-book-by/{postId}")
+//    @PermitAll
+//        public ResponseEntity<ResponseDTO> getAllBookImage(@PathVariable @Validated Long postId){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            BookImageResponseDTO bookImageResponseDTO = bookService.getAllImageOfBook(postId);
+//            responseDTO.setData(bookImageResponseDTO);
+//            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     @GetMapping("get-book-by-id")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getBookbyId(@RequestParam Long bookId){
+    public ResponseEntity<ResponseDTO> getBookById(@RequestParam Long bookId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             BookResponseDTO bookResponseDTO = bookService.getBookById(bookId);
@@ -75,11 +75,10 @@ public class BookController {
     }
     @PutMapping("update-book-information")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> updateBookInformation( @Validated UpdateBookResquestDTO updateBookResquestDTO){
+    public ResponseEntity<ResponseDTO> updateBookInformation(@RequestBody UpdateBookResquestDTO updateBookResquestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            BookResponseDTO bookResponseDTO = bookService.updateBookInfo(updateBookResquestDTO);
-            responseDTO.setData(bookResponseDTO);
+            responseDTO.setData(bookService.updateBookInfo(updateBookResquestDTO));
             responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();

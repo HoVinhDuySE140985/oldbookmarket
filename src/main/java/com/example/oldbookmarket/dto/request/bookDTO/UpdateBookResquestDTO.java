@@ -1,5 +1,6 @@
 package com.example.oldbookmarket.dto.request.bookDTO;
 
+import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
 import com.example.oldbookmarket.entity.BookImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

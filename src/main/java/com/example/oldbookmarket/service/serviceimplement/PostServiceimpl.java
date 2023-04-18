@@ -418,6 +418,7 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         try {
             Post post = postRepo.getById(postRequestDTO.getId());
+            post.setPostStatus("pending");
             post.setTitle(postRequestDTO.getTitle());
             post.setForm(postRequestDTO.getForm());
             post.setImageUrl(postRequestDTO.getImageUrl());

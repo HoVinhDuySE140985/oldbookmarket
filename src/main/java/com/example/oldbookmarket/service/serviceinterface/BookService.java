@@ -7,10 +7,10 @@ import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
 import java.util.List;
 
 public interface BookService {
-    List<BookResponseDTO> getBookInfor(Long postId);
+    List<BookResponseDTO> getBookInfo(Long postId);
     BookResponseDTO updateBookInfo(UpdateBookResquestDTO updateBookResquestDTO);
 
-    BookImageResponseDTO getAllImageOfBook(Long postId);
+//    BookImageResponseDTO getAllImageOfBook(Long postId);
 
     BookResponseDTO getBookById(Long bookId);
 }

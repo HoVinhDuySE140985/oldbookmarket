@@ -12,6 +12,6 @@ import java.util.List;
 @Builder
 @Data
 public class BookImageResponseDTO {
-    private List<String> imageUrl;
-    private Long bookId;
+    private String imageUrl;
+    private Long imageId;
 }
