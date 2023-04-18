@@ -60,7 +60,20 @@ public class BookController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("update-book-information/{postId}/{bookId}")
+    @GetMapping("get-book-by-id")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> getBookbyId(@RequestParam Long bookId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            BookResponseDTO bookResponseDTO = bookService.getBookById(bookId);
+            responseDTO.setData(bookResponseDTO);
+            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+    @PutMapping("update-book-information")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updateBookInformation( @Validated UpdateBookResquestDTO updateBookResquestDTO){
         ResponseDTO responseDTO = new ResponseDTO();

@@ -172,5 +172,18 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @GetMapping("get-post-by-id")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> getPostById(@RequestParam Long postId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            PostResponseDTO dto = postService.getPostById(postId);
+            responseDTO.setData(dto);
+            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
 }

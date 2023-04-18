@@ -1,7 +1,7 @@
 package com.example.oldbookmarket.shared.utils;
 
-import com.example.oldbookmarket.models.HttpRequest;
-import com.example.oldbookmarket.models.HttpResponse;
+import com.example.oldbookmarket.dto.request.LoginGoogleRequest.HttpRequest;
+import com.example.oldbookmarket.dto.response.LoginGoogleResponse.HttpResponse;
 import okhttp3.*;
 import okio.Buffer;
 

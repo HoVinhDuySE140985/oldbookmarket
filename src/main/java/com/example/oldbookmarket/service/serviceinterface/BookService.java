@@ -11,4 +11,6 @@ public interface BookService {
     BookResponseDTO updateBookInfo(UpdateBookResquestDTO updateBookResquestDTO);
 
     BookImageResponseDTO getAllImageOfBook(Long postId);
+
+    BookResponseDTO getBookById(Long bookId);
 }

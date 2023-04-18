@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.models;
+package com.example.oldbookmarket.dto.request.LoginGoogleRequest;
 
 public class HttpRequest {
     private String method;

@@ -22,9 +22,8 @@ import com.example.oldbookmarket.Jwt.JwtConfig;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.LoginResponseDTO;
-import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.enumcode.SuccessCode;
-import com.example.oldbookmarket.models.OAuth2Request;
+import com.example.oldbookmarket.dto.request.LoginGoogleRequest.OAuth2Request;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 
 import io.jsonwebtoken.Jwts;

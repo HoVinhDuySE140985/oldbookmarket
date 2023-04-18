@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.models;
+package com.example.oldbookmarket.dto.response.LoginGoogleResponse;
 
 import okhttp3.Headers;
 

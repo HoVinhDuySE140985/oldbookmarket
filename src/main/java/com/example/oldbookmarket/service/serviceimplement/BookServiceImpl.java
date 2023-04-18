@@ -3,10 +3,7 @@ package com.example.oldbookmarket.service.serviceimplement;
 import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
-import com.example.oldbookmarket.entity.Book;
-import com.example.oldbookmarket.entity.BookAuthor;
-import com.example.oldbookmarket.entity.Post;
-import com.example.oldbookmarket.entity.User;
+import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.BookImageRepo;
 import com.example.oldbookmarket.repository.BookRepo;
 import com.example.oldbookmarket.repository.PostRepo;
@@ -16,6 +13,7 @@ import com.example.oldbookmarket.service.serviceinterface.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,5 +164,30 @@ public class BookServiceImpl implements BookService {
                     .build();
         }
         return bookImageResponseDTO;
+    }
+
+    @Override
+    public BookResponseDTO getBookById(Long bookId) {
+        BookResponseDTO bookResponseDTO = null;
+        try {
+            Book book = bookRepo.findById(bookId).get();
+            bookResponseDTO = BookResponseDTO.builder()
+                    .bookId(book.getId())
+                    .name(book.getName())
+                    .isbn(book.getIsbn())
+                    .bookImages(book.getImageList())
+                    .publicationDate(book.getPublicationDate())
+                    .publicCompany(book.getPublicCompany())
+                    .author(book.getBookAuthor().getName())
+                    .coverType(book.getCoverType())
+                    .reprint(book.getReprints())
+                    .language(book.getLanguage())
+                    .statusQuo(book.getStatusQuo())
+                    .description(book.getDescription())
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return bookResponseDTO;
     }
 }

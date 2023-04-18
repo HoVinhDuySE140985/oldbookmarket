@@ -165,7 +165,7 @@ public class PostServiceimpl implements PostService {
                                 .publicCompany(book.getPublicCompany())
                                 .statusQuo(book.getStatusQuo())
                                 .language(book.getLanguage())
-//                                .author(book.getAuthor())
+                                .author(book.getBookAuthor().getName())
                                 .imageBook(book.getImageList())
                                 .build();
                         bookPendingResponseDTOS.add(responseDTO);
@@ -572,5 +572,46 @@ public class PostServiceimpl implements PostService {
             e.printStackTrace();
         }
         return postResponseDTOS;
+    }
+
+    @Override
+    public PostResponseDTO getPostById(Long postId) {
+        PostResponseDTO postResponseDTO = null;
+        try {
+            Post post = postRepo.findById(postId).get();
+            List<Book> bookList = post.getBooks();
+            List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
+            for (Book book : bookList) {
+                BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+                        .bookId(book.getId())
+                        .name(book.getName())
+                        .coverType(book.getCoverType())
+                        .description(book.getDescription())
+                        .isbn(book.getIsbn())
+                        .publicationDate(book.getPublicationDate())
+                        .bookExchange(post.getBookExchange())
+                        .publicCompany(book.getPublicCompany())
+                        .statusQuo(book.getStatusQuo())
+                        .language(book.getLanguage())
+                        .author(book.getBookAuthor().getName())
+                        .imageBook(book.getImageList())
+                        .build();
+                bookPendingResponseDTOS.add(responseDTO);
+            }
+            postResponseDTO = PostResponseDTO.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .form(post.getForm())
+                    .imageUrl(post.getImageUrl())
+                    .location(post.getLocation())
+                    .bookList(bookPendingResponseDTOS)
+                    .initPrice(post.getInitPrice())
+                    .price(post.getPrice())
+                    .bookExchange(post.getBookExchange())
+                    .build();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return postResponseDTO;
     }
 }
