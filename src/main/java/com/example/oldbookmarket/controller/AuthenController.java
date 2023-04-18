@@ -171,7 +171,7 @@ public class AuthenController {
         try{
             responseDTO.setData(userService.banUser(email));
             responseDTO.setSuccessCode(SuccessCode.Ban_Success);
-        }catch (Exception e){
+        }catch(Exception e){
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);

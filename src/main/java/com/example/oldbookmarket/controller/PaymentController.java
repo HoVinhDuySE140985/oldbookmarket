@@ -38,7 +38,7 @@ public class PaymentController {
 
     @PostMapping("/momo")
     @PreAuthorize("hasRole('CUSTOMER')")
-//    public ResponseEntity<MomoResponse> paymentWithMomo(@RequestBody MomoClientRequest request) {
+
     public ResponseEntity<MomoResponse> paymentWithMomo(@RequestParam String codeOrder,
                                                         @RequestParam BigDecimal money,
                                                         @RequestParam Long userId,

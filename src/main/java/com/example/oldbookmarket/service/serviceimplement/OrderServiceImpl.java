@@ -5,6 +5,7 @@ import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
+import com.example.oldbookmarket.dto.response.orderDTO.RevenueResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
@@ -19,10 +20,12 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Ref;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -49,19 +52,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public ResponseEntity<MomoResponse> createNewOrderWithMomo(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress) {
+    public ResponseEntity<MomoResponse> createNewOrderWithMomo(Long postId, Long userId, BigDecimal amount, String paymentMethod, String note, String shipAddress) {
         ResponseEntity<MomoResponse> response = null;
         try {
             String orderCode = Utilities.randomAlphaNumeric(10);
-            response = paymentService.getPaymentMomoV1(orderCode,postId,userId,amount,paymentMethod,note,shipAddress,"Thanh Toán");
-        }catch (Exception e){
+            response = paymentService.getPaymentMomoV1(orderCode, postId, userId, amount, paymentMethod, note, shipAddress, "Thanh Toán");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return response;
     }
 
     @Override
-    public ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress, String orderCode) {
+    public ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount, String paymentMethod, String note, String shipAddress, String orderCode) {
         ResponseEntity<MomoResponse> response = null;
         System.out.println(userId);
         try {
@@ -422,5 +425,77 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
         return orderHistoryResponseDTOS;
+    }
+
+    @Override
+    public List<RevenueResponseDTO> profitCalculation(String month, String year) {
+        Map<Integer, BigDecimal> integerBigDecimalMap = new HashMap<>();
+        List<RevenueResponseDTO> revenueResponseDTOS = new ArrayList<>();
+        List<Order> orderList = null;
+        try {
+            LocalDate date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
+            Integer integer = date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+            for (int i = 1; i <= integer; i++) {
+                integerBigDecimalMap.put(i, BigDecimal.valueOf(0));
+            }
+            orderList = orderRepo.findAllByOrderDate(Integer.parseInt(year), Integer.parseInt(month));
+            for (Order order : orderList) {
+                if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
+                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                        integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
+                    }
+                } else {
+                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                        integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                    }
+                }
+            }
+            Set set = integerBigDecimalMap.keySet();
+            for (Object key : set) {
+                RevenueResponseDTO revenueResponseDTO = RevenueResponseDTO.builder()
+                        .day(Integer.parseInt(key + ""))
+                        .amount(integerBigDecimalMap.get(key))
+                        .build();
+                revenueResponseDTOS.add(revenueResponseDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return revenueResponseDTOS;
+    }
+
+    @Override
+    public List<RevenueResponseDTO> profitCalculationInYear(String year) {
+        Map<Integer, BigDecimal> integerBigDecimalMap = new HashMap<>();
+        List<RevenueResponseDTO> revenueResponseDTOS = new ArrayList<>();
+        List<Order> orderList = null;
+        try {
+            for (int i = 1; i <= 12; i++) {
+                integerBigDecimalMap.put(i, BigDecimal.valueOf(0));
+            }
+            orderList = orderRepo.findAllByYear(Integer.parseInt(year));
+            for (Order order : orderList) {
+                if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
+                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getMonthValue())) {
+                        integerBigDecimalMap.put(order.getOrderDate().getMonthValue(), integerBigDecimalMap.get(order.getOrderDate().getMonthValue()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
+                    }
+                } else {
+                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getMonthValue())) {
+                        integerBigDecimalMap.put(order.getOrderDate().getMonthValue(), integerBigDecimalMap.get(order.getOrderDate().getMonthValue()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                    }
+                }
+            }
+            Set set = integerBigDecimalMap.keySet();
+            for (Object key : set) {
+                RevenueResponseDTO revenueResponseDTO = RevenueResponseDTO.builder()
+                        .month(Integer.parseInt(key + ""))
+                        .amount(integerBigDecimalMap.get(key))
+                        .build();
+                revenueResponseDTOS.add(revenueResponseDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return revenueResponseDTOS;
     }
 }
