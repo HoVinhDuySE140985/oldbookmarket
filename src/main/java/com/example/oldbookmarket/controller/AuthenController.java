@@ -151,7 +151,7 @@ public class AuthenController {
     }
 
     @GetMapping("get-all-user")
-    @PreAuthorize("hasAnyRole('Admin','STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getAllUser(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -165,7 +165,7 @@ public class AuthenController {
     }
 
     @PutMapping("ban-user")
-    @PreAuthorize("hasAnyRole('Admin','STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public ResponseEntity<ResponseDTO> banUser(@RequestParam String email){
         ResponseDTO responseDTO = new ResponseDTO();
         try{
