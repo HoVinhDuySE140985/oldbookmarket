@@ -198,6 +198,8 @@ public class UserServiceImpl implements UserService {
                         .id(user.getId())
                         .email(user.getEmail())
                         .name(user.getName())
+                        .userImage(user.getImageUrl())
+                        .phoneNumber(user.getPhoneNumber())
                         .build();
                 userResponseDTOS.add(userResponseDTO);
             }
