@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         UserLoginResponseDTO responseDTO = null;
         try {
             User user = userRepo.findUserByEmail(email);
-            UserStatus userStatus = userStatusRepo.findByUserId(user.getId());
+            UserStatus userStatus = userStatusRepo.findById(user.getUserStatus().getId()).get();
             responseDTO = UserLoginResponseDTO.builder()
                     .id(user.getId())
                     .email(user.getEmail())
@@ -76,14 +76,10 @@ public class UserServiceImpl implements UserService {
                 user.setEmail(registerRequestDTO.getEmail());
                 user.setPhoneNumber(registerRequestDTO.getPhoneNumber());
                 user.setPassword(encoder.encode(registerRequestDTO.getPassword()));
+                user.setUserStatus(userStatusRepo.findByName("active"));
                 user.setRole(roleRepo.findByName("CUSTOMER"));
                 user = userRepo.save(user);
 
-                UserStatus userStatus = UserStatus.builder()
-                        .user(user)
-                        .name(StatusCode.ACTIVATE.toString())
-                        .build();
-                userStatusRepo.save(userStatus);
                 Wallet wallet = Wallet.builder()
                         .user(user)
                         .amount(BigDecimal.valueOf(0))
@@ -159,9 +155,6 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepo.findUserByEmail(changePasswordRequestDTO.getEmail());
             Boolean check = encoder.matches(changePasswordRequestDTO.getOldPassword(), user.getPassword());
-            System.out.println(changePasswordRequestDTO.getOldPassword());
-            System.out.println(user.getPassword());
-            System.out.println(check);
             if (check){
                 if(changePasswordRequestDTO.getNewPassword().equalsIgnoreCase(changePasswordRequestDTO.getConfirmPassword())){
                     user.setPassword(encoder.encode(changePasswordRequestDTO.getNewPassword()));
@@ -194,12 +187,14 @@ public class UserServiceImpl implements UserService {
         try {
             userList = userRepo.findAll();
             for (User user: userList){
+                UserStatus userStatus = userStatusRepo.findById(user.getUserStatus().getId()).get();
                 UserResponseDTO userResponseDTO = UserResponseDTO.builder()
                         .id(user.getId())
                         .email(user.getEmail())
                         .name(user.getName())
                         .userImage(user.getImageUrl())
                         .phoneNumber(user.getPhoneNumber())
+                        .userStatus(userStatus.getName())
                         .build();
                 userResponseDTOS.add(userResponseDTO);
             }
@@ -213,10 +208,10 @@ public class UserServiceImpl implements UserService {
     public Boolean banUser(String email) {
         try {
             User user = userRepo.findUserByEmail(email);
-            UserStatus userStatus = userStatusRepo.findByUserId(user.getId());
+            UserStatus userStatus = userStatusRepo.findById(user.getUserStatus().getId()).get();
             if (userStatus.getName().equalsIgnoreCase("active")){
-                userStatus.setName("deactive");
-                userStatusRepo.save(userStatus);
+                user.setUserStatus(userStatusRepo.findByName("deactive"));
+                userRepo.save(user);
                 List<Post> postList = postRepo.findAllByUser_Id(user.getId());
                 for (Post post: postList) {
                     if (post.getPostStatus().equalsIgnoreCase("active")){

@@ -37,8 +37,9 @@ public class User {
     private Role role;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    private List<UserStatus> userStatuses;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "status_id")
+    private UserStatus userStatus;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

@@ -151,7 +151,7 @@ public class AuthenController {
     }
 
     @GetMapping("get-all-user")
-    @PermitAll
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getAllUser(){
         ResponseDTO responseDTO = new ResponseDTO();
         try {

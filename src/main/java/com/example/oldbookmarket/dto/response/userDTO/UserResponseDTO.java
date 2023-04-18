@@ -17,4 +17,5 @@ public class UserResponseDTO {
     private String email;
     private String userImage;
     private String phoneNumber;
+    private String userStatus;
 }
