@@ -49,9 +49,7 @@ public class FcmServiceImpl implements FcmService {
 
     @Override
     public BatchResponse pushNotification(PnsRequest pnsRequest) {
-        List<String> registrationTokens = Arrays.asList(
-			    pnsRequest.getToken()
-			);
+        List<String> registrationTokens = pnsRequest.getTokens();
 		MulticastMessage message = MulticastMessage.builder()
 				.setNotification(new Notification(pnsRequest.getTitle(), pnsRequest.getMessage()))
 			    .putData("score", "850")

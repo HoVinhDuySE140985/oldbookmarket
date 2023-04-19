@@ -26,6 +26,8 @@ public class User {
     private String imageUrl;
     private LocalDate  dob;
     private String password;
+    private String fcmKey;
+    
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

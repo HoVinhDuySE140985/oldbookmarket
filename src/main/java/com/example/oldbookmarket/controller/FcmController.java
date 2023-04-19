@@ -22,9 +22,9 @@ public class FcmController {
  
          @PostMapping("/send-notification")
          public ResponseEntity<BatchResponse> sendSampleNotification(@RequestBody PnsRequest pnsRequest) {
-             String token = pnsRequest.getToken();
-             String title = pnsRequest.getTitle();
-             String message = pnsRequest.getMessage();
+//             String token = pnsRequest.getToken();
+//             String title = pnsRequest.getTitle();
+//             String message = pnsRequest.getMessage();
              return new ResponseEntity<BatchResponse>(fcmService.pushNotification(pnsRequest), HttpStatus.OK);
          }
          
