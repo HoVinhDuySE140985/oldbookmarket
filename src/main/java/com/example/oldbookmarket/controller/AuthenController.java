@@ -1,10 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.Jwt.JwtConfig;
-import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
-import com.example.oldbookmarket.dto.request.userDTO.LoginRequestDTO;
-import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
-import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.*;
 import com.example.oldbookmarket.dto.response.userDTO.*;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.entity.User;
@@ -176,4 +173,20 @@ public class AuthenController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+//    @PutMapping("forgot-password")
+//    @PermitAll
+//    public ResponseEntity<ResponseDTO> forgotPassWord(@RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            User user = userService.forgotPassword(forgotPasswordRequestDTO);
+//            responseDTO.setData(user);
+//            responseDTO.setSuccessCode(SuccessCode.SUCCESS);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//
+//    }
+
 }

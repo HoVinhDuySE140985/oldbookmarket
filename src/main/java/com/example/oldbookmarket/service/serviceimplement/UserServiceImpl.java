@@ -1,15 +1,17 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.ForgotPasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
+import com.example.oldbookmarket.dto.response.EmailResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.*;
 import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.entity.UserStatus;
 import com.example.oldbookmarket.entity.Wallet;
-import com.example.oldbookmarket.enumcode.StatusCode;
 import com.example.oldbookmarket.repository.*;
+//import com.example.oldbookmarket.service.serviceinterface.EmailService;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -41,6 +44,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     PostRepo postRepo;
+
+//    @Autowired
+//    EmailService emailService;
 
     @Override
     public UserLoginResponseDTO findByEmail(String email) {
@@ -225,4 +231,49 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+//    @Override
+//    public User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO) {
+//        User user = userRepo.findUserByEmail(forgotPasswordRequestDTO.getEmail());
+//        String randomCode = randomPassword()+"OBM";
+//        try {
+//            EmailResponseDTO emailDetail = EmailResponseDTO.builder()
+//                    .email(forgotPasswordRequestDTO.getEmail())
+//                    .subject("Mã Xác Nhận Đổi Mật Khẩu " + forgotPasswordRequestDTO.getEmail())
+//                    .massage("Xin chào " + user.getName() + ",\n" +
+//                    "\n" +
+//                    "Chúng tôi xin gửi đến bạn mã xác thực \n" +
+//                    "\n" +
+//                    "Mã Xác Thực: " + randomCode + "\n" +
+//                    "\n" +
+//                    "Vui lòng không cung cấp mã xác thực cho người khác!\n" +
+//                    "\n" +
+//                    "Trân trọng,\n" +
+//                    "\n" +
+//                    "Phòng hỗ trợ khách hàng.\n" +
+//                    "(Đây là email được gửi tự động, Quý khách vui lòng không hồi đáp theo địa chỉ email này.)")
+//                    .build();
+//            emailService.sendSimpleMail(emailDetail);
+//            if (randomCode.equalsIgnoreCase(forgotPasswordRequestDTO.getRandomCode())){
+//                user.setPassword(encoder.encode(forgotPasswordRequestDTO.getNewPassword()));
+//                userRepo.save(user);
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return user;
+//    }
+//
+//    public String randomPassword() {
+//        int leftLimit = 97; // letter 'a'
+//        int rightLimit = 122; // letter 'z'
+//        int targetStringLength = 10;
+//        Random random = new Random();
+//        String generatedString = random.ints(leftLimit, rightLimit + 1)
+//                .limit(targetStringLength)
+//                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+//                .toString();
+//        return generatedString;
+//
+//    }
 }

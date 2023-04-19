@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
+import com.example.oldbookmarket.dto.request.userDTO.ForgotPasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
 import com.example.oldbookmarket.dto.response.userDTO.*;
@@ -27,4 +28,6 @@ public interface UserService {
     List<UserResponseDTO> getAllUser();
 
     Boolean banUser(String email);
+
+//    User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
 }

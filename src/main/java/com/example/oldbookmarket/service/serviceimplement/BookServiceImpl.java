@@ -140,7 +140,6 @@ public class BookServiceImpl implements BookService {
                 author = bookAuthorRepo.save(author);
                 book.setName(updateBookResquestDTO.getName());
                 book.setIsbn(updateBookResquestDTO.getIsbn());
-                book.setImageList(updateBookResquestDTO.getBookImages());
                 book.setReprints(updateBookResquestDTO.getReprints());
                 book.setPublicationDate(updateBookResquestDTO.getPublicationDate());
                 book.setPublicCompany(updateBookResquestDTO.getPublicCompany());
@@ -152,6 +151,7 @@ public class BookServiceImpl implements BookService {
                 bookRepo.save(book);
 
                 List<BookImage> bookImages = updateBookResquestDTO.getBookImages();
+                System.out.println(updateBookResquestDTO.getBookImages());
                 for (BookImage bookImage : bookImages) {
                     BookImage image = bookImageRepo.findById(bookImage.getId()).get();
                     image.setUrl(bookImage.getUrl());

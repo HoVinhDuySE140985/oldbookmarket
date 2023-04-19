@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.service;
+package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.google.firebase.messaging.BatchResponse;

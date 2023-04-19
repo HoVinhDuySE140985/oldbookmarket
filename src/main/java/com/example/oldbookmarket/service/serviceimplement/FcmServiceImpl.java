@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
 import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
-import com.example.oldbookmarket.service.FcmService;
+import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
