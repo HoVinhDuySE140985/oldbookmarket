@@ -149,7 +149,7 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-revenue-in-month")
+    @GetMapping("get-revenue")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getRevenue(@RequestParam String month,
                                                   @RequestParam String year) {
