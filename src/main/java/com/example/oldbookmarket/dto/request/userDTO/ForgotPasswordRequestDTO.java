@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ForgotPasswordRequestDTO {
     private String email;
-    private String randomCode;
+    private String verificationCode;
     private String newPassword;
 }

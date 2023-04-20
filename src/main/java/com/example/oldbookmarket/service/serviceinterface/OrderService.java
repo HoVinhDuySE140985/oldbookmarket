@@ -25,5 +25,4 @@ public interface OrderService {
     List<OrderHistoryResponseDTO> getAllOrderByStatus(Long userId, String status);
 
     List<RevenueResponseDTO> profitCalculation( String month, String year);
-    List<RevenueResponseDTO> profitCalculationInYear(String year);
 }

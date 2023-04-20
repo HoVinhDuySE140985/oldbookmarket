@@ -18,4 +18,5 @@ public class UserResponseDTO {
     private String userImage;
     private String phoneNumber;
     private String userStatus;
+    private String verificationCodes;
 }

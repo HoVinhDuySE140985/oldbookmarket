@@ -36,4 +36,9 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     List<Post> findTop10ByPostStatusOrderByCreateAtDesc(String Status);
 
     List<Post> findAllByUser_Id(Long userId);
+
+    @Query("Select count(p.id)\n" +
+            "from Post as p \n" +
+            "where p.user.id = :userId ")
+    Integer findAllPost(Long userId);
 }

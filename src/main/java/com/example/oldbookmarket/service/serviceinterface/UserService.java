@@ -29,5 +29,6 @@ public interface UserService {
 
     Boolean banUser(String email);
 
-//    User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
+    String sendVerificationCode(String email);
+    User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
 }

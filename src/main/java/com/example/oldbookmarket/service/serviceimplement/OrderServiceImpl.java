@@ -433,65 +433,57 @@ public class OrderServiceImpl implements OrderService {
         List<RevenueResponseDTO> revenueResponseDTOS = new ArrayList<>();
         List<Order> orderList = null;
         try {
-            LocalDate date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
-            Integer integer = date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
-            for (int i = 1; i <= integer; i++) {
-                integerBigDecimalMap.put(i, BigDecimal.valueOf(0));
-            }
-            orderList = orderRepo.findAllByOrderDate(Integer.parseInt(year), Integer.parseInt(month));
-            for (Order order : orderList) {
-                if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
-                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
-                        integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
-                    }
-                } else {
-                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
-                        integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+            if (!month.equalsIgnoreCase("null") && !year.equalsIgnoreCase("null")) {
+                LocalDate date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
+                Integer integer = date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+                for (int i = 1; i <= integer; i++) {
+                    integerBigDecimalMap.put(i, BigDecimal.valueOf(0));
+                }
+                orderList = orderRepo.findAllByOrderDate(Integer.parseInt(year), Integer.parseInt(month));
+                for (Order order : orderList) {
+                    if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
+                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                            integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
+                        }
+                    } else {
+                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                            integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                        }
                     }
                 }
-            }
-            Set set = integerBigDecimalMap.keySet();
-            for (Object key : set) {
-                RevenueResponseDTO revenueResponseDTO = RevenueResponseDTO.builder()
-                        .day(Integer.parseInt(key + ""))
-                        .amount(integerBigDecimalMap.get(key))
-                        .build();
-                revenueResponseDTOS.add(revenueResponseDTO);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return revenueResponseDTOS;
-    }
-
-    @Override
-    public List<RevenueResponseDTO> profitCalculationInYear(String year) {
-        Map<Integer, BigDecimal> integerBigDecimalMap = new HashMap<>();
-        List<RevenueResponseDTO> revenueResponseDTOS = new ArrayList<>();
-        List<Order> orderList = null;
-        try {
-            for (int i = 1; i <= 12; i++) {
-                integerBigDecimalMap.put(i, BigDecimal.valueOf(0));
-            }
-            orderList = orderRepo.findAllByYear(Integer.parseInt(year));
-            for (Order order : orderList) {
-                if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
-                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getMonthValue())) {
-                        integerBigDecimalMap.put(order.getOrderDate().getMonthValue(), integerBigDecimalMap.get(order.getOrderDate().getMonthValue()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
-                    }
-                } else {
-                    if (integerBigDecimalMap.containsKey(order.getOrderDate().getMonthValue())) {
-                        integerBigDecimalMap.put(order.getOrderDate().getMonthValue(), integerBigDecimalMap.get(order.getOrderDate().getMonthValue()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
-                    }
+                Set set = integerBigDecimalMap.keySet();
+                for (Object key : set) {
+                    RevenueResponseDTO revenueResponseDTO = RevenueResponseDTO.builder()
+                            .day(Integer.parseInt(key + ""))
+                            .amount(integerBigDecimalMap.get(key))
+                            .build();
+                    revenueResponseDTOS.add(revenueResponseDTO);
                 }
             }
-            Set set = integerBigDecimalMap.keySet();
-            for (Object key : set) {
-                RevenueResponseDTO revenueResponseDTO = RevenueResponseDTO.builder()
-                        .month(Integer.parseInt(key + ""))
-                        .amount(integerBigDecimalMap.get(key))
-                        .build();
-                revenueResponseDTOS.add(revenueResponseDTO);
+            if (month.equalsIgnoreCase("null") && !year.equalsIgnoreCase("null")) {
+                for (int i = 1; i <= 12; i++) {
+                    integerBigDecimalMap.put(i, BigDecimal.valueOf(0));
+                }
+                orderList = orderRepo.findAllByYear(Integer.parseInt(year));
+                for (Order order : orderList) {
+                    if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
+                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getMonthValue())) {
+                            integerBigDecimalMap.put(order.getOrderDate().getMonthValue(), integerBigDecimalMap.get(order.getOrderDate().getMonthValue()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
+                        }
+                    } else {
+                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getMonthValue())) {
+                            integerBigDecimalMap.put(order.getOrderDate().getMonthValue(), integerBigDecimalMap.get(order.getOrderDate().getMonthValue()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                        }
+                    }
+                }
+                Set set = integerBigDecimalMap.keySet();
+                for (Object key : set) {
+                    RevenueResponseDTO revenueResponseDTO = RevenueResponseDTO.builder()
+                            .month(Integer.parseInt(key + ""))
+                            .amount(integerBigDecimalMap.get(key))
+                            .build();
+                    revenueResponseDTOS.add(revenueResponseDTO);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

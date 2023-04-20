@@ -151,7 +151,7 @@ public class OrderController {
 
     @GetMapping("get-revenue-in-month")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> getRevenueInMonth(@RequestParam String month,
+    public ResponseEntity<ResponseDTO> getRevenue(@RequestParam String month,
                                                   @RequestParam String year) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
@@ -164,17 +164,4 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get-revenue-in-year")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseDTO> getRevenueInYear(@RequestParam String year) {
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            List<RevenueResponseDTO> result = orderService.profitCalculationInYear(year);
-            responseDTO.setData(result);
-            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
 }

@@ -175,19 +175,33 @@ public class AuthenController {
     }
     
 
-//    @PutMapping("forgot-password")
-//    @PermitAll
-//    public ResponseEntity<ResponseDTO> forgotPassWord(@RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            User user = userService.forgotPassword(forgotPasswordRequestDTO);
-//            responseDTO.setData(user);
-//            responseDTO.setSuccessCode(SuccessCode.SUCCESS);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//
-//    }
+    @PutMapping("send-verificationCodes")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> sendVerificationCode(@RequestParam String email){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            String verificationCode = userService.sendVerificationCode(email);
+            responseDTO.setData(verificationCode);
+            responseDTO.setSuccessCode(SuccessCode.SEND_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("forgot-password")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> forgotPassWord(@RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            User user = userService.forgotPassword(forgotPasswordRequestDTO);
+            responseDTO.setData(user);
+            responseDTO.setSuccessCode(SuccessCode.SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+
+    }
 
 }

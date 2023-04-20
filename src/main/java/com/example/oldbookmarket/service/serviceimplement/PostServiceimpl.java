@@ -12,8 +12,11 @@ import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -49,79 +52,173 @@ public class PostServiceimpl implements PostService {
 	@Autowired
 	FcmService fcmService;
 
+	@Autowired
+	WalletRepo walletRepo;
+
 	@Override
 	public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
 		PostResponseDTO postResponseDTO = null;
 		User user = userRepo.getById(postRequestDTO.getUserId());
+		Subcategory subcategory = null;
 		try {
-			Subcategory subcategory = subcategoryRepo.findById(postRequestDTO.getSubCategoryId()).get();
-			Post post = new Post();
-			post.setSubcategory(subcategory);
-			post.setImageUrl(postRequestDTO.getImageUrl());
-			post.setTitle(postRequestDTO.getTitle());
-			post.setForm(postRequestDTO.getForm());
-			post.setCreateAt(LocalDate.now());
-			post.setInitPrice(postRequestDTO.getInitPrice());
-			post.setPrice(postRequestDTO.getPrice());
-			post.setBookExchange(postRequestDTO.getBookExchange());
-			post.setLocation(postRequestDTO.getLocation());
-			post.setPostStatus("pending");
-			post.setUser(user);
-			post = postRepo.save(post);
+			int postAmount = postRepo.findAllPost(postRequestDTO.getUserId());
+			if(postAmount<=3){
+				// 3 bài đăng đầu đc free
+				subcategory = subcategoryRepo.findById(postRequestDTO.getSubCategoryId()).get();
+				Post post = new Post();
+				post.setSubcategory(subcategory);
+				post.setImageUrl(postRequestDTO.getImageUrl());
+				post.setTitle(postRequestDTO.getTitle());
+				post.setForm(postRequestDTO.getForm());
+				post.setCreateAt(LocalDate.now());
+				post.setInitPrice(postRequestDTO.getInitPrice());
+				post.setPrice(postRequestDTO.getPrice());
+				post.setBookExchange(postRequestDTO.getBookExchange());
+				post.setLocation(postRequestDTO.getLocation());
+				post.setPostStatus("pending");
+				post.setUser(user);
+				post = postRepo.save(post);
 
-			List<BookRequestDTO> bookRequestDTOS = postRequestDTO.getBookList();
-			for (BookRequestDTO bookRequestDTO : bookRequestDTOS) {
-				BookAuthor bookAuthor = bookAuthorRepo.findByName(bookRequestDTO.getAuthor());
-				if (bookAuthor != null) {
-					Book book = new Book();
-					book.setName(bookRequestDTO.getName());
-					book.setIsbn(bookRequestDTO.getIsbn());
-					book.setReprints(bookRequestDTO.getReprints());
-					book.setBookAuthor(bookAuthor);
-					book.setPublicationDate(bookRequestDTO.getPublicationDate());
-					book.setPublicCompany(bookRequestDTO.getPublicCompany());
-					book.setLanguage(bookRequestDTO.getLanguage());
-					book.setCoverType(bookRequestDTO.getCoverType());
-					book.setStatusQuo(bookRequestDTO.getStatusQuo());
-					book.setDescription(bookRequestDTO.getDescription());
-					book.setPost(post);
-					book = bookRepo.save(book);
-					List<String> bookImages = bookRequestDTO.getBookImages();
-					for (String bookImage : bookImages) {
-						BookImage _bookImage = new BookImage();
-						_bookImage.setUrl(bookImage);
-						_bookImage.setBook(book);
-						bookImageRepo.save(_bookImage);
+				List<BookRequestDTO> bookRequestDTOS = postRequestDTO.getBookList();
+				for (BookRequestDTO bookRequestDTO : bookRequestDTOS) {
+					BookAuthor bookAuthor = bookAuthorRepo.findByName(bookRequestDTO.getAuthor());
+					if (bookAuthor != null) {
+						Book book = new Book();
+						book.setName(bookRequestDTO.getName());
+						book.setIsbn(bookRequestDTO.getIsbn());
+						book.setReprints(bookRequestDTO.getReprints());
+						book.setBookAuthor(bookAuthor);
+						book.setPublicationDate(bookRequestDTO.getPublicationDate());
+						book.setPublicCompany(bookRequestDTO.getPublicCompany());
+						book.setLanguage(bookRequestDTO.getLanguage());
+						book.setCoverType(bookRequestDTO.getCoverType());
+						book.setStatusQuo(bookRequestDTO.getStatusQuo());
+						book.setDescription(bookRequestDTO.getDescription());
+						book.setPost(post);
+						book = bookRepo.save(book);
+						List<String> bookImages = bookRequestDTO.getBookImages();
+						for (String bookImage : bookImages) {
+							BookImage _bookImage = new BookImage();
+							_bookImage.setUrl(bookImage);
+							_bookImage.setBook(book);
+							bookImageRepo.save(_bookImage);
+						}
+					} else {
+						BookAuthor author = BookAuthor.builder()
+								.name(bookRequestDTO.getAuthor())
+								.build();
+						author = bookAuthorRepo.save(author);
+						Book book = new Book();
+						book.setName(bookRequestDTO.getName());
+						book.setIsbn(bookRequestDTO.getIsbn());
+						book.setBookAuthor(author);
+						book.setReprints(bookRequestDTO.getReprints());
+						book.setPublicationDate(bookRequestDTO.getPublicationDate());
+						book.setPublicCompany(bookRequestDTO.getPublicCompany());
+						book.setLanguage(bookRequestDTO.getLanguage());
+						book.setCoverType(bookRequestDTO.getCoverType());
+						book.setStatusQuo(bookRequestDTO.getStatusQuo());
+						book.setDescription(bookRequestDTO.getDescription());
+						book.setPost(post);
+						book = bookRepo.save(book);
+						List<String> bookImages = bookRequestDTO.getBookImages();
+						for (String bookImage : bookImages) {
+							BookImage _bookImage = new BookImage();
+							_bookImage.setUrl(bookImage);
+							_bookImage.setBook(book);
+							bookImageRepo.save(_bookImage);
+						}
 					}
-				} else {
-					BookAuthor author = BookAuthor.builder().name(bookRequestDTO.getAuthor()).build();
-					author = bookAuthorRepo.save(author);
-					Book book = new Book();
-					book.setName(bookRequestDTO.getName());
-					book.setIsbn(bookRequestDTO.getIsbn());
-					book.setBookAuthor(author);
-					book.setReprints(bookRequestDTO.getReprints());
-					book.setPublicationDate(bookRequestDTO.getPublicationDate());
-					book.setPublicCompany(bookRequestDTO.getPublicCompany());
-					book.setLanguage(bookRequestDTO.getLanguage());
-					book.setCoverType(bookRequestDTO.getCoverType());
-					book.setStatusQuo(bookRequestDTO.getStatusQuo());
-					book.setDescription(bookRequestDTO.getDescription());
-					book.setPost(post);
-					book = bookRepo.save(book);
-					List<String> bookImages = bookRequestDTO.getBookImages();
-					for (String bookImage : bookImages) {
-						BookImage _bookImage = new BookImage();
-						_bookImage.setUrl(bookImage);
-						_bookImage.setBook(book);
-						bookImageRepo.save(_bookImage);
+					postResponseDTO = PostResponseDTO.builder().id(post.getId()).title(post.getTitle())
+							.imageUrl(post.getImageUrl()).form(post.getForm()).price(post.getPrice())
+							.location(post.getLocation()).userId(post.getUser().getId()).status(post.getPostStatus())
+							.build();
+				}
+			}else {
+				// từ 3 bài đăng trờ đi mất phí 14k duy trì 7 ngày
+				Wallet walletPoster = walletRepo.findById(user.getId()).get();
+				if(walletPoster.getAmount().compareTo(BigDecimal.valueOf(14000))==-1){
+					throw new ResponseStatusException(HttpStatus.valueOf(400),"Ví Bạn Không Đủ Tiền Vui Lòng Nạp Thêm Và Thử Lại");
+				}else {
+					walletPoster.setAmount(walletPoster.getAmount().subtract(BigDecimal.valueOf(14000)));
+					walletRepo.save(walletPoster);
+					Wallet walletAdmin = walletRepo.findById(14L).get();
+					walletAdmin.setAmount(walletAdmin.getAmount().add(BigDecimal.valueOf(14000)));
+					walletRepo.save(walletAdmin);
+					subcategory = subcategoryRepo.findById(postRequestDTO.getSubCategoryId()).get();
+					Post post = new Post();
+					post.setSubcategory(subcategory);
+					post.setImageUrl(postRequestDTO.getImageUrl());
+					post.setTitle(postRequestDTO.getTitle());
+					post.setForm(postRequestDTO.getForm());
+					post.setCreateAt(LocalDate.now());
+					post.setInitPrice(postRequestDTO.getInitPrice());
+					post.setPrice(postRequestDTO.getPrice());
+					post.setBookExchange(postRequestDTO.getBookExchange());
+					post.setLocation(postRequestDTO.getLocation());
+					post.setPostStatus("pending");
+					post.setUser(user);
+					post = postRepo.save(post);
+
+					List<BookRequestDTO> bookRequestDTOS = postRequestDTO.getBookList();
+					for (BookRequestDTO bookRequestDTO : bookRequestDTOS) {
+						BookAuthor bookAuthor = bookAuthorRepo.findByName(bookRequestDTO.getAuthor());
+						if (bookAuthor != null) {
+							Book book = new Book();
+							book.setName(bookRequestDTO.getName());
+							book.setIsbn(bookRequestDTO.getIsbn());
+							book.setReprints(bookRequestDTO.getReprints());
+							book.setBookAuthor(bookAuthor);
+							book.setPublicationDate(bookRequestDTO.getPublicationDate());
+							book.setPublicCompany(bookRequestDTO.getPublicCompany());
+							book.setLanguage(bookRequestDTO.getLanguage());
+							book.setCoverType(bookRequestDTO.getCoverType());
+							book.setStatusQuo(bookRequestDTO.getStatusQuo());
+							book.setDescription(bookRequestDTO.getDescription());
+							book.setPost(post);
+							book = bookRepo.save(book);
+							List<String> bookImages = bookRequestDTO.getBookImages();
+							for (String bookImage : bookImages) {
+								BookImage _bookImage = new BookImage();
+								_bookImage.setUrl(bookImage);
+								_bookImage.setBook(book);
+								bookImageRepo.save(_bookImage);
+							}
+						} else {
+							BookAuthor author = BookAuthor.builder()
+									.name(bookRequestDTO.getAuthor())
+									.build();
+							author = bookAuthorRepo.save(author);
+							Book book = new Book();
+							book.setName(bookRequestDTO.getName());
+							book.setIsbn(bookRequestDTO.getIsbn());
+							book.setBookAuthor(author);
+							book.setReprints(bookRequestDTO.getReprints());
+							book.setPublicationDate(bookRequestDTO.getPublicationDate());
+							book.setPublicCompany(bookRequestDTO.getPublicCompany());
+							book.setLanguage(bookRequestDTO.getLanguage());
+							book.setCoverType(bookRequestDTO.getCoverType());
+							book.setStatusQuo(bookRequestDTO.getStatusQuo());
+							book.setDescription(bookRequestDTO.getDescription());
+							book.setPost(post);
+							book = bookRepo.save(book);
+							List<String> bookImages = bookRequestDTO.getBookImages();
+							for (String bookImage : bookImages) {
+								BookImage _bookImage = new BookImage();
+								_bookImage.setUrl(bookImage);
+								_bookImage.setBook(book);
+								bookImageRepo.save(_bookImage);
+							}
+						}
+						postResponseDTO = PostResponseDTO.builder().id(post.getId()).title(post.getTitle())
+								.imageUrl(post.getImageUrl()).form(post.getForm()).price(post.getPrice())
+								.location(post.getLocation()).userId(post.getUser().getId()).status(post.getPostStatus())
+								.build();
 					}
 				}
-				postResponseDTO = PostResponseDTO.builder().id(post.getId()).title(post.getTitle())
-						.imageUrl(post.getImageUrl()).form(post.getForm()).price(post.getPrice())
-						.location(post.getLocation()).userId(post.getUser().getId()).status(post.getPostStatus())
-						.build();
+
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -191,11 +288,17 @@ public class PostServiceimpl implements PostService {
 				List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
 				for (Book book : bookList) {
 					BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder().bookId(book.getId())
-							.name(book.getName()).coverType(book.getCoverType()).description(book.getDescription())
-							.isbn(book.getIsbn()).reprints(book.getReprints())
-							.publicationDate(book.getPublicationDate()).bookExchange(post.getBookExchange())
-							.publicCompany(book.getPublicCompany()).statusQuo(book.getStatusQuo())
-							.language(book.getLanguage()).author(book.getBookAuthor().getName())
+							.name(book.getName())
+							.coverType(book.getCoverType())
+							.description(book.getDescription())
+							.isbn(book.getIsbn())
+							.reprints(book.getReprints())
+							.publicationDate(book.getPublicationDate())
+							.bookExchange(post.getBookExchange())
+							.publicCompany(book.getPublicCompany())
+							.statusQuo(book.getStatusQuo())
+							.language(book.getLanguage())
+							.author(book.getBookAuthor().getName())
 							.imageBook(book.getImageList()).build();
 					bookPendingResponseDTOS.add(responseDTO);
 				}
@@ -328,7 +431,6 @@ public class PostServiceimpl implements PostService {
 					fcmKey.add(user.getFcmKey());
 				}
 			}
-			
 //			List<User> userList = postNotificationRepo.findAllUserByBookNoty(post.getTitle());
 //			for (User user : userList) {
 //				if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
@@ -383,18 +485,13 @@ public class PostServiceimpl implements PostService {
 				post.setPostStatus("active");
 				postRepo.save(post);
 			}
-//            Subcategory subcate = subcategoryRepo.getById(post.getSubcategory().getId());
 			postResponseDTO.setId(post.getId());
 			postResponseDTO.setTitle(post.getTitle());
 			postResponseDTO.setForm(post.getForm());
-//            postResponeDTO.setCategoryId(subcate.getCategory().getId());
-//            postResponeDTO.setSubCategoryId(post.getSubcategory().getId());
-//            postResponeDTO.setBookList(post.getBooks());
 			postResponseDTO.setImageUrl(post.getImageUrl());
 			postResponseDTO.setLocation(post.getLocation());
 			postResponseDTO.setPrice(post.getPrice());
 			postResponseDTO.setStatus(post.getPostStatus());
-//            postResponeDTO.setReasonReject(post.getReasonReject());
 			postResponseDTO.setUserId(post.getUser().getId());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -460,7 +557,7 @@ public class PostServiceimpl implements PostService {
 									.publicationDate(book.getPublicationDate()).bookExchange(post.getBookExchange())
 									.publicCompany(book.getPublicCompany()).statusQuo(book.getStatusQuo())
 									.language(book.getLanguage())
-//                                    .author(book.getAuthor())
+                                    .author(book.getBookAuthor().getName())
 									.imageBook(book.getImageList()).build();
 							bookPendingResponseDTOS.add(responseDTO);
 						}
@@ -490,7 +587,7 @@ public class PostServiceimpl implements PostService {
 									.publicationDate(book.getPublicationDate()).bookExchange(post.getBookExchange())
 									.publicCompany(book.getPublicCompany()).statusQuo(book.getStatusQuo())
 									.language(book.getLanguage())
-//                                    .author(book.getAuthor())
+                                    .author(book.getBookAuthor().getName())
 									.imageBook(book.getImageList()).build();
 							bookPendingResponseDTOS.add(responseDTO);
 						}
@@ -527,12 +624,17 @@ public class PostServiceimpl implements PostService {
 				List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
 				for (Book book : bookList) {
 					BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder().bookId(book.getId())
-							.name(book.getName()).coverType(book.getCoverType()).description(book.getDescription())
+							.name(book.getName()).coverType(book.getCoverType())
+							.description(book.getDescription())
 							.isbn(book.getIsbn()).reprints(book.getReprints())
-							.publicationDate(book.getPublicationDate()).bookExchange(post.getBookExchange())
-							.publicCompany(book.getPublicCompany()).statusQuo(book.getStatusQuo())
-							.language(book.getLanguage()).author(book.getBookAuthor().getName())
-							.imageBook(book.getImageList()).build();
+							.publicationDate(book.getPublicationDate())
+							.bookExchange(post.getBookExchange())
+							.publicCompany(book.getPublicCompany())
+							.statusQuo(book.getStatusQuo())
+							.language(book.getLanguage())
+							.author(book.getBookAuthor().getName())
+							.imageBook(book.getImageList())
+							.build();
 					bookPendingResponseDTOS.add(responseDTO);
 				}
 				postResponseDTO.setBookList(bookPendingResponseDTOS);
