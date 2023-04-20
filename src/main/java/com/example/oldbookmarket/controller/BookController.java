@@ -61,7 +61,6 @@ public class BookController {
 //    }
 
     @GetMapping("get-book-by-id")
-    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> getBookById(@RequestParam Long bookId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {

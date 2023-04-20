@@ -24,9 +24,9 @@ public class ReportController {
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> createNewReport(@RequestBody @Validated ReportRequestDTO reportRequestDTO){
         ResponseDTO responseDTO = new ResponseDTO();
-        ReportResponseDTO reportResponseDTO = reportService.createNewReport(reportRequestDTO);
         try {
-            responseDTO.setData(reportRequestDTO);
+            ReportResponseDTO reportResponseDTO = reportService.createNewReport(reportRequestDTO);
+            responseDTO.setData(reportResponseDTO);
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         }catch (Exception e){
             e.printStackTrace();
