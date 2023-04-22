@@ -1,6 +1,6 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
-import com.example.oldbookmarket.dto.response.EmailResponseDTO;
+import com.example.oldbookmarket.dto.response.emailDTO.EmailResponseDTO;
 import com.example.oldbookmarket.service.serviceinterface.EmailService;
 
 import org.springframework.beans.factory.annotation.Autowired;

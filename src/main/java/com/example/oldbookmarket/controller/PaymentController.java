@@ -84,20 +84,19 @@ public class PaymentController {
         MomoConfirmResultResponse momoConfirmResultResponse = new MomoConfirmResultResponse(
                 partnerCode, orderInfo, responseTime, amount, orderInfo, orderType, transId,
                 resultCode, message, payType, resultCode, extraData, signatureHmac, Common.PARTNER_CODE);
-
         String msg = "";
-        if (resultCode == 0) {
+        if (momoConfirmResultResponse.getResultCode() == 0) {
             // System.out.println("Giao Dich Thanh cong");
 
             msg = "giao dich thanh cong";
-        } else if (resultCode == 9000) {
+        } else if (momoConfirmResultResponse.getResultCode() == 9000) {
             msg = "giao dich duoc xac nhan, giao dich thang cong!";
             if (type.equalsIgnoreCase("Nạp Tiền")){
-                walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount));
+                walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount), orderId);
             }else {
                 orderService.createNewOrder(userId,postId,BigDecimal.valueOf(amount),paymentMethod,note,shipAddress,orderId);
             }
-        }else if (resultCode == 1006){
+        }else if (momoConfirmResultResponse.getResultCode() == 1006){
             msg = "người dùng từ chối giao dịch!";
 //            redirectUrl = "https://www.youtube.com/";
         }

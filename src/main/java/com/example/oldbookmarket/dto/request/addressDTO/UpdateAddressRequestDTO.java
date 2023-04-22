@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 public class UpdateAddressRequestDTO {
+    private Long userId;
     private Long addressId;
     private String city;
     private String province;

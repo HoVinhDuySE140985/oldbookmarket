@@ -10,6 +10,7 @@ import com.example.oldbookmarket.service.serviceinterface.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,17 +26,22 @@ public class ReportServiceImpl implements ReportService {
     public ReportResponseDTO createNewReport(ReportRequestDTO reportRequestDTO) {
         ReportResponseDTO reportResponseDTO = null;
         try {
-            User user = userRepo.findById(reportResponseDTO.getUserId()).get();
+            User approvedBy = userRepo.findById(reportRequestDTO.getApprovedBy()).get();
+            User userReported = userRepo.findById(reportRequestDTO.getUserReportedId()).get();
             Report report = Report.builder()
-                    .user(user)
+                    .user(approvedBy)
+                    .createAt(LocalDate.now())
+                    .orderCode(reportRequestDTO.getOrderCode())
+                    .emailReported(userReported.getEmail())
                     .reason(reportRequestDTO.getReason())
                     .build();
             report = reportRepo.save(report);
             reportResponseDTO = ReportResponseDTO.builder()
                     .id(report.getId())
-                    .userId(report.getUser().getId())
+                    .approvedBy(report.getUser().getId())
+                    .emailReported(report.getEmailReported())
+                    .orderCode(report.getOrderCode())
                     .reason(report.getReason())
-                    .createAt(report.getCreateAt())
                     .build();
         }catch (Exception e){
             e.printStackTrace();
@@ -50,11 +56,12 @@ public class ReportServiceImpl implements ReportService {
         try {
             reportList = reportRepo.findAll();
             for (Report report : reportList){
-                ReportResponseDTO reportResponseDTO = new ReportResponseDTO();
-                reportResponseDTO.setId(report.getId());
-                reportResponseDTO.setUserId(report.getUser().getId());
-                reportResponseDTO.setReason(report.getReason());
-                reportResponseDTO.setCreateAt(report.getCreateAt());
+                ReportResponseDTO reportResponseDTO = ReportResponseDTO.builder()
+                        .id(report.getId())
+                        .orderCode(report.getOrderCode())
+                        .emailReported(report.getEmailReported())
+                        .approvedBy(report.getUser().getId())
+                        .build();
                 reportResponseDTOS.add(reportResponseDTO);
             }
         }catch (Exception e){

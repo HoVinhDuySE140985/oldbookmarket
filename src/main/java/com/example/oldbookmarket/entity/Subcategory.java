@@ -19,6 +19,7 @@ public class Subcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 30)
     private String name;
     private String subcateImage;
 

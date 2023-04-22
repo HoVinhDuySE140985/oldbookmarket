@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class ReportRequestDTO {
-    private Long userId;
+    private Long approvedBy;
+    private String orderCode;
     private String reason;
+    private Long userReportedId;
 }

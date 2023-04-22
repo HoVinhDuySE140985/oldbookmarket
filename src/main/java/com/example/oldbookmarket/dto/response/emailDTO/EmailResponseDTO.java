@@ -1,4 +1,4 @@
-package com.example.oldbookmarket.dto.response;
+package com.example.oldbookmarket.dto.response.emailDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

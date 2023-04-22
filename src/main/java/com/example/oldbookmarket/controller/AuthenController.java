@@ -106,7 +106,7 @@ public class AuthenController {
     }
 
     @GetMapping("get-user-info-by-email")
-    @PreAuthorize("hasAnyRole('CUSTOMER' , 'ADMIN', 'STAFF')")
+    @PermitAll
     public ResponseEntity<ResponseDTO> getUserInfo(@RequestParam @Validated String email) {
         ResponseDTO responseDTO = new ResponseDTO();
         User user = userService.findUserByEmail(email);

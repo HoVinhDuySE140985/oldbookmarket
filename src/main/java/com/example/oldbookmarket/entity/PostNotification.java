@@ -17,7 +17,9 @@ public class PostNotification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postNotyId;
+    @Column(length = 40)
     private String email;
+    @Column(length = 40)
     private String bookNoty;
 
     @JsonIgnore

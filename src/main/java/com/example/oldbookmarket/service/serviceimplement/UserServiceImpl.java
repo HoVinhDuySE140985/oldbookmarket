@@ -4,11 +4,11 @@ import com.example.oldbookmarket.dto.request.userDTO.ChangePasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.ForgotPasswordRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.RegisterRequestDTO;
 import com.example.oldbookmarket.dto.request.userDTO.UpdateUserRequestDTO;
-import com.example.oldbookmarket.dto.response.EmailResponseDTO;
+import com.example.oldbookmarket.dto.response.emailDTO.EmailResponseDTO;
 import com.example.oldbookmarket.dto.response.userDTO.*;
 import com.example.oldbookmarket.entity.Post;
 import com.example.oldbookmarket.entity.User;
-import com.example.oldbookmarket.entity.UserStatus;
+//import com.example.oldbookmarket.entity.UserStatus;
 import com.example.oldbookmarket.entity.Wallet;
 import com.example.oldbookmarket.repository.*;
 //import com.example.oldbookmarket.service.serviceinterface.EmailService;
@@ -16,7 +16,6 @@ import com.example.oldbookmarket.service.serviceinterface.EmailService;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,8 +34,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     PasswordEncoder encoder;
 
-    @Autowired
-    UserStatusRepo userStatusRepo;
 
     @Autowired
     RoleRepo roleRepo;
@@ -56,7 +53,6 @@ public class UserServiceImpl implements UserService {
         UserLoginResponseDTO responseDTO = null;
         try {
             User user = userRepo.findUserByEmail(email);
-            UserStatus userStatus = userStatusRepo.findById(user.getUserStatus().getId()).get();
             responseDTO = UserLoginResponseDTO.builder()
                     .id(user.getId())
                     .email(user.getEmail())
@@ -64,7 +60,7 @@ public class UserServiceImpl implements UserService {
                     .dob(user.getDob())
                     .imageUrl(user.getImageUrl())
                     .name(user.getName())
-                    .status(userStatus.getName())
+                    .status(user.getUserStatus())
                     .gender(user.getGender())
                     .password(user.getPassword())
                     .build();
@@ -85,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 user.setEmail(registerRequestDTO.getEmail());
                 user.setPhoneNumber(registerRequestDTO.getPhoneNumber());
                 user.setPassword(encoder.encode(registerRequestDTO.getPassword()));
-                user.setUserStatus(userStatusRepo.findByName("active"));
+                user.setUserStatus("active");
                 user.setRole(roleRepo.findByName("CUSTOMER"));
                 user = userRepo.save(user);
 
@@ -197,14 +193,13 @@ public class UserServiceImpl implements UserService {
         try {
             userList = userRepo.findAll();
             for (User user : userList) {
-                UserStatus userStatus = userStatusRepo.findById(user.getUserStatus().getId()).get();
                 UserResponseDTO userResponseDTO = UserResponseDTO.builder()
                         .id(user.getId())
                         .email(user.getEmail())
                         .name(user.getName())
                         .userImage(user.getImageUrl())
                         .phoneNumber(user.getPhoneNumber())
-                        .userStatus(userStatus.getName())
+                        .userStatus(user.getUserStatus())
                         .build();
                 userResponseDTOS.add(userResponseDTO);
             }
@@ -218,9 +213,8 @@ public class UserServiceImpl implements UserService {
     public Boolean banUser(String email) {
         try {
             User user = userRepo.findUserByEmail(email);
-            UserStatus userStatus = userStatusRepo.findById(user.getUserStatus().getId()).get();
-            if (userStatus.getName().equalsIgnoreCase("active")) {
-                user.setUserStatus(userStatusRepo.findByName("deactive"));
+            if (user.getUserStatus().equalsIgnoreCase("active")) {
+                user.setUserStatus("deactive");
                 userRepo.save(user);
                 List<Post> postList = postRepo.findAllByUser_Id(user.getId());
                 for (Post post : postList) {

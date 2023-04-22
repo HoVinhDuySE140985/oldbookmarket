@@ -18,11 +18,18 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String orderCode;
+    private String emailReported;
     private String reason;
     private LocalDate createAt;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "sender_id")
+    @JoinColumn(name = "approvedBy")
     private User user;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "complaint_id")
+    private Complaint complaint;
 }

@@ -13,7 +13,8 @@ import java.time.LocalDate;
 @Builder
 public class ReportResponseDTO {
     private Long id;
-    private Long userId;
+    private Long approvedBy;
+    private String orderCode;
     private String reason;
-    private LocalDate createAt;
+    private String emailReported;
 }

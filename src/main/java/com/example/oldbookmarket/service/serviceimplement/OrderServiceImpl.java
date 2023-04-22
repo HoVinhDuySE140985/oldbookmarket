@@ -1,6 +1,5 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
-import com.example.oldbookmarket.controller.PaymentController;
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
@@ -19,11 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.sql.Ref;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -45,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
     WalletRepo walletRepo;
 
     @Autowired
-    RefundRepo refundRepo;
+    TransactionRepo transactionRepo;
 
     @Autowired
     PaymentService paymentService;
@@ -66,10 +61,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount, String paymentMethod, String note, String shipAddress, String orderCode) {
         ResponseEntity<MomoResponse> response = null;
-        System.out.println(userId);
+        User user = userRepo.findById(userId).get();
+        Post post = postRepo.findById(postId).get();
         try {
-            User user = userRepo.findById(userId).get();
-            Post post = postRepo.findById(postId).get();
             post.setPostStatus("deactivate");
             postRepo.save(post);
             if (post.getForm().equalsIgnoreCase("bán")) {
@@ -87,6 +81,15 @@ public class OrderServiceImpl implements OrderService {
                         .paymentStatus("PAID")
                         .build();
                 orderRepo.save(order);
+                Transaction transaction = Transaction.builder()
+                        .createAt(LocalDate.now())
+                        .type("Thanh Toán")
+                        .paymentMethod("Ví MoMo")
+                        .orderCode(orderCode)
+                        .wallet(walletRepo.findByUserId(userId))
+                        .amount(amount)
+                        .build();
+                transactionRepo.save(transaction);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,6 +101,8 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO) {
         OrderResponseDTO orderResponseDTO = null;
+        Transaction transaction = null;
+        String orderCode = Utilities.randomAlphaNumeric(10);
         User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         post.setPostStatus("deactivate");
@@ -106,9 +111,9 @@ public class OrderServiceImpl implements OrderService {
             // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
             // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
             // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
-            Wallet walletBuyer = walletRepo.findById(user.getId()).get();
+            Wallet walletBuyer = walletRepo.findByUserId(user.getId());
             if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
-                throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+                throw new ResponseStatusException(HttpStatus.valueOf(400), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
             } else {
                 Order order = Order.builder()
                         .user(user)
@@ -120,6 +125,7 @@ public class OrderServiceImpl implements OrderService {
                         .paymentMethod("VÍ CỦA TÔI")
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                         .status("WaitingForConfirmation")
+                        .codeOrder(orderCode)
                         .paymentStatus("PAID")
                         .build();
                 order = orderRepo.save(order);
@@ -139,11 +145,29 @@ public class OrderServiceImpl implements OrderService {
                 // tru tien trong vi va luu lai
                 walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
                 walletRepo.save(walletBuyer);
+                transaction = Transaction.builder()
+                        .createAt(LocalDate.now())
+                        .type("Thanh Toán")
+                        .paymentMethod("Ví Của Tôi")
+                        .orderCode(orderCode)
+                        .wallet(walletBuyer)
+                        .amount(order.getAmount())
+                        .build();
+                transactionRepo.save(transaction);
                 // cong tien vao vi admin
                 User admin = userRepo.findUserByRole_Id(1L);
                 Wallet adminWallet = walletRepo.findById(admin.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
                 adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
                 walletRepo.save(adminWallet);
+                transaction = Transaction.builder()
+                        .createAt(LocalDate.now())
+                        .type("Admin Nhận Thanh Toán")
+                        .paymentMethod("Ví Của Tôi")
+                        .orderCode(orderCode)
+                        .wallet(adminWallet)
+                        .amount(order.getAmount())
+                        .build();
+                transactionRepo.save(transaction);
                 // neu don hang co trang thai thanh cong thi
                 //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
             }
@@ -163,6 +187,7 @@ public class OrderServiceImpl implements OrderService {
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                         .status("WaitingForConfirmation")
                         .paymentStatus("DEPOSITED")
+                        .codeOrder(orderCode)
                         .build();
                 order = orderRepo.save(order);
                 orderResponseDTO = OrderResponseDTO.builder()
@@ -182,11 +207,29 @@ public class OrderServiceImpl implements OrderService {
                 // tru tien trong vi va luu lai
                 walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
                 walletRepo.save(walletBuyer);
+                transaction = Transaction.builder()
+                        .createAt(LocalDate.now())
+                        .type("Đặt Cọc")
+                        .paymentMethod("Ví Của Tôi")
+                        .orderCode(orderCode)
+                        .wallet(walletBuyer)
+                        .amount(order.getAmount())
+                        .build();
+                transactionRepo.save(transaction);
                 // cong tien vao vi admin
                 User admin = userRepo.findUserByRole_Id(1L);
                 Wallet adminWallet = walletRepo.findById(admin.getId()).get();
                 adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
                 walletRepo.save(adminWallet);
+                transaction = Transaction.builder()
+                        .createAt(LocalDate.now())
+                        .type("Admin Nhận Đăt Cọc")
+                        .paymentMethod("Ví Của Tôi")
+                        .orderCode(orderCode)
+                        .wallet(adminWallet)
+                        .amount(order.getAmount())
+                        .build();
+                transactionRepo.save(transaction);
                 // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
                 //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
             }
@@ -251,13 +294,7 @@ public class OrderServiceImpl implements OrderService {
             order.setStatus("cancel");
             order.setCancelReason(cancelReason);
             orderRepo.save(order);
-            Refund refund = Refund.builder()
-                    .order(order)
-                    .createAt(LocalDate.now())
-                    .amount(order.getAmount())
-                    .user(userReceivered)
-                    .build();
-            refundRepo.save(refund);
+            // lưu vào trong bản transaction
 
         } else {
             throw new ResponseStatusException(HttpStatus.valueOf(200), "Huy Đơn Không Thành Công");

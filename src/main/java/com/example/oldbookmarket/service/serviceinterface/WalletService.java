@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 
 public interface WalletService {
     ResponseEntity<MomoResponse> rechargeIntoWalletMoMo(Long userId, BigDecimal depositAmount);
-    ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, BigDecimal depositAmount);
+    ResponseEntity<MomoResponse> rechargeIntoWallet(Long userId, BigDecimal depositAmount, String orderId);
     WalletResponseDTO viewWallet(Long userId);
 }

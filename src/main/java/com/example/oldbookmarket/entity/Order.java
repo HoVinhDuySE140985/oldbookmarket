@@ -23,16 +23,22 @@ public class Order implements Serializable {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
+    @Column(length = 50)
     private String shipAddress;
     private LocalDate orderDate;
     private BigDecimal amount;
     private String note;
+    @Column(length = 20)
     private String paymentMethod;
+    @Column(length = 20)
     private String deliveryMethod;
+    @Column(length = 20)
     private String status;
+    @Column(length = 20)
     private String paymentStatus;
     private LocalDate resentDate;
     private String cancelReason;
+    @Column(length = 15)
     private String codeOrder;
 
     @MapsId
@@ -46,10 +52,10 @@ public class Order implements Serializable {
 
 
     @JsonIgnore
-    @OneToOne(mappedBy = "order")
-    private Refund refund;
-
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "order")
+    private List<Transaction> transactions;
 }

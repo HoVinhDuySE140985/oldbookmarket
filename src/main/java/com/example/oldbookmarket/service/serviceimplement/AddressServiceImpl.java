@@ -31,16 +31,40 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressResponseDTO createNewAddress(AddressRequestDTO addressRequestDTO) {
         AddressResponseDTO addressResponseDTO = null;
+        User user = null;
         try {
-            Boolean f = false;
-            User user = userRepo.getById(addressRequestDTO.getUserId());
-            List<Address> result = addressRepo.findAllByUser_Id(addressRequestDTO.getUserId());
-            for (Address address: result) {
-                if (address.getProvince().equalsIgnoreCase(addressRequestDTO.getProvince()) && address.getCity().equalsIgnoreCase(addressRequestDTO.getCity()) &&
-                        address.getWard().equalsIgnoreCase(addressRequestDTO.getWard()) && address.getDistrict().equalsIgnoreCase(addressRequestDTO.getDistrict()) &&
-                        address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("deactive")) {
+            user = userRepo.findById(addressRequestDTO.getUserId()).get();
+            if (user.getUserStatus().equals(1)){
+                Boolean f = false;
+                user = userRepo.getById(addressRequestDTO.getUserId());
+                List<Address> result = addressRepo.findAllByUser_Id(addressRequestDTO.getUserId());
+                for (Address address: result) {
+                    if (address.getProvince().equalsIgnoreCase(addressRequestDTO.getProvince()) && address.getCity().equalsIgnoreCase(addressRequestDTO.getCity()) &&
+                            address.getWard().equalsIgnoreCase(addressRequestDTO.getWard()) && address.getDistrict().equalsIgnoreCase(addressRequestDTO.getDistrict()) &&
+                            address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("deactive")) {
+                        address.setStatus("active");
+                        addressRepo.save(address);
+                        addressResponseDTO = AddressResponseDTO.builder()
+                                .id(address.getId())
+                                .city(address.getCity())
+                                .province(address.getProvince())
+                                .district(address.getDistrict())
+                                .ward(address.getWard())
+                                .street(address.getStreet())
+                                .build();
+                        f = true;
+                    }
+                }
+                if(!f) {
+                    Address address = new Address();
+                    address.setCity(addressRequestDTO.getCity());
+                    address.setDistrict(addressRequestDTO.getDistrict());
+                    address.setProvince(addressRequestDTO.getProvince());
+                    address.setWard(addressRequestDTO.getWard());
+                    address.setStreet(addressRequestDTO.getStreet());
                     address.setStatus("active");
-                    addressRepo.save(address);
+                    address.setUser(user);
+                    address = addressRepo.save(address);
                     addressResponseDTO = AddressResponseDTO.builder()
                             .id(address.getId())
                             .city(address.getCity())
@@ -49,27 +73,7 @@ public class AddressServiceImpl implements AddressService {
                             .ward(address.getWard())
                             .street(address.getStreet())
                             .build();
-                    f = true;
                 }
-            }
-            if(!f) {
-                Address address = new Address();
-                address.setCity(addressRequestDTO.getCity());
-                address.setDistrict(addressRequestDTO.getDistrict());
-                address.setProvince(addressRequestDTO.getProvince());
-                address.setWard(addressRequestDTO.getWard());
-                address.setStreet(addressRequestDTO.getStreet());
-                address.setStatus("active");
-                address.setUser(user);
-                address = addressRepo.save(address);
-                addressResponseDTO = AddressResponseDTO.builder()
-                        .id(address.getId())
-                        .city(address.getCity())
-                        .province(address.getProvince())
-                        .district(address.getDistrict())
-                        .ward(address.getWard())
-                        .street(address.getStreet())
-                        .build();
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -80,6 +84,7 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public AddressResponseDTO updateAddress(UpdateAddressRequestDTO updateAddressRequestDTO) {
         AddressResponseDTO addressResponseDTO = null;
+        User user = null;
         try {
             Address address = addressRepo.getById(updateAddressRequestDTO.getAddressId());
             if(address != null){

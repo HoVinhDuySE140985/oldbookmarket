@@ -10,6 +10,7 @@ import com.example.oldbookmarket.repository.*;
 import com.example.oldbookmarket.repository.BookAuthorRepo;
 import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
+import com.example.oldbookmarket.shared.utils.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -55,11 +56,16 @@ public class PostServiceimpl implements PostService {
 	@Autowired
 	WalletRepo walletRepo;
 
+	@Autowired
+	TransactionRepo transactionRepo;
+
 	@Override
 	public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
 		PostResponseDTO postResponseDTO = null;
 		User user = userRepo.getById(postRequestDTO.getUserId());
 		Subcategory subcategory = null;
+		Transaction transaction = null;
+		String orderCode = Utilities.randomAlphaNumeric(10);
 		try {
 			int postAmount = postRepo.findAllPost(postRequestDTO.getUserId());
 			if(postAmount<=3){
@@ -75,6 +81,7 @@ public class PostServiceimpl implements PostService {
 				post.setPrice(postRequestDTO.getPrice());
 				post.setBookExchange(postRequestDTO.getBookExchange());
 				post.setLocation(postRequestDTO.getLocation());
+				post.setExpDate(LocalDate.now().plusDays(7));
 				post.setPostStatus("pending");
 				post.setUser(user);
 				post = postRepo.save(post);
@@ -142,9 +149,27 @@ public class PostServiceimpl implements PostService {
 				}else {
 					walletPoster.setAmount(walletPoster.getAmount().subtract(BigDecimal.valueOf(14000)));
 					walletRepo.save(walletPoster);
+					transaction = Transaction.builder()
+							.createAt(LocalDate.now())
+							.type("Gia Hạn Thời Gian Bài Đăng")
+							.paymentMethod("Ví Của Tôi")
+							.orderCode(orderCode)
+							.wallet(walletPoster)
+							.amount(BigDecimal.valueOf(14000))
+							.build();
+					transactionRepo.save(transaction);
 					Wallet walletAdmin = walletRepo.findById(14L).get();
 					walletAdmin.setAmount(walletAdmin.getAmount().add(BigDecimal.valueOf(14000)));
 					walletRepo.save(walletAdmin);
+					transaction = Transaction.builder()
+							.createAt(LocalDate.now())
+							.type("Nhận Tiền Gia Hạn ")
+							.paymentMethod("Ví Của Tôi")
+							.orderCode(orderCode)
+							.wallet(walletAdmin)
+							.amount(BigDecimal.valueOf(14000))
+							.build();
+					transactionRepo.save(transaction);
 					subcategory = subcategoryRepo.findById(postRequestDTO.getSubCategoryId()).get();
 					Post post = new Post();
 					post.setSubcategory(subcategory);
@@ -156,6 +181,7 @@ public class PostServiceimpl implements PostService {
 					post.setPrice(postRequestDTO.getPrice());
 					post.setBookExchange(postRequestDTO.getBookExchange());
 					post.setLocation(postRequestDTO.getLocation());
+					post.setExpDate(LocalDate.now().plusDays(7));
 					post.setPostStatus("pending");
 					post.setUser(user);
 					post = postRepo.save(post);
@@ -503,7 +529,7 @@ public class PostServiceimpl implements PostService {
 	public PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO) {
 		PostResponseDTO postResponseDTO = new PostResponseDTO();
 		try {
-			Post post = postRepo.getById(postRequestDTO.getId());
+			Post post = postRepo.findById(postRequestDTO.getId()).get();
 			post.setPostStatus("pending");
 			post.setTitle(postRequestDTO.getTitle());
 			post.setForm(postRequestDTO.getForm());
