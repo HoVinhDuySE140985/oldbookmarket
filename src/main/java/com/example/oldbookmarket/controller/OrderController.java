@@ -163,4 +163,19 @@ public class OrderController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @GetMapping("get-all-order")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    public ResponseEntity<ResponseDTO> getAllOrder(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<OrderResponseDTO> responseDTOS = orderService.getALLOrder();
+            responseDTO.setData(responseDTOS);
+            responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
 }

@@ -272,16 +272,33 @@ public class OrderServiceImpl implements OrderService {
         return false;
     }
 
-//    @Override
-//    public List<Order> getAllOrder(Long userId, String orderStatus) {
-//        List<Order> orderList = new ArrayList<>();
-//        try {
-//            orderList = orderRepo.findAllByStatusAndUser_Id(orderStatus, userId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return orderList;
-//    }
+    @Override
+    public List<OrderResponseDTO> getALLOrder() {
+        List<Order> orderList = null;
+        List<OrderResponseDTO> responseDTOS = new ArrayList<>();
+        try {
+            orderList = orderRepo.findAll();
+            for (Order order : orderList) {
+                OrderResponseDTO orderResponseDTO = OrderResponseDTO.builder()
+                        .orderId(order.getId())
+                        .postId(order.getPost().getId())
+                        .shipAddress(order.getShipAddress())
+                        .orderDate(order.getOrderDate())
+                        .amount(order.getAmount())
+                        .note(order.getNote())
+                        .paymentMethod(order.getPaymentMethod())
+                        .deliveryMethod(order.getDeliveryMethod())
+                        .userId(order.getUser().getId())
+                        .status(order.getStatus())
+                        .paymentStatus(order.getPaymentStatus())
+                        .build();
+                responseDTOS.add(orderResponseDTO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return responseDTOS;
+    }
 
     @Override
     public Order cancelOrder(Long orderId, String cancelReason) {

@@ -1,5 +1,8 @@
 package com.example.oldbookmarket.dto.request.bookDTO;
 
+
+import com.example.oldbookmarket.dto.response.bookauthorDTO.BookAuthorResponseDTO;
+import com.example.oldbookmarket.entity.BookAuthor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

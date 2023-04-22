@@ -4,6 +4,7 @@ import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.example.oldbookmarket.dto.request.bookDTO.BookRequestDTO;
 import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookPendingResponseDTO;
+import com.example.oldbookmarket.dto.response.bookauthorDTO.BookAuthorResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
@@ -89,10 +90,11 @@ public class PostServiceimpl implements PostService {
 
 				List<BookRequestDTO> bookRequestDTOS = postRequestDTO.getBookList();
 				for (BookRequestDTO bookRequestDTO : bookRequestDTOS) {
+
 					List<String> listAuthor = bookRequestDTO.getAuthor();
 					for (String authorBook: listAuthor) {
 						BookAuthor author = bookAuthorRepo.findByName(authorBook);
-						if (author != null) {
+						if (author!=null){
 							Book book = new Book();
 							book.setName(bookRequestDTO.getName());
 							book.setIsbn(bookRequestDTO.getIsbn());
@@ -114,9 +116,8 @@ public class PostServiceimpl implements PostService {
 								bookImageRepo.save(_bookImage);
 							}
 						} else {
-							BookAuthor _author = BookAuthor.builder()
-									.name(author.getName())
-									.build();
+							BookAuthor _author = new BookAuthor();
+							_author.setName(authorBook);
 							bookAuthorRepo.save(_author);
 							Book book = new Book();
 							book.setName(bookRequestDTO.getName());
@@ -193,8 +194,8 @@ public class PostServiceimpl implements PostService {
 					List<BookRequestDTO> bookRequestDTOS = postRequestDTO.getBookList();
 					for (BookRequestDTO bookRequestDTO : bookRequestDTOS) {
 						List<String> listAuthor = bookRequestDTO.getAuthor();
-						for (String _bookAuthor : listAuthor){
-							bookAuthor = bookAuthorRepo.findByName(_bookAuthor);
+						for (String author : listAuthor){
+							bookAuthor = bookAuthorRepo.findByName(author);
 							if (bookAuthor != null) {
 								Book book = new Book();
 								book.setName(bookRequestDTO.getName());
@@ -218,7 +219,7 @@ public class PostServiceimpl implements PostService {
 								}
 							} else {
 								BookAuthor _author = BookAuthor.builder()
-										.name(bookAuthor.getName())
+										.name(author)
 										.build();
 								bookAuthorRepo.save(_author);
 								Book book = new Book();
@@ -243,7 +244,6 @@ public class PostServiceimpl implements PostService {
 								}
 							}
 						}
-
 						postResponseDTO = PostResponseDTO.builder().id(post.getId()).title(post.getTitle())
 								.imageUrl(post.getImageUrl()).form(post.getForm()).price(post.getPrice())
 								.location(post.getLocation()).userId(post.getUser().getId()).status(post.getPostStatus())

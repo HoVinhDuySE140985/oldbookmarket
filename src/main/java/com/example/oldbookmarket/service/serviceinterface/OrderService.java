@@ -16,7 +16,7 @@ public interface OrderService {
     ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress, String orderCode);
     OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO);
     Boolean converOrderStatus(Long orderId);
-//    List<Order> getAllOrder(Long userId, String orderStatus);
+    List<OrderResponseDTO> getALLOrder();
     Order cancelOrder(Long orderId, String cancelReason);
 //    OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId);
     Boolean updateResentDate(Long orderId, String resentDate);
