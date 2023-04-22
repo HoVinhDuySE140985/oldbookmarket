@@ -18,7 +18,7 @@ public class BookRequestDTO {
     private LocalDate publicationDate;
     private String reprints;
     private String publicCompany;
-    private String author;
+    private List<String> author;
     private String coverType;
     private String language;
     private String statusQuo;
