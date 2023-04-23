@@ -477,7 +477,6 @@ public class PostServiceimpl implements PostService {
 						"Hay nhanh chong xem chi tiet cuon sach ban da dang ki");
 				fcmService.pushNotification(pnsRequest);
 			}
-			// chạy vòng fore lấy userid trong list xong gửi thông báo đến list userid
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

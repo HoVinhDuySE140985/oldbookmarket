@@ -21,4 +21,5 @@ public class UserLoginResponseDTO {
     private LocalDate dob;
     private String password;
     private String status;
+//    private String fcmKey;
 }

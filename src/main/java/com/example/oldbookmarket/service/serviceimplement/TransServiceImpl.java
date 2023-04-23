@@ -36,6 +36,7 @@ public class TransServiceImpl implements TransService {
                         .amount(transaction.getAmount())
                         .createAt(transaction.getCreateAt())
                         .orderCode(transaction.getOrderCode())
+                        .paymentMethod(transaction.getPaymentMethod())
                         .build();
                 transResponseDTOS.add(responseDTO);
             }

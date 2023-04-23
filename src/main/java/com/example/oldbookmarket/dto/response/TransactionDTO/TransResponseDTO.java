@@ -17,5 +17,6 @@ public class TransResponseDTO {
     private String orderCode;
     private BigDecimal amount;
     private LocalDate createAt;
+    private String paymentMethod;
     private String type;
 }

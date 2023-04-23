@@ -20,9 +20,12 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transId;
+    @Column(length = 15)
     private String orderCode;
+    @Column(length = 30)
     private String type;
     private BigDecimal amount;
+    @Column(length = 30)
     private String paymentMethod;
     private LocalDate createAt;
 

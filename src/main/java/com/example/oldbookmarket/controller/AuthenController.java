@@ -6,6 +6,7 @@ import com.example.oldbookmarket.dto.response.userDTO.*;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.entity.User;
 import com.example.oldbookmarket.enumcode.SuccessCode;
+import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.UserService;
 import io.jsonwebtoken.Jwts;
 
@@ -33,6 +34,9 @@ public class AuthenController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    UserRepo userRepo;
+
+    @Autowired
     public AuthenController(AuthenticationManager authenticationManager, UserService userService, JwtConfig jwtConfig, PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
@@ -55,7 +59,9 @@ public class AuthenController {
                         .claim("id", userAuthenticated.getId())
                         .setIssuedAt((new Date())).setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
                         .signWith(jwtConfig.secretKey()).compact();
-
+                User user = userRepo.findUserByEmail(loginRequestDTO.getEmail());
+                user.setFcmKey(loginRequestDTO.getFcmKey());
+                userRepo.save(user);
                 LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                         .id(userAuthenticated.getId())
                         .name(userAuthenticated.getName())
