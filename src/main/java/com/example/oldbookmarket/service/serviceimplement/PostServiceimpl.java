@@ -545,9 +545,10 @@ public class PostServiceimpl implements PostService {
 			post.setPrice(postRequestDTO.getPrice());
 			post.setInitPrice(postRequestDTO.getInitPrice());
 			post.setBookExchange(postRequestDTO.getBookExchange());
-			postRepo.save(post);
+			post = postRepo.save(post);
 			postResponseDTO =PostResponseDTO.builder()
 					.id(post.getId())
+					.title(post.getTitle())
 					.form(post.getForm())
 					.imageUrl(post.getImageUrl())
 					.initPrice(post.getInitPrice())
