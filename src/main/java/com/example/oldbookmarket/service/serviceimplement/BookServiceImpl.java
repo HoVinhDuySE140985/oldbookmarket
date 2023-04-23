@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BooKDetailResponseDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
 import com.example.oldbookmarket.entity.*;
@@ -36,27 +37,20 @@ public class BookServiceImpl implements BookService {
     BookAuthorRepo bookAuthorRepo;
 
     @Override
-    public List<BookResponseDTO> getBookInfo(Long postId) {
-        List<BookResponseDTO> bookResponseDTOS = new ArrayList<>();
+    public List<BooKDetailResponseDTO> getBookInfo(Long postId) {
+        List<BooKDetailResponseDTO> bookResponseDTOS = new ArrayList<>();
         List<Book> bookList = null;
-        List<BookImageResponseDTO> bookImageResponseDTOS = new ArrayList<>();
         try {
             Post post = postRepo.findById(postId).get();
             User user = userRepo.findById(post.getUser().getId()).get();
             bookList = bookRepo.findAllByPost_Id(postId);
             for (Book book : bookList) {
                 List<BookImage> bookImages = bookImageRepo.findAllByBook_Id(book.getId());
-                for (BookImage bookImage : bookImages) {
-                    BookImageResponseDTO bookImageResponseDTO = BookImageResponseDTO.builder()
-                            .imageId(bookImage.getId())
-                            .imageUrl(bookImage.getUrl())
-                            .build();
-                    bookImageResponseDTOS.add(bookImageResponseDTO);
-                }
-                BookResponseDTO bookResponseDTO = BookResponseDTO.builder()
+                BooKDetailResponseDTO bookResponseDTO = BooKDetailResponseDTO.builder()
+                        .bookId(book.getId())
                         .name(book.getName())
                         .isbn(book.getIsbn())
-                        .bookImages(bookImageResponseDTOS)
+                        .bookImages(bookImages)
                         .reprint(book.getReprints())
                         .publicationDate(book.getPublicationDate())
                         .publicCompany(book.getPublicCompany())

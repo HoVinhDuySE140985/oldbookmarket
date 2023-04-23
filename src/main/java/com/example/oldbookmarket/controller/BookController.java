@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.bookDTO.UpdateBookResquestDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BooKDetailResponseDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookImageResponseDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
@@ -37,7 +38,7 @@ public class BookController {
     public ResponseEntity<ResponseDTO> getBookInfo(@PathVariable @Validated Long postId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<BookResponseDTO> booklist = bookService.getBookInfo(postId);
+            List<BooKDetailResponseDTO> booklist = bookService.getBookInfo(postId);
             responseDTO.setData(booklist);
             responseDTO.setSuccessCode(SuccessCode.Get_Success);
         }catch (Exception e){
