@@ -59,9 +59,9 @@ public class AuthenController {
                         .claim("id", userAuthenticated.getId())
                         .setIssuedAt((new Date())).setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
                         .signWith(jwtConfig.secretKey()).compact();
-                User user = userRepo.findUserByEmail(loginRequestDTO.getEmail());
-                user.setFcmKey(loginRequestDTO.getFcmKey());
-                userRepo.save(user);
+//                User user = userRepo.findUserByEmail(loginRequestDTO.getEmail());
+//                user.setFcmKey(loginRequestDTO.getFcmKey());
+//                userRepo.save(user);
                 LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                         .id(userAuthenticated.getId())
                         .name(userAuthenticated.getName())
