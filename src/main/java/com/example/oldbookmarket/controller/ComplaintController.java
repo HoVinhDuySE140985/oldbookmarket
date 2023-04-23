@@ -32,7 +32,7 @@ public class ComplaintController {
     }
 
     @GetMapping("get-all-complaint")
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public ResponseEntity<ResponseDTO> getAllComplaint(){
         ResponseDTO responseDTO = new ResponseDTO();
         List<ComplaintResponseDTO> complaintResponseDTOS = complaintService.getAllComplaint();

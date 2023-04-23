@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
+import com.example.oldbookmarket.dto.response.bookDTO.BookPendingResponseDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
@@ -44,6 +45,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     PaymentService paymentService;
+
+    @Autowired
+    BookRepo bookRepo;
 
     @Override
     @Transactional
@@ -279,6 +283,26 @@ public class OrderServiceImpl implements OrderService {
         try {
             orderList = orderRepo.findAll();
             for (Order order : orderList) {
+                Post post = postRepo.findById(order.getId()).get();
+                List<Book> books = bookRepo.findAllByPost_Id(post.getId());
+                List<BookPendingResponseDTO> listBookResponse = new ArrayList<>();
+                for (Book book: books) {
+                    BookPendingResponseDTO dto = BookPendingResponseDTO.builder()
+                            .imageBook(book.getImageList())
+                            .reprints(book.getReprints())
+                            .isbn(book.getIsbn())
+                            .language(book.getLanguage())
+                            .author(book.getBookAuthor().getName())
+                            .publicCompany(book.getPublicCompany())
+                            .name(book.getName())
+                            .bookExchange(book.getName())
+                            .statusQuo(book.getStatusQuo())
+                            .description(book.getDescription())
+                            .coverType(book.getCoverType())
+                            .publicationDate(book.getPublicationDate())
+                            .build();
+                    listBookResponse.add(dto);
+                }
                 OrderResponseDTO orderResponseDTO = OrderResponseDTO.builder()
                         .orderId(order.getId())
                         .postId(order.getPost().getId())
@@ -287,9 +311,12 @@ public class OrderServiceImpl implements OrderService {
                         .amount(order.getAmount())
                         .note(order.getNote())
                         .paymentMethod(order.getPaymentMethod())
+                        .orderCode(order.getCodeOrder())
                         .deliveryMethod(order.getDeliveryMethod())
                         .userId(order.getUser().getId())
                         .status(order.getStatus())
+                        .postImage(post.getImageUrl())
+                        .listBooks(listBookResponse)
                         .paymentStatus(order.getPaymentStatus())
                         .build();
                 responseDTOS.add(orderResponseDTO);
