@@ -85,7 +85,6 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponseDTO updateBookInfo(UpdateBookResquestDTO updateBookResquestDTO) {
         BookResponseDTO bookResponseDTO = null;
-
         try {
             Book book = bookRepo.findById(updateBookResquestDTO.getBookId()).get();
             BookAuthor bookAuthor = bookAuthorRepo.findByName(updateBookResquestDTO.getAuthor());
@@ -101,63 +100,12 @@ public class BookServiceImpl implements BookService {
                 book.setStatusQuo(updateBookResquestDTO.getStatusQuo());
                 book.setDescription(updateBookResquestDTO.getDescription());
                 bookRepo.save(book);
-
                 List<BookImage> bookImages = updateBookResquestDTO.getBookImages();
                 for (BookImage bookImage : bookImages) {
                     BookImage image = bookImageRepo.findById(bookImage.getId()).get();
                     image.setUrl(bookImage.getUrl());
                     bookImageRepo.save(image);
                 }
-
-                Book _book = bookRepo.findById(book.getId()).get();
-                List<BookImage> imageList = bookImageRepo.findAllByBook_Id(_book.getId());
-                List<BookImageResponseDTO> bookImageResponseDTOS = new ArrayList<>();
-                for (BookImage bookImage : imageList) {
-                    BookImageResponseDTO bookImageResponseDTO = BookImageResponseDTO.builder()
-                            .imageId(bookImage.getId())
-                            .imageUrl(bookImage.getUrl())
-                            .build();
-                    bookImageResponseDTOS.add(bookImageResponseDTO);
-                }
-                bookResponseDTO = BookResponseDTO.builder()
-                        .bookId(book.getId())
-                        .name(book.getName())
-                        .isbn(book.getIsbn())
-                        .bookImages(bookImageResponseDTOS)
-                        .publicationDate(book.getPublicationDate())
-                        .publicCompany(book.getPublicCompany())
-                        .author(book.getBookAuthor().getName())
-                        .coverType(book.getCoverType())
-                        .reprint(book.getReprints())
-                        .language(book.getLanguage())
-                        .statusQuo(book.getStatusQuo())
-                        .description(book.getDescription())
-                        .build();
-            } else {
-                BookAuthor author = BookAuthor.builder()
-                        .name(updateBookResquestDTO.getAuthor())
-                        .build();
-                author = bookAuthorRepo.save(author);
-                book.setName(updateBookResquestDTO.getName());
-                book.setIsbn(updateBookResquestDTO.getIsbn());
-                book.setReprints(updateBookResquestDTO.getReprints());
-                book.setPublicationDate(updateBookResquestDTO.getPublicationDate());
-                book.setPublicCompany(updateBookResquestDTO.getPublicCompany());
-                book.setBookAuthor(author);
-                book.setCoverType(updateBookResquestDTO.getCoverType());
-                book.setLanguage(updateBookResquestDTO.getLanguage());
-                book.setStatusQuo(updateBookResquestDTO.getStatusQuo());
-                book.setDescription(updateBookResquestDTO.getDescription());
-                bookRepo.save(book);
-
-                List<BookImage> bookImages = updateBookResquestDTO.getBookImages();
-                System.out.println(updateBookResquestDTO.getBookImages());
-                for (BookImage bookImage : bookImages) {
-                    BookImage image = bookImageRepo.findById(bookImage.getId()).get();
-                    image.setUrl(bookImage.getUrl());
-                    bookImageRepo.save(image);
-                }
-
                 Book _book = bookRepo.findById(book.getId()).get();
                 List<BookImage> imageList = bookImageRepo.findAllByBook_Id(_book.getId());
                 List<BookImageResponseDTO> bookImageResponseDTOS = new ArrayList<>();
@@ -183,7 +131,55 @@ public class BookServiceImpl implements BookService {
                         .description(book.getDescription())
                         .build();
             }
+            if (bookAuthor == null){
+                BookAuthor author = BookAuthor.builder()
+                        .name(updateBookResquestDTO.getAuthor())
+                        .build();
+                author = bookAuthorRepo.save(author);
+                book.setName(updateBookResquestDTO.getName());
+                book.setIsbn(updateBookResquestDTO.getIsbn());
+                book.setReprints(updateBookResquestDTO.getReprints());
+                book.setPublicationDate(updateBookResquestDTO.getPublicationDate());
+                book.setPublicCompany(updateBookResquestDTO.getPublicCompany());
+                book.setBookAuthor(author);
+                book.setCoverType(updateBookResquestDTO.getCoverType());
+                book.setLanguage(updateBookResquestDTO.getLanguage());
+                book.setStatusQuo(updateBookResquestDTO.getStatusQuo());
+                book.setDescription(updateBookResquestDTO.getDescription());
+                bookRepo.save(book);
 
+                List<BookImage> bookImages = updateBookResquestDTO.getBookImages();
+                System.out.println(updateBookResquestDTO.getBookImages());
+                for (BookImage bookImage : bookImages) {
+                    BookImage image = bookImageRepo.findById(bookImage.getId()).get();
+                    image.setUrl(bookImage.getUrl());
+                    bookImageRepo.save(image);
+                }
+                Book _book = bookRepo.findById(book.getId()).get();
+                List<BookImage> imageList = bookImageRepo.findAllByBook_Id(_book.getId());
+                List<BookImageResponseDTO> bookImageResponseDTOS = new ArrayList<>();
+                for (BookImage bookImage : imageList) {
+                    BookImageResponseDTO bookImageResponseDTO = BookImageResponseDTO.builder()
+                            .imageId(bookImage.getId())
+                            .imageUrl(bookImage.getUrl())
+                            .build();
+                    bookImageResponseDTOS.add(bookImageResponseDTO);
+                }
+                bookResponseDTO = BookResponseDTO.builder()
+                        .bookId(book.getId())
+                        .name(book.getName())
+                        .isbn(book.getIsbn())
+                        .bookImages(bookImageResponseDTOS)
+                        .publicationDate(book.getPublicationDate())
+                        .publicCompany(book.getPublicCompany())
+                        .author(book.getBookAuthor().getName())
+                        .coverType(book.getCoverType())
+                        .reprint(book.getReprints())
+                        .language(book.getLanguage())
+                        .statusQuo(book.getStatusQuo())
+                        .description(book.getDescription())
+                        .build();
+            }
         } catch (
                 Exception e) {
             e.printStackTrace();
@@ -220,7 +216,6 @@ public class BookServiceImpl implements BookService {
                         .build();
                 bookImageResponseDTOS.add(bookImageResponseDTO);
             }
-
             bookResponseDTO = BookResponseDTO.builder()
                     .bookId(book.getId())
                     .name(book.getName())

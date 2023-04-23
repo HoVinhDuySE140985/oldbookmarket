@@ -535,18 +535,26 @@ public class PostServiceimpl implements PostService {
 
 	@Override
 	public PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO) {
-		PostResponseDTO postResponseDTO = new PostResponseDTO();
+		PostResponseDTO postResponseDTO = null;
 		try {
 			Post post = postRepo.findById(postRequestDTO.getId()).get();
 			post.setPostStatus("pending");
 			post.setTitle(postRequestDTO.getTitle());
-			post.setForm(postRequestDTO.getForm());
 			post.setImageUrl(postRequestDTO.getImageUrl());
 			post.setLocation(postRequestDTO.getLocation());
 			post.setPrice(postRequestDTO.getPrice());
 			post.setInitPrice(postRequestDTO.getInitPrice());
 			post.setBookExchange(postRequestDTO.getBookExchange());
 			postRepo.save(post);
+			postResponseDTO =PostResponseDTO.builder()
+					.id(post.getId())
+					.form(post.getForm())
+					.imageUrl(post.getImageUrl())
+					.initPrice(post.getInitPrice())
+					.price(post.getPrice())
+					.bookExchange(post.getBookExchange())
+					.location(post.getLocation())
+					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

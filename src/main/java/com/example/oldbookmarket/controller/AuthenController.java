@@ -201,7 +201,5 @@ public class AuthenController {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
-
     }
-
 }
