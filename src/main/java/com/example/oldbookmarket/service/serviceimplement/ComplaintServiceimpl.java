@@ -65,6 +65,7 @@ public class ComplaintServiceimpl implements ComplaintService {
         try {
             complaints = complaintRepo.findAll();
             for (Complaint complaint: complaints) {
+                Order order = orderRepo.findByCodeOrder(complaint.getOrder().getCodeOrder());
                 complaintResponseDTO = ComplaintResponseDTO.builder()
                         .id(complaint.getId())
                         .title(complaint.getTitle())
@@ -73,6 +74,7 @@ public class ComplaintServiceimpl implements ComplaintService {
                         .orderCode(complaint.getOrder().getCodeOrder())
                         .description(complaint.getDescription())
                         .userComplained(complaint.getUserComplained())
+                        .userComplainedId(order.getPost().getUser().getId())
                         .senderId(complaint.getUser().getId())
                         .build();
                 complaintResponseDTOS.add(complaintResponseDTO);
