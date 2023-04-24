@@ -24,6 +24,7 @@ public class Complaint {
     private String title;
     private String complaintImage;
     private String description;
+    @Column(length = 25)
     private String userComplained;
 
     @JsonIgnore

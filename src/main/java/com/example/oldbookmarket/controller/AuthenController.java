@@ -71,7 +71,6 @@ public class AuthenController {
                         .status(userAuthenticated.getStatus())
                         .password(userAuthenticated.getPassword())
                         .accesstoken(jwtConfig.getTokenPrefix() + token)
-                        .fcmKey(userAuthenticated.getFcmKey())
                         .build();
                 responseDTO.setData(loginResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.Login_Success);
