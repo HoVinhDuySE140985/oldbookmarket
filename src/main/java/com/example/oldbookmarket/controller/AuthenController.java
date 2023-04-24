@@ -33,8 +33,6 @@ public class AuthenController {
     private JwtConfig jwtConfig;
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    UserRepo userRepo;
 
     @Autowired
     public AuthenController(AuthenticationManager authenticationManager, UserService userService, JwtConfig jwtConfig, PasswordEncoder passwordEncoder) {
@@ -54,14 +52,14 @@ public class AuthenController {
             Authentication authenticate = authenticationManager.authenticate(authentication);
             if (authenticate.isAuthenticated()) {
                 UserLoginResponseDTO userAuthenticated = userService.findByEmail(authenticate.getName());
+                User user = userService.findUserByEmail(authenticate.getName());
+                user.setFcmKey(loginRequestDTO.getFcmKey());
+                userService.save(user);
                 String token = Jwts.builder().setSubject(authenticate.getName())
                         .claim(("authorities"), authenticate.getAuthorities())
                         .claim("id", userAuthenticated.getId())
                         .setIssuedAt((new Date())).setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
                         .signWith(jwtConfig.secretKey()).compact();
-//                User user = userRepo.findUserByEmail(loginRequestDTO.getEmail());
-//                user.setFcmKey(loginRequestDTO.getFcmKey());
-//                userRepo.save(user);
                 LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder()
                         .id(userAuthenticated.getId())
                         .name(userAuthenticated.getName())
@@ -73,6 +71,7 @@ public class AuthenController {
                         .status(userAuthenticated.getStatus())
                         .password(userAuthenticated.getPassword())
                         .accesstoken(jwtConfig.getTokenPrefix() + token)
+                        .fcmKey(userAuthenticated.getFcmKey())
                         .build();
                 responseDTO.setData(loginResponseDTO);
                 responseDTO.setSuccessCode(SuccessCode.Login_Success);
@@ -208,4 +207,18 @@ public class AuthenController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+//    @GetMapping("update-fcmkey")
+//    @PermitAll
+//    public ResponseEntity<ResponseDTO> updateFcmKey(@RequestParam Long userId,
+//                                                    @RequestParam String fcmKey){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            responseDTO.setData(userService.updateFcmKey(userId,fcmKey));
+//            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 }

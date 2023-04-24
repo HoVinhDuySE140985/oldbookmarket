@@ -99,9 +99,9 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @PutMapping("staff/reject-post/{id}")
+    @PutMapping("staff/reject-post")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public ResponseEntity<ResponseDTO> rejectPost(@PathVariable @Validated Long id, @RequestParam @Validated String reasonReject) {
+    public ResponseEntity<ResponseDTO> rejectPost(@RequestParam @Validated Long id, @RequestParam @Validated String reasonReject) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO post = postService.rejectPost(id, reasonReject);

@@ -144,6 +144,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User save(User user) {
+        return userRepo.save(user);
+    }
+
+    @Override
     public List<TopUserResponseDTO> getAllUsersHasHighestOrder() {
         List<TopUserResponseDTO> topUserResponseDTOS = new ArrayList<>();
         try {
@@ -289,5 +294,15 @@ public class UserServiceImpl implements UserService {
         return generatedString;
     }
 
-
+//    @Override
+//    public Boolean updateFcmKey(Long userId, String fcmKey) {
+//        try {
+//            User user = userRepo.findById(userId).get();
+//            user.setFcmKey(fcmKey);
+//            userRepo.save(user);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 }

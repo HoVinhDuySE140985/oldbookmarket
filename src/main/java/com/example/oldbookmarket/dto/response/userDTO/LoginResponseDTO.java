@@ -22,8 +22,5 @@ public class LoginResponseDTO {
     private String password;
     private String status;
     private String accesstoken;
-
-
-
-
+    private String fcmKey;
 }

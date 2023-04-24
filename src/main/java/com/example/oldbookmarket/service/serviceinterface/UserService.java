@@ -19,6 +19,8 @@ public interface UserService {
 
     User findUserByEmail(String email);
 
+    User save(User user);
+
     Boolean isExistUserByEmail(String email);
 
     List<TopUserResponseDTO> getAllUsersHasHighestOrder();
@@ -31,4 +33,6 @@ public interface UserService {
 
     String sendVerificationCode(String email);
     User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
+
+//    Boolean updateFcmKey(Long userId, String fcmKey);
 }
