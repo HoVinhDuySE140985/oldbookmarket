@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepo.findById(userId).get();
         Post post = postRepo.findById(postId).get();
         try {
-            post.setPostStatus("deactivate");
+            post.setPostStatus("deactive");
             postRepo.save(post);
             if (post.getForm().equalsIgnoreCase("bán")) {
                 Order order = Order.builder()
@@ -135,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
         String orderCode = Utilities.randomAlphaNumeric(10);
         User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        post.setPostStatus("deactivate");
+        post.setPostStatus("deactive");
         postRepo.save(post);
         if (post.getForm().equalsIgnoreCase("bán")) {
             // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
