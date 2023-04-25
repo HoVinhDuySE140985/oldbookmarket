@@ -34,8 +34,8 @@ public class ScheduledConfig {
     @Autowired
     FcmService fcmService;
 
-    @Scheduled(fixedDelay = 60000)
-//    @Scheduled(fixedDelay = 43200000)
+//    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 43200000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
         Transaction transaction = null;
@@ -154,18 +154,17 @@ public class ScheduledConfig {
             if (post.getPostStatus().equalsIgnoreCase("active") && post.getExpDate().equals(LocalDate.now())){
                 post.setPostStatus("expired");
                 postRepo.save(post);
+                List<String> fcmKey1 = new ArrayList<>();
+                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                    fcmKey1.add(post.getUser().getFcmKey());
+                }
+                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Bài đăng hết hạn",
+                            "Bạn có bài đăng hết hạn vui lòng gia hạn thêm để hiển thị");
+                    fcmService.pushNotification(pnsRequest);
+                }
             }
-//            List<String> fcmKey1 = new ArrayList<>();
-//            if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
-//                fcmKey1.add(post.getUser().getFcmKey());
-//            }
-//            if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
-//                // pushnoti
-//                PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Bài đăng hết hạn",
-//                        "Bạn có bài đăng hết hạn vui lòng gia hạn thêm để hiển thị");
-//                fcmService.pushNotification(pnsRequest);
-//            }
         }
-
     }
 }
