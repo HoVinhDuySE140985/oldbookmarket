@@ -242,10 +242,9 @@ public class UserServiceImpl implements UserService {
             user = userRepo.findUserByEmail(forgotPasswordRequestDTO.getEmail());
             if (user.getVerificationCode().equalsIgnoreCase(forgotPasswordRequestDTO.getVerificationCode())){
                 user.setPassword(encoder.encode(forgotPasswordRequestDTO.getNewPassword()));
-                user.setVerificationCode("");
+                user.setVerificationCode("null");
                 userRepo.save(user);
             }
-            userRepo.save(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
