@@ -186,4 +186,16 @@ public class PostController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PutMapping("post-extension")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> postExtension(@RequestParam Long postId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(postService.postExtension(postId));
+            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

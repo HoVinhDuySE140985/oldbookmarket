@@ -34,5 +34,5 @@ public interface UserService {
     String sendVerificationCode(String email);
     User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
 
-//    Boolean updateFcmKey(Long userId, String fcmKey);
+    User findUserByName(String name);
 }

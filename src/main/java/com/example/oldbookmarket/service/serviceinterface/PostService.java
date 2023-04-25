@@ -19,4 +19,6 @@ public interface PostService {
     List<PostResponseDTO> searchPostByKeyWord(String keyWord,String sortBy, String filter);
     List<PostResponseDTO> getAllNewPost ();
     PostResponseDTO getPostById(Long postId);
+
+    Boolean postExtension(Long postId);
 }

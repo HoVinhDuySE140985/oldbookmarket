@@ -294,15 +294,15 @@ public class UserServiceImpl implements UserService {
         return generatedString;
     }
 
-//    @Override
-//    public Boolean updateFcmKey(Long userId, String fcmKey) {
-//        try {
-//            User user = userRepo.findById(userId).get();
-//            user.setFcmKey(fcmKey);
-//            userRepo.save(user);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
+    @Override
+    public User findUserByName(String name) {
+        User user = null;
+        try {
+            user = userRepo.findUserByName(name);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return user;
+    }
+
 }

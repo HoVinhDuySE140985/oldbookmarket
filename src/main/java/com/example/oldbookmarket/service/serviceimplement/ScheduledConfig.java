@@ -1,13 +1,9 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
-import com.example.oldbookmarket.entity.Order;
-import com.example.oldbookmarket.entity.Transaction;
-import com.example.oldbookmarket.entity.User;
-import com.example.oldbookmarket.entity.Wallet;
-import com.example.oldbookmarket.repository.OrderRepo;
-import com.example.oldbookmarket.repository.TransactionRepo;
-import com.example.oldbookmarket.repository.UserRepo;
-import com.example.oldbookmarket.repository.WalletRepo;
+import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
+import com.example.oldbookmarket.entity.*;
+import com.example.oldbookmarket.repository.*;
+import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -31,8 +28,14 @@ public class ScheduledConfig {
     @Autowired
     TransactionRepo transactionRepo;
 
-//    @Scheduled(fixedDelay = 60000)
-    @Scheduled(fixedDelay = 43200000)
+    @Autowired
+    PostRepo postRepo;
+
+    @Autowired
+    FcmService fcmService;
+
+    @Scheduled(fixedDelay = 60000)
+//    @Scheduled(fixedDelay = 43200000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
         Transaction transaction = null;
@@ -50,7 +53,8 @@ public class ScheduledConfig {
                     adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));
                     walletRepo.save(adminWallet);
 
-                    Wallet sellerWallet = walletRepo.findById(seller.getId()).get() ;
+                    Wallet sellerWallet = walletRepo.findByUserId(seller.getId());
+                    System.out.println(sellerWallet.getWalletId());
                     sellerWallet.setAmount(sellerWallet.getAmount().add(amountToBePaid));
                     walletRepo.save(sellerWallet);
                     transaction = Transaction.builder()
@@ -143,5 +147,25 @@ public class ScheduledConfig {
                 }
             }
         }
+
+        // ẩn bài đăng khi hết hạn
+        List<Post> posts = postRepo.findAll();
+        for (Post post : posts){
+            if (post.getPostStatus().equalsIgnoreCase("active") && post.getExpDate().equals(LocalDate.now())){
+                post.setPostStatus("expired");
+                postRepo.save(post);
+            }
+//            List<String> fcmKey1 = new ArrayList<>();
+//            if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+//                fcmKey1.add(post.getUser().getFcmKey());
+//            }
+//            if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+//                // pushnoti
+//                PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Bài đăng hết hạn",
+//                        "Bạn có bài đăng hết hạn vui lòng gia hạn thêm để hiển thị");
+//                fcmService.pushNotification(pnsRequest);
+//            }
+        }
+
     }
 }

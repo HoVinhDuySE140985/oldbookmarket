@@ -1,5 +1,6 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
+import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookPendingResponseDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
@@ -8,6 +9,7 @@ import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.RevenueResponseDTO;
 import com.example.oldbookmarket.entity.*;
 import com.example.oldbookmarket.repository.*;
+import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import com.example.oldbookmarket.shared.utils.Utilities;
@@ -48,6 +50,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     BookRepo bookRepo;
+
+    @Autowired
+    FcmService fcmService;
 
     @Override
     @Transactional
@@ -94,6 +99,27 @@ public class OrderServiceImpl implements OrderService {
                         .amount(amount)
                         .build();
                 transactionRepo.save(transaction);
+
+                List<String> fcmKey1 = new ArrayList<>();
+                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                    fcmKey1.add(user.getFcmKey());
+                }
+                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                    fcmService.pushNotification(pnsRequest);
+                }
+                List<String> fcmKey2 = new ArrayList<>();
+                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                    fcmKey2.add(post.getUser().getFcmKey());
+                }
+                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Đơn hàng của bạn đã thanh toán thành công",
+                            "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
+                    fcmService.pushNotification(pnsRequest);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,6 +200,26 @@ public class OrderServiceImpl implements OrderService {
                 transactionRepo.save(transaction);
                 // neu don hang co trang thai thanh cong thi
                 //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
+                List<String> fcmKey1 = new ArrayList<>();
+                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                    fcmKey1.add(user.getFcmKey());
+                }
+                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                    fcmService.pushNotification(pnsRequest);
+                }
+                List<String> fcmKey2 = new ArrayList<>();
+                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                    fcmKey2.add(post.getUser().getFcmKey());
+                }
+                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Đơn hàng của bạn đã thanh toán thành công",
+                            "Bạn có đơn hàng mới cần duyệt :" + order.getCodeOrder());
+                    fcmService.pushNotification(pnsRequest);
+                }
             }
         } else {
             Wallet walletBuyer = walletRepo.findById(user.getId()).get();
@@ -236,6 +282,26 @@ public class OrderServiceImpl implements OrderService {
                 transactionRepo.save(transaction);
                 // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
                 //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
+                List<String> fcmKey1 = new ArrayList<>();
+                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                    fcmKey1.add(user.getFcmKey());
+                }
+                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                    fcmService.pushNotification(pnsRequest);
+                }
+                List<String> fcmKey2 = new ArrayList<>();
+                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                    fcmKey2.add(post.getUser().getFcmKey());
+                }
+                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Đơn hàng của bạn đã thanh toán thành công",
+                            "Bạn có đơn hàng mới cần duyệt :" + order.getCodeOrder());
+                    fcmService.pushNotification(pnsRequest);
+                }
             }
         }
         return orderResponseDTO;
@@ -286,7 +352,7 @@ public class OrderServiceImpl implements OrderService {
                 Post post = postRepo.findById(order.getId()).get();
                 List<Book> books = bookRepo.findAllByPost_Id(post.getId());
                 List<BookPendingResponseDTO> listBookResponse = new ArrayList<>();
-                for (Book book: books) {
+                for (Book book : books) {
                     BookPendingResponseDTO dto = BookPendingResponseDTO.builder()
                             .imageBook(book.getImageList())
                             .reprints(book.getReprints())
