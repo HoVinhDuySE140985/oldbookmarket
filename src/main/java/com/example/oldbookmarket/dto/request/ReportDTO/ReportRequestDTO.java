@@ -17,4 +17,5 @@ public class ReportRequestDTO {
     private String orderCode;
     private String reason;
     private Long userReportedId;
+    private Long complaintId;
 }

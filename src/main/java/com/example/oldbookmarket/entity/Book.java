@@ -31,9 +31,9 @@ public class Book {
     private String reprints; // lần tái bản
     @Column(length = 30)
     private String publicCompany;
-    @Column(length = 15)
+    @Column(length = 40)
     private String coverType;
-    @Column(length = 15)
+    @Column(length = 25)
     private String language;
     private String statusQuo; // đồng nghĩa với condition
     @Column(length = 500)

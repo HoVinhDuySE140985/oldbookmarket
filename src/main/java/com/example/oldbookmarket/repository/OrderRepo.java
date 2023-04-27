@@ -23,4 +23,5 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
             "where year(o.orderDate) = :year and o.status = 'complete'")
     List<Order> findAllByYear(int year);
 
+    Order findOrderByCodeOrder(String orderCode);
 }

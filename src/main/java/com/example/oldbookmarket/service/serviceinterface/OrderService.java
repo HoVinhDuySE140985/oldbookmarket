@@ -16,13 +16,13 @@ public interface OrderService {
     ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount,String paymentMethod,String note,String shipAddress, String orderCode);
     OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO);
     Boolean converOrderStatus(Long orderId);
-    List<OrderResponseDTO> getALLOrder();
+    List<OrderResponseDTO> getALLOrder(String orderCode);
     Order cancelOrder(Long orderId, String cancelReason);
 //    OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId);
     Boolean updateResentDate(Long orderId, String resentDate);
     List<OrderHistoryResponseDTO> getAllSellOrder(Long userId, String status);
     List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId,String status);
     List<OrderHistoryResponseDTO> getAllOrderByStatus(Long userId, String status);
-
     List<RevenueResponseDTO> profitCalculation( String month, String year);
+//    Order getOrderByOrderCode(String orderCode);
 }

@@ -2,8 +2,10 @@ package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.ReportDTO.ReportRequestDTO;
 import com.example.oldbookmarket.dto.response.reportDTO.ReportResponseDTO;
+import com.example.oldbookmarket.entity.Complaint;
 import com.example.oldbookmarket.entity.Report;
 import com.example.oldbookmarket.entity.User;
+import com.example.oldbookmarket.repository.ComplaintRepo;
 import com.example.oldbookmarket.repository.ReportRepo;
 import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.ReportService;
@@ -22,20 +24,27 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     UserRepo userRepo;
+
+    @Autowired
+    ComplaintRepo complaintRepo;
     @Override
     public ReportResponseDTO createNewReport(ReportRequestDTO reportRequestDTO) {
         ReportResponseDTO reportResponseDTO = null;
+        Complaint complaint = complaintRepo.findById(3L).get();
+        System.out.println(complaint.getId());
         try {
             User approvedBy = userRepo.findById(reportRequestDTO.getApprovedBy()).get();
             User userReported = userRepo.findById(reportRequestDTO.getUserReportedId()).get();
+//            Complaint complaint = complaintRepo.findById(reportRequestDTO.getComplaintId()).get();
             Report report = Report.builder()
                     .user(approvedBy)
                     .createAt(LocalDate.now())
                     .orderCode(reportRequestDTO.getOrderCode())
                     .emailReported(userReported.getEmail())
+//                    .complaint(complaint)
                     .reason(reportRequestDTO.getReason())
                     .build();
-            report = reportRepo.save(report);
+            reportRepo.save(report);
             reportResponseDTO = ReportResponseDTO.builder()
                     .id(report.getId())
                     .approvedBy(report.getUser().getId())
@@ -60,6 +69,7 @@ public class ReportServiceImpl implements ReportService {
                         .id(report.getId())
                         .orderCode(report.getOrderCode())
                         .emailReported(report.getEmailReported())
+                        .reason(report.getReason())
                         .approvedBy(report.getUser().getId())
                         .build();
                 reportResponseDTOS.add(reportResponseDTO);

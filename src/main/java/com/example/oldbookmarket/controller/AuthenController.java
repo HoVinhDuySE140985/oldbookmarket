@@ -44,7 +44,7 @@ public class AuthenController {
 
     @PostMapping("login")
     @PermitAll
-    public ResponseEntity<ResponseDTO> login(@RequestBody @Validated LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<ResponseDTO> login(@RequestBody(required = true) @Validated LoginRequestDTO loginRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
 
@@ -153,10 +153,10 @@ public class AuthenController {
 
     @GetMapping("get-all-user")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllUser(){
+    public ResponseEntity<ResponseDTO> getAllUser(@RequestParam String email){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<UserResponseDTO> userList = userService.getAllUser();
+            List<UserResponseDTO> userList = userService.getAllUser(email);
             responseDTO.setData(userList);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
@@ -207,14 +207,13 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("update-fcmkey")
+//    @GetMapping("search-user-email")
 //    @PermitAll
-//    public ResponseEntity<ResponseDTO> updateFcmKey(@RequestParam Long userId,
-//                                                    @RequestParam String fcmKey){
+//    public ResponseEntity<ResponseDTO> SearchUserByKeyWord(@RequestParam String email){
 //        ResponseDTO responseDTO = new ResponseDTO();
 //        try {
-//            responseDTO.setData(userService.updateFcmKey(userId,fcmKey));
-//            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+//            responseDTO.setData(userService.searchEmailByKeyWord(email));
+//            responseDTO.setSuccessCode(SuccessCode.Find_SUCCESS);
 //        }catch (Exception e){
 //            e.printStackTrace();
 //        }

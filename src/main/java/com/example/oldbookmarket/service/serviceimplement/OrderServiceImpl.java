@@ -13,9 +13,12 @@ import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import com.example.oldbookmarket.service.serviceinterface.PaymentService;
 import com.example.oldbookmarket.shared.utils.Utilities;
+import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,6 +29,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 @Service
+@EnableAsync
 public class OrderServiceImpl implements OrderService {
     @Autowired
     PostRepo postRepo;
@@ -129,6 +133,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    @Synchronized
     public OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO) {
         OrderResponseDTO orderResponseDTO = null;
         Transaction transaction = null;
@@ -343,13 +348,55 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponseDTO> getALLOrder() {
+    public List<OrderResponseDTO> getALLOrder(String orderCode) {
         List<Order> orderList = null;
         List<OrderResponseDTO> responseDTOS = new ArrayList<>();
+        Post post = null;
         try {
-            orderList = orderRepo.findAll();
-            for (Order order : orderList) {
-                Post post = postRepo.findById(order.getId()).get();
+            if (orderCode.equalsIgnoreCase("null")){
+                orderList = orderRepo.findAll();
+                for (Order order : orderList) {
+                    post = postRepo.findById(order.getId()).get();
+                    List<Book> books = bookRepo.findAllByPost_Id(post.getId());
+                    List<BookPendingResponseDTO> listBookResponse = new ArrayList<>();
+                    for (Book book : books) {
+                        BookPendingResponseDTO dto = BookPendingResponseDTO.builder()
+                                .imageBook(book.getImageList())
+                                .reprints(book.getReprints())
+                                .isbn(book.getIsbn())
+                                .language(book.getLanguage())
+                                .author(book.getBookAuthor().getName())
+                                .publicCompany(book.getPublicCompany())
+                                .name(book.getName())
+                                .bookExchange(book.getName())
+                                .statusQuo(book.getStatusQuo())
+                                .description(book.getDescription())
+                                .coverType(book.getCoverType())
+                                .publicationDate(book.getPublicationDate())
+                                .build();
+                        listBookResponse.add(dto);
+                    }
+                    OrderResponseDTO orderResponseDTO = OrderResponseDTO.builder()
+                            .orderId(order.getId())
+                            .postId(order.getPost().getId())
+                            .shipAddress(order.getShipAddress())
+                            .orderDate(order.getOrderDate())
+                            .amount(order.getAmount())
+                            .note(order.getNote())
+                            .paymentMethod(order.getPaymentMethod())
+                            .orderCode(order.getCodeOrder())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .userId(order.getUser().getId())
+                            .status(order.getStatus())
+                            .postImage(post.getImageUrl())
+                            .listBooks(listBookResponse)
+                            .paymentStatus(order.getPaymentStatus())
+                            .build();
+                    responseDTOS.add(orderResponseDTO);
+                }
+            }else {
+                Order order = orderRepo.findOrderByCodeOrder(orderCode);
+                post = postRepo.findById(order.getId()).get();
                 List<Book> books = bookRepo.findAllByPost_Id(post.getId());
                 List<BookPendingResponseDTO> listBookResponse = new ArrayList<>();
                 for (Book book : books) {
@@ -397,7 +444,6 @@ public class OrderServiceImpl implements OrderService {
     public Order cancelOrder(Long orderId, String cancelReason) {
         Order order = orderRepo.findById(orderId).get();
         if (order.getStatus().equalsIgnoreCase("processing")) {
-            User userReceivered = userRepo.findById(order.getUser().getId()).get();
             Post post = postRepo.findById(order.getPost().getId()).get();
             post.setPostStatus("active");
             postRepo.save(post);
@@ -405,6 +451,15 @@ public class OrderServiceImpl implements OrderService {
             order.setCancelReason(cancelReason);
             orderRepo.save(order);
             // lưu vào trong bản transaction
+            Transaction transaction = Transaction.builder()
+                    .createAt(LocalDate.now())
+                    .type("Cancel Order")
+                    .paymentMethod("Ví Của Tôi")
+                    .orderCode(order.getCodeOrder())
+                    .wallet(walletRepo.findByUserId(order.getUser().getId()))
+                    .amount(order.getAmount())
+                    .build();
+            transactionRepo.save(transaction);
 
         } else {
             throw new ResponseStatusException(HttpStatus.valueOf(200), "Huy Đơn Không Thành Công");
@@ -637,4 +692,15 @@ public class OrderServiceImpl implements OrderService {
         }
         return revenueResponseDTOS;
     }
+
+//    @Override
+//    public Order getOrderByOrderCode(String orderCode) {
+//        Order order = null;
+//        try {
+//            order = orderRepo.findOrderByCodeOrder(orderCode);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return order;
+//    }
 }

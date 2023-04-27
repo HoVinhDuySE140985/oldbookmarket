@@ -27,7 +27,7 @@ public interface UserService {
 
     ChangePasswordReponseDTO changePassWord(ChangePasswordRequestDTO changePasswordRequestDTO);
 
-    List<UserResponseDTO> getAllUser();
+    List<UserResponseDTO> getAllUser(String email);
 
     Boolean banUser(String email);
 
@@ -35,4 +35,5 @@ public interface UserService {
     User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
 
     User findUserByName(String name);
+//    User searchEmailByKeyWord(String email);
 }

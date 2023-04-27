@@ -11,6 +11,8 @@ import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,7 @@ public class OrderController {
                                                               @RequestParam @Validated String note,
                                                               @RequestParam @Validated String shipAddress) {
         ResponseDTO responseDTO = new ResponseDTO();
+
         try {
             responseDTO.setData(orderService.createNewOrderWithMomo(postId, userId, amount, paymentMethod, note, shipAddress));
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
@@ -133,7 +136,7 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("get_all_order_by_status") // check lại xem ham nay cua admin hay cus
+    @GetMapping("get_all_order_by_status")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> getAllOrderByStatus(@RequestParam @Validated Long userId,
                                                            @RequestParam @Validated String status) {
@@ -166,10 +169,10 @@ public class OrderController {
 
     @GetMapping("get-all-order")
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
-    public ResponseEntity<ResponseDTO> getAllOrder(){
+    public ResponseEntity<ResponseDTO> getAllOrder(@RequestParam String orderCode){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<OrderResponseDTO> responseDTOS = orderService.getALLOrder();
+            List<OrderResponseDTO> responseDTOS = orderService.getALLOrder(orderCode);
             responseDTO.setData(responseDTOS);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         }catch (Exception e){
@@ -178,4 +181,16 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+//    @GetMapping("get-order-by-order-code")
+//    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+//    public ResponseEntity<ResponseDTO> getOrderByOrderCode(@RequestParam String orderCode){
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            responseDTO.setData(orderService.getOrderByOrderCode(orderCode));
+//            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 }

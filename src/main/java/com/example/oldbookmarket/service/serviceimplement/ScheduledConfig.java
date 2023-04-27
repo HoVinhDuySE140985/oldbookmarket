@@ -34,6 +34,9 @@ public class ScheduledConfig {
     @Autowired
     FcmService fcmService;
 
+    @Autowired
+    ComplaintRepo complaintRepo;
+
 //    @Scheduled(fixedDelay = 60000)
     @Scheduled(fixedDelay = 43200000)
     public void load5sForCheckOrderStatus(){
@@ -43,32 +46,38 @@ public class ScheduledConfig {
             User seller = userRepo.findById(order.getPost().getUser().getId()).get();
             User admin = userRepo.findById(14l).get();
             User buyer = userRepo.findById(order.getUser().getId()).get();
+            List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
+            LocalDate futureDay = order.getOrderDate().plusDays(10);
+
+            LocalDate currentDay = LocalDate.now();
             //bán
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){
                 // dơn thành công
                 if (order.getStatus().equalsIgnoreCase("complete") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
-                    BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.80));
+                    if (currentDay.equals(futureDay) && complaints.isEmpty()){
+                        BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.80));
 
-                    Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                    adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));
-                    walletRepo.save(adminWallet);
+                        Wallet adminWallet = walletRepo.findById(admin.getId()).get();
+                        adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));
+                        walletRepo.save(adminWallet);
 
-                    Wallet sellerWallet = walletRepo.findByUserId(seller.getId());
-                    System.out.println(sellerWallet.getWalletId());
-                    sellerWallet.setAmount(sellerWallet.getAmount().add(amountToBePaid));
-                    walletRepo.save(sellerWallet);
-                    transaction = Transaction.builder()
-                            .type("Nhận Tiền Thanh Toán")
-                            .createAt(LocalDate.now())
-                            .orderCode(order.getCodeOrder())
-                            .paymentMethod("Ví Của Tôi")
-                            .wallet(sellerWallet)
-                            .order(order)
-                            .amount(amountToBePaid)
-                            .build();
-                    transactionRepo.save(transaction);
-                    order.setPaymentStatus("PAYMENT_COMPLETED");
-                    orderRepo.save(order);
+                        Wallet sellerWallet = walletRepo.findByUserId(seller.getId());
+                        System.out.println(sellerWallet.getWalletId());
+                        sellerWallet.setAmount(sellerWallet.getAmount().add(amountToBePaid));
+                        walletRepo.save(sellerWallet);
+                        transaction = Transaction.builder()
+                                .type("Nhận Tiền Thanh Toán")
+                                .createAt(LocalDate.now())
+                                .orderCode(order.getCodeOrder())
+                                .paymentMethod("Ví Của Tôi")
+                                .wallet(sellerWallet)
+                                .order(order)
+                                .amount(amountToBePaid)
+                                .build();
+                        transactionRepo.save(transaction);
+                        order.setPaymentStatus("PAYMENT_COMPLETED");
+                        orderRepo.save(order);
+                    }
                 }
                 //đơn hàng cancel
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
@@ -98,27 +107,30 @@ public class ScheduledConfig {
             }else {
                 // trao đổi thanh cong
                 if (order.getStatus().equalsIgnoreCase("Received") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
-                    BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.90));
+                    LocalDate futureDateReceive = order.getResentDate().plusDays(5);
+                    if (currentDay.equals(futureDateReceive) && complaints.isEmpty() ){
+                        BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.90));
 
-                    Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                    adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));
-                    walletRepo.save(adminWallet);
+                        Wallet adminWallet = walletRepo.findById(admin.getId()).get();
+                        adminWallet.setAmount(adminWallet.getAmount().subtract(amountToBePaid));
+                        walletRepo.save(adminWallet);
 
-                    Wallet buyerWallet = walletRepo.findById(buyer.getId()).get();
-                    buyerWallet.setAmount(buyerWallet.getAmount().add(amountToBePaid));
-                    walletRepo.save(buyerWallet);
-                    transaction = Transaction.builder()
-                            .type("Nhận Lại Tiền Cọc")
-                            .createAt(LocalDate.now())
-                            .orderCode(order.getCodeOrder())
-                            .paymentMethod("Ví Của Tôi")
-                            .wallet(buyerWallet)
-                            .order(order)
-                            .amount(amountToBePaid)
-                            .build();
-                    transactionRepo.save(transaction);
-                    order.setPaymentStatus("EXCHANGE_COMPLETED");
-                    orderRepo.save(order);
+                        Wallet buyerWallet = walletRepo.findById(buyer.getId()).get();
+                        buyerWallet.setAmount(buyerWallet.getAmount().add(amountToBePaid));
+                        walletRepo.save(buyerWallet);
+                        transaction = Transaction.builder()
+                                .type("Nhận Lại Tiền Cọc")
+                                .createAt(LocalDate.now())
+                                .orderCode(order.getCodeOrder())
+                                .paymentMethod("Ví Của Tôi")
+                                .wallet(buyerWallet)
+                                .order(order)
+                                .amount(amountToBePaid)
+                                .build();
+                        transactionRepo.save(transaction);
+                        order.setPaymentStatus("EXCHANGE_COMPLETED");
+                        orderRepo.save(order);
+                    }
                 }
                 // trao đổi that bai
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){

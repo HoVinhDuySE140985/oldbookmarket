@@ -192,12 +192,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDTO> getAllUser() {
+    public List<UserResponseDTO> getAllUser(String email) {
         List<User> userList = null;
         List<UserResponseDTO> userResponseDTOS = new ArrayList<>();
         try {
-            userList = userRepo.findAll();
-            for (User user : userList) {
+            if (email.equalsIgnoreCase("null")){
+                userList = userRepo.findAll();
+                for (User user : userList) {
+                    UserResponseDTO userResponseDTO = UserResponseDTO.builder()
+                            .id(user.getId())
+                            .email(user.getEmail())
+                            .name(user.getName())
+                            .userImage(user.getImageUrl())
+                            .phoneNumber(user.getPhoneNumber())
+                            .userStatus(user.getUserStatus())
+                            .build();
+                    userResponseDTOS.add(userResponseDTO);
+                }
+            }else {
+                User user = userRepo.findUserByEmail(email);
                 UserResponseDTO userResponseDTO = UserResponseDTO.builder()
                         .id(user.getId())
                         .email(user.getEmail())
@@ -208,6 +221,7 @@ public class UserServiceImpl implements UserService {
                         .build();
                 userResponseDTOS.add(userResponseDTO);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -304,4 +318,14 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+//    @Override
+//    public User searchEmailByKeyWord(String email) {
+//        User user = null;
+//        try {
+//            user = userRepo.findUserByEmail(email);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return user;
+//    }
 }
