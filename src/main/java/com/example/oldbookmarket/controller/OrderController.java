@@ -181,16 +181,16 @@ public class OrderController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("get-order-by-order-code")
-//    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
-//    public ResponseEntity<ResponseDTO> getOrderByOrderCode(@RequestParam String orderCode){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            responseDTO.setData(orderService.getOrderByOrderCode(orderCode));
-//            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
+    @PutMapping("refund-to-wallet")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    public ResponseEntity<ResponseDTO> getOrderByOrderCode(@RequestParam Long orderId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(orderService.refundOrderToWallet(orderId));
+            responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

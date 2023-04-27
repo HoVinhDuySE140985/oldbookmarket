@@ -44,7 +44,7 @@ public class ScheduledConfig {
         Transaction transaction = null;
         for (Order order: orderList) {
             User seller = userRepo.findById(order.getPost().getUser().getId()).get();
-            User admin = userRepo.findById(14l).get();
+            User admin = userRepo.findUserByRole_Id(1L);
             User buyer = userRepo.findById(order.getUser().getId()).get();
             List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
             LocalDate futureDay = order.getOrderDate().plusDays(10);

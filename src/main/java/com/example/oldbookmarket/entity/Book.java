@@ -27,7 +27,7 @@ public class Book {
     @Column(length = 40)
     private String isbn;
     private LocalDate publicationDate;
-    @Column(length = 20)
+    @Column(length = 30, nullable = true)
     private String reprints; // lần tái bản
     @Column(length = 30)
     private String publicCompany;

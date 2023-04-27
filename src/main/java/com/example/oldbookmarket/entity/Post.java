@@ -22,7 +22,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(length = 50)
+    @Column(length = 200)
     private String title;
     @Column(length = 10)
     private String form;
@@ -35,7 +35,6 @@ public class Post {
     @Column(length = 100)
     private String bookExchange;
     private String reasonReject;
-    @Column(length = 20)
     private String location;
     private LocalDate expDate;
 

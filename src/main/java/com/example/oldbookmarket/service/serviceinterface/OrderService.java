@@ -18,11 +18,10 @@ public interface OrderService {
     Boolean converOrderStatus(Long orderId);
     List<OrderResponseDTO> getALLOrder(String orderCode);
     Order cancelOrder(Long orderId, String cancelReason);
-//    OrderResponseDTO addToOrder(Long orderId, Long userId, Long addressId);
     Boolean updateResentDate(Long orderId, String resentDate);
     List<OrderHistoryResponseDTO> getAllSellOrder(Long userId, String status);
     List<OrderHistoryResponseDTO> getAllBoughtOrder(Long userId,String status);
     List<OrderHistoryResponseDTO> getAllOrderByStatus(Long userId, String status);
     List<RevenueResponseDTO> profitCalculation( String month, String year);
-//    Order getOrderByOrderCode(String orderCode);
+    Boolean refundOrderToWallet(Long orderId);
 }

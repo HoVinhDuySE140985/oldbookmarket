@@ -693,14 +693,32 @@ public class OrderServiceImpl implements OrderService {
         return revenueResponseDTOS;
     }
 
-//    @Override
-//    public Order getOrderByOrderCode(String orderCode) {
-//        Order order = null;
-//        try {
-//            order = orderRepo.findOrderByCodeOrder(orderCode);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return order;
-//    }
+    @Override
+    public Boolean refundOrderToWallet(Long orderId) {
+        Order order = null;
+        try {
+            order = orderRepo.findById(orderId).get();
+            order.setPaymentStatus("REFUND_COMPLETED");
+            orderRepo.save(order);
+            User admin = userRepo.findUserByRole_Id(1L);
+            Wallet adminWallet = walletRepo.findByUserId(admin.getId());
+            adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount()));
+            walletRepo.save(adminWallet);
+            Wallet buyerWallet = walletRepo.findByUserId(order.getUser().getId());
+            buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount()));
+            walletRepo.save(buyerWallet);
+            Transaction transaction = Transaction.builder()
+                    .createAt(LocalDate.now())
+                    .type("Hoàn tiền")
+                    .paymentMethod("Ví Của Tôi")
+                    .orderCode(order.getCodeOrder())
+                    .wallet(walletRepo.findByUserId(order.getUser().getId()))
+                    .amount(order.getAmount())
+                    .build();
+            transactionRepo.save(transaction);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

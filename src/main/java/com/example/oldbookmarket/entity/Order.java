@@ -23,22 +23,22 @@ public class Order implements Serializable {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
-    @Column(length = 50)
+    @Column(length = 100)
     private String shipAddress;
     private LocalDate orderDate;
     private BigDecimal amount;
     private String note;
     @Column(length = 20)
     private String paymentMethod;
-    @Column(length = 20)
+    @Column(length = 40)
     private String deliveryMethod;
-    @Column(length = 20)
+    @Column(length = 50)
     private String status;
     @Column(length = 20)
     private String paymentStatus;
     private LocalDate resentDate;
     private String cancelReason;
-    @Column(length = 15)
+    @Column(length = 40)
     private String codeOrder;
 
     @MapsId

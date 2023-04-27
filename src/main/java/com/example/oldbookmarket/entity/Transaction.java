@@ -20,7 +20,7 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long transId;
-    @Column(length = 15)
+    @Column(length = 40)
     private String orderCode;
     @Column(length = 30)
     private String type;

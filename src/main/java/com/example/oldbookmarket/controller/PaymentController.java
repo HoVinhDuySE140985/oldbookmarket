@@ -69,7 +69,7 @@ public class PaymentController {
             @RequestParam("responseTime") String responseTime,
             @RequestParam("extraData") String extraData,
             @RequestParam("signature") String signature) {
-        String redirectUrl = "https://www.nimo.tv/";
+//        String redirectUrl = "https://www.youtube.com/";
         String sign = "accessKey=" +
                 Common.ACCESS_KEY + "&orderId=" + orderId + "&partnerCode=" + Common.PARTNER_CODE
                 + "&requestId=" + requestId;
@@ -80,32 +80,35 @@ public class PaymentController {
         } catch (Exception e) {
             logger.error("Signiture HMAC loi!");
         }
+        try {
+            MomoConfirmResultResponse momoConfirmResultResponse = new MomoConfirmResultResponse(
+                    partnerCode, orderInfo, responseTime, amount, orderInfo, orderType, transId,
+                    resultCode, message, payType, resultCode, extraData, signatureHmac, Common.PARTNER_CODE);
+            String msg = "";
+            if (momoConfirmResultResponse.getResultCode() == 0) {
+                // System.out.println("Giao Dich Thanh cong");
 
-        MomoConfirmResultResponse momoConfirmResultResponse = new MomoConfirmResultResponse(
-                partnerCode, orderInfo, responseTime, amount, orderInfo, orderType, transId,
-                resultCode, message, payType, resultCode, extraData, signatureHmac, Common.PARTNER_CODE);
-        String msg = "";
-        if (momoConfirmResultResponse.getResultCode() == 0) {
-            // System.out.println("Giao Dich Thanh cong");
-
-            msg = "giao dich thanh cong";
-        } else if (momoConfirmResultResponse.getResultCode() == 9000) {
-            msg = "giao dich duoc xac nhan, giao dich thang cong!";
-            if (type.equalsIgnoreCase("Nạp Tiền")){
-                walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount), orderId);
-            }else {
-                orderService.createNewOrder(userId,postId,BigDecimal.valueOf(amount),paymentMethod,note,shipAddress,orderId);
-            }
-        }else if (momoConfirmResultResponse.getResultCode() == 1006){
-            msg = "người dùng từ chối giao dịch!";
+                msg = "giao dich thanh cong";
+            } else if (momoConfirmResultResponse.getResultCode() == 9000) {
+                msg = "giao dich duoc xac nhan, giao dich thang cong!";
+                if (type.equalsIgnoreCase("Nạp Tiền")){
+                    walletService.rechargeIntoWallet(userId, BigDecimal.valueOf(amount), orderId);
+                }else {
+                    orderService.createNewOrder(userId,postId,BigDecimal.valueOf(amount),paymentMethod,note,shipAddress,orderId);
+                }
+            }else if (momoConfirmResultResponse.getResultCode() == 1006){
+                msg = "người dùng từ chối giao dịch!";
 //            redirectUrl = "https://www.youtube.com/";
+            }
+            logger.info("" + msg);
+            System.out.println(resultCode);
+            System.out.println(msg);
+            // accessKey=WehkypIRwPP14mHb&orderId=23&partnerCode=MOMODJMX20220717&requestId=48468005-6de1-4140-839f-5f2d8d77a001
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        logger.info("" + msg);
-        System.out.println(resultCode);
-        System.out.println(msg);
-        // accessKey=WehkypIRwPP14mHb&orderId=23&partnerCode=MOMODJMX20220717&requestId=48468005-6de1-4140-839f-5f2d8d77a001
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectUrl)); // deploy lên thì chạy về trang cần trả về
+        headers.setLocation(URI.create("https://www.youtube.com/")); // deploy lên thì chạy về trang cần trả về
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
