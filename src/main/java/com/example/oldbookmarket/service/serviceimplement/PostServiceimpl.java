@@ -276,6 +276,7 @@ public class PostServiceimpl implements PostService {
                     postResponseDTO.setImageUrl(post.getImageUrl());
                     postResponseDTO.setLocation(post.getLocation());
                     postResponseDTO.setInitPrice(post.getInitPrice());
+                    postResponseDTO.setExpDate(post.getExpDate());
                     postResponseDTO.setPrice(post.getPrice());
                     postResponseDTO.setStatus(post.getPostStatus());
                     postResponseDTO.setUserId(post.getUser().getId());
@@ -388,7 +389,6 @@ public class PostServiceimpl implements PostService {
                         postResponseDTO.setImageUrl(post.getImageUrl());
                         postResponseDTO.setLocation(post.getLocation());
                         postResponseDTO.setPrice(post.getPrice());
-                        postResponseDTO.setExpDate(post.getExpDate());
                         postResponseDTO.setStatus(post.getPostStatus());
                         postResponseDTO.setUserId(post.getUser().getId());
                         postResponseDTO.setUserName(post.getUser().getName());
@@ -417,7 +417,6 @@ public class PostServiceimpl implements PostService {
                         postResponseDTO.setForm(post.getForm());
                         postResponseDTO.setImageUrl(post.getImageUrl());
                         postResponseDTO.setLocation(post.getLocation());
-                        postResponseDTO.setExpDate(post.getExpDate());
                         postResponseDTO.setPrice(post.getPrice());
                         postResponseDTO.setStatus(post.getPostStatus());
                         postResponseDTO.setUserId(post.getUser().getId());
