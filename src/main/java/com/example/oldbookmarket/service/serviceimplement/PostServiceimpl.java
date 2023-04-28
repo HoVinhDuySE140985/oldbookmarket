@@ -86,7 +86,6 @@ public class PostServiceimpl implements PostService {
                 post.setPrice(postRequestDTO.getPrice());
                 post.setBookExchange(postRequestDTO.getBookExchange());
                 post.setLocation(postRequestDTO.getLocation());
-                post.setExpDate(LocalDate.now().plusDays(7));
                 post.setPostStatus("pending");
                 post.setUser(user);
                 post = postRepo.save(post);
@@ -389,6 +388,7 @@ public class PostServiceimpl implements PostService {
                         postResponseDTO.setImageUrl(post.getImageUrl());
                         postResponseDTO.setLocation(post.getLocation());
                         postResponseDTO.setPrice(post.getPrice());
+                        postResponseDTO.setExpDate(post.getExpDate());
                         postResponseDTO.setStatus(post.getPostStatus());
                         postResponseDTO.setUserId(post.getUser().getId());
                         postResponseDTO.setUserName(post.getUser().getName());
@@ -417,6 +417,7 @@ public class PostServiceimpl implements PostService {
                         postResponseDTO.setForm(post.getForm());
                         postResponseDTO.setImageUrl(post.getImageUrl());
                         postResponseDTO.setLocation(post.getLocation());
+                        postResponseDTO.setExpDate(post.getExpDate());
                         postResponseDTO.setPrice(post.getPrice());
                         postResponseDTO.setStatus(post.getPostStatus());
                         postResponseDTO.setUserId(post.getUser().getId());
@@ -450,6 +451,8 @@ public class PostServiceimpl implements PostService {
         try {
             Post post = postRepo.findById(id).get();
             post.setPostStatus("active");
+            post.setCreateAt(LocalDate.now());
+            post.setExpDate(LocalDate.now().plusDays(7));
             postRepo.save(post);
             postResponseDTO.setId(post.getId());
             postResponseDTO.setTitle(post.getTitle());

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoArgsConstructor
@@ -28,4 +29,6 @@ public class PostResponseDTO {
     private Long userId;
     private String userName;
     private String reasonReject;
+    private LocalDate expDate;
+
 }
