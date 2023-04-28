@@ -37,7 +37,7 @@ public class ScheduledConfig {
     @Autowired
     ComplaintRepo complaintRepo;
 
-//    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 60000)
     @Scheduled(fixedDelay = 43200000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
@@ -48,7 +48,6 @@ public class ScheduledConfig {
             User buyer = userRepo.findById(order.getUser().getId()).get();
             List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
             LocalDate futureDay = order.getOrderDate().plusDays(10);
-
             LocalDate currentDay = LocalDate.now();
             //bán
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){

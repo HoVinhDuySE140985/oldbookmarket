@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComplaintRequestDTO {
-    private LocalDate createAt;
     private String title;
     private String complaintImage;
     private String description;

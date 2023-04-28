@@ -58,6 +58,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     FcmService fcmService;
 
+    @Autowired
+    ComplaintRepo complaintRepo;
+
     @Override
     @Transactional
     public ResponseEntity<MomoResponse> createNewOrderWithMomo(Long postId, Long userId, BigDecimal amount, String paymentMethod, String note, String shipAddress) {
@@ -634,6 +637,7 @@ public class OrderServiceImpl implements OrderService {
         Map<Integer, BigDecimal> integerBigDecimalMap = new HashMap<>();
         List<RevenueResponseDTO> revenueResponseDTOS = new ArrayList<>();
         List<Order> orderList = null;
+        List<Complaint> complaints = null;
         try {
             if (!month.equalsIgnoreCase("null") && !year.equalsIgnoreCase("null")) {
                 LocalDate date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), 1);
@@ -643,13 +647,16 @@ public class OrderServiceImpl implements OrderService {
                 }
                 orderList = orderRepo.findAllByOrderDate(Integer.parseInt(year), Integer.parseInt(month));
                 for (Order order : orderList) {
-                    if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
-                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
-                            integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
-                        }
-                    } else {
-                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
-                            integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                    complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
+                    if(complaints == null){
+                        if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
+                            if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                                integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
+                            }
+                        } else {
+                            if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                                integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                            }
                         }
                     }
                 }

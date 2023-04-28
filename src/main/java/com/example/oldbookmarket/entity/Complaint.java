@@ -20,7 +20,7 @@ public class Complaint {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate createAt;
-    @Column(length = 30)
+    @Column(length = 150)
     private String title;
     private String complaintImage;
     private String description;
