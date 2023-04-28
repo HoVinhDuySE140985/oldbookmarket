@@ -58,6 +58,9 @@ public class PostServiceimpl implements PostService {
     WalletRepo walletRepo;
 
     @Autowired
+    OrderRepo orderRepo;
+
+    @Autowired
     TransactionRepo transactionRepo;
 
     @Override
@@ -505,12 +508,17 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         try {
             Post post = postRepo.findById(id).get();
-            if (post.getPostStatus().equalsIgnoreCase("active")) {
-                post.setPostStatus("deactive");
-                postRepo.save(post);
-            } else if (post.getPostStatus().equalsIgnoreCase("deactive")) {
-                post.setPostStatus("active");
-                postRepo.save(post);
+            Order order = orderRepo.findById(post.getId()).get();
+            if (order==null){
+                if (post.getPostStatus().equalsIgnoreCase("active")) {
+                    post.setPostStatus("deactive");
+                    postRepo.save(post);
+                } else if (post.getPostStatus().equalsIgnoreCase("deactive")) {
+                    post.setPostStatus("active");
+                    postRepo.save(post);
+                }
+            }else {
+                throw new ResponseStatusException(HttpStatus.valueOf(400),"Bài đăng đã được mua/trao đổi không thể cập nhập trạng thái");
             }
             postResponseDTO.setId(post.getId());
             postResponseDTO.setTitle(post.getTitle());
@@ -531,24 +539,30 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = null;
         try {
             Post post = postRepo.findById(postRequestDTO.getId()).get();
-            post.setPostStatus("pending");
-            post.setTitle(postRequestDTO.getTitle());
-            post.setImageUrl(postRequestDTO.getImageUrl());
-            post.setLocation(postRequestDTO.getLocation());
-            post.setPrice(postRequestDTO.getPrice());
-            post.setInitPrice(postRequestDTO.getInitPrice());
-            post.setBookExchange(postRequestDTO.getBookExchange());
-            post = postRepo.save(post);
-            postResponseDTO = PostResponseDTO.builder()
-                    .id(post.getId())
-                    .title(post.getTitle())
-                    .form(post.getForm())
-                    .imageUrl(post.getImageUrl())
-                    .initPrice(post.getInitPrice())
-                    .price(post.getPrice())
-                    .bookExchange(post.getBookExchange())
-                    .location(post.getLocation())
-                    .build();
+            Order order = orderRepo.findById(post.getId()).get();
+            if(order==null){
+                post.setPostStatus("pending");
+                post.setTitle(postRequestDTO.getTitle());
+                post.setImageUrl(postRequestDTO.getImageUrl());
+                post.setLocation(postRequestDTO.getLocation());
+                post.setPrice(postRequestDTO.getPrice());
+                post.setInitPrice(postRequestDTO.getInitPrice());
+                post.setBookExchange(postRequestDTO.getBookExchange());
+                post = postRepo.save(post);
+                postResponseDTO = PostResponseDTO.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .form(post.getForm())
+                        .imageUrl(post.getImageUrl())
+                        .initPrice(post.getInitPrice())
+                        .price(post.getPrice())
+                        .bookExchange(post.getBookExchange())
+                        .location(post.getLocation())
+                        .build();
+            }else {
+                throw new ResponseStatusException(HttpStatus.valueOf(400),"Bài đang đã được mua/trao đổi không thể cập nhập thông tin");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
