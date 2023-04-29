@@ -318,14 +318,18 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-//    @Override
-//    public User searchEmailByKeyWord(String email) {
-//        User user = null;
-//        try {
-//            user = userRepo.findUserByEmail(email);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return user;
-//    }
+    @Override
+    public Boolean unBanUser(String email) {
+        User user = null;
+        try {
+            user = userRepo.findUserByEmail(email);
+            if (user.getUserStatus().equalsIgnoreCase("deactive")){
+                user.setUserStatus("active");
+                userRepo.save(user);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return true;
+    }
 }

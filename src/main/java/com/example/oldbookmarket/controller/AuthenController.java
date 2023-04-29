@@ -207,16 +207,16 @@ public class AuthenController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @GetMapping("search-user-email")
-//    @PermitAll
-//    public ResponseEntity<ResponseDTO> SearchUserByKeyWord(@RequestParam String email){
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            responseDTO.setData(userService.searchEmailByKeyWord(email));
-//            responseDTO.setSuccessCode(SuccessCode.Find_SUCCESS);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
+    @PutMapping("unban-user")
+    @PermitAll
+    public ResponseEntity<ResponseDTO> unBanUser(@RequestParam String email){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(userService.unBanUser(email));
+            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

@@ -35,5 +35,5 @@ public interface UserService {
     User forgotPassword(ForgotPasswordRequestDTO forgotPasswordRequestDTO);
 
     User findUserByName(String name);
-//    User searchEmailByKeyWord(String email);
+    Boolean unBanUser(String email);
 }
