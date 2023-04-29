@@ -242,6 +242,7 @@ public class UserServiceImpl implements UserService {
                         postRepo.save(post);
                     }
                 }
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -326,10 +327,11 @@ public class UserServiceImpl implements UserService {
             if (user.getUserStatus().equalsIgnoreCase("deactive")){
                 user.setUserStatus("active");
                 userRepo.save(user);
+                return true;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 }

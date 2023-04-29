@@ -37,7 +37,7 @@ public class ScheduledConfig {
     @Autowired
     ComplaintRepo complaintRepo;
 
-    @Scheduled(fixedDelay = 60000)
+//    @Scheduled(fixedDelay = 60000)
     @Scheduled(fixedDelay = 43200000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
