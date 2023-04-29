@@ -165,7 +165,8 @@ public class PostServiceimpl implements PostService {
                             .amount(BigDecimal.valueOf(14000))
                             .build();
                     transactionRepo.save(transaction);
-                    Wallet walletAdmin = walletRepo.findById(14L).get();
+                    user = userRepo.findUserByRole_Id(1L);
+                    Wallet walletAdmin = walletRepo.findByUserId(user.getId());
                     walletAdmin.setAmount(walletAdmin.getAmount().add(BigDecimal.valueOf(14000)));
                     walletRepo.save(walletAdmin);
                     transaction = Transaction.builder()
