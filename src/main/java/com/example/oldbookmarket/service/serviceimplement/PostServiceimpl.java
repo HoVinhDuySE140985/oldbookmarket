@@ -522,10 +522,10 @@ public class PostServiceimpl implements PostService {
     @Override
     public PostResponseDTO updatePostStatus(Long id) {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
-        try {
+//        try {
             Post post = postRepo.findById(id).get();
-            Order order = orderRepo.findById(post.getId()).get();
-            if (order==null){
+//            Order order = orderRepo.findById(id).get();
+//            if (order.equals(null)){
                 if (post.getPostStatus().equalsIgnoreCase("active")) {
                     post.setPostStatus("deactive");
                     postRepo.save(post);
@@ -533,9 +533,9 @@ public class PostServiceimpl implements PostService {
                     post.setPostStatus("active");
                     postRepo.save(post);
                 }
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(400),"Bài đăng đã được mua/trao đổi không thể cập nhập trạng thái");
-            }
+//            }else {
+//                throw new ResponseStatusException(HttpStatus.valueOf(400),"Bài đăng đã được mua/trao đổi không thể cập nhập trạng thái");
+//            }
             postResponseDTO.setId(post.getId());
             postResponseDTO.setTitle(post.getTitle());
             postResponseDTO.setForm(post.getForm());
@@ -544,9 +544,7 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setPrice(post.getPrice());
             postResponseDTO.setStatus(post.getPostStatus());
             postResponseDTO.setUserId(post.getUser().getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         return postResponseDTO;
     }
 
