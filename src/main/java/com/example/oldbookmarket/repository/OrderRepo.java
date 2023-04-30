@@ -24,4 +24,6 @@ public interface OrderRepo extends JpaRepository<Order, Long> {
     List<Order> findAllByYear(int year);
 
     Order findOrderByCodeOrder(String orderCode);
+
+    Order findOrderByPostId(Long postId);
 }

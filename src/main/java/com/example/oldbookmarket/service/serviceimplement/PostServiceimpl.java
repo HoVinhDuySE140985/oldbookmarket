@@ -522,28 +522,27 @@ public class PostServiceimpl implements PostService {
     @Override
     public PostResponseDTO updatePostStatus(Long id) {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
-//        try {
-            Post post = postRepo.findById(id).get();
-//            Order order = orderRepo.findById(id).get();
-//            if (order.equals(null)){
-                if (post.getPostStatus().equalsIgnoreCase("active")) {
-                    post.setPostStatus("deactive");
-                    postRepo.save(post);
-                } else if (post.getPostStatus().equalsIgnoreCase("deactive")) {
-                    post.setPostStatus("active");
-                    postRepo.save(post);
-                }
-//            }else {
-//                throw new ResponseStatusException(HttpStatus.valueOf(400),"Bài đăng đã được mua/trao đổi không thể cập nhập trạng thái");
-//            }
-            postResponseDTO.setId(post.getId());
-            postResponseDTO.setTitle(post.getTitle());
-            postResponseDTO.setForm(post.getForm());
-            postResponseDTO.setImageUrl(post.getImageUrl());
-            postResponseDTO.setLocation(post.getLocation());
-            postResponseDTO.setPrice(post.getPrice());
-            postResponseDTO.setStatus(post.getPostStatus());
-            postResponseDTO.setUserId(post.getUser().getId());
+        Post post = postRepo.findById(id).get();
+        Order order = orderRepo.findOrderByPostId(id);
+        if (order == null) {
+            if (post.getPostStatus().equalsIgnoreCase("active")) {
+                post.setPostStatus("deactive");
+                postRepo.save(post);
+            } else if (post.getPostStatus().equalsIgnoreCase("deactive")) {
+                post.setPostStatus("active");
+                postRepo.save(post);
+            }
+        }else {
+            throw new ResponseStatusException(HttpStatus.valueOf(400),"bài đăng đã được mua/trao đổi, không thể cập nhập trạng thái");
+        }
+        postResponseDTO.setId(post.getId());
+        postResponseDTO.setTitle(post.getTitle());
+        postResponseDTO.setForm(post.getForm());
+        postResponseDTO.setImageUrl(post.getImageUrl());
+        postResponseDTO.setLocation(post.getLocation());
+        postResponseDTO.setPrice(post.getPrice());
+        postResponseDTO.setStatus(post.getPostStatus());
+        postResponseDTO.setUserId(post.getUser().getId());
 
         return postResponseDTO;
     }
@@ -554,7 +553,7 @@ public class PostServiceimpl implements PostService {
         try {
             Post post = postRepo.findById(postRequestDTO.getId()).get();
             Order order = orderRepo.findById(post.getId()).get();
-            if(order==null){
+            if (order == null) {
                 post.setPostStatus("pending");
                 post.setTitle(postRequestDTO.getTitle());
                 post.setImageUrl(postRequestDTO.getImageUrl());
@@ -573,8 +572,8 @@ public class PostServiceimpl implements PostService {
                         .bookExchange(post.getBookExchange())
                         .location(post.getLocation())
                         .build();
-            }else {
-                throw new ResponseStatusException(HttpStatus.valueOf(400),"Bài đang đã được mua/trao đổi không thể cập nhập thông tin");
+            } else {
+                throw new ResponseStatusException(HttpStatus.valueOf(400), "Bài đang đã được mua/trao đổi không thể cập nhập thông tin");
             }
 
         } catch (Exception e) {

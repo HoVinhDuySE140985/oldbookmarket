@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,5 +31,5 @@ public class PostResponseDTO {
     private String userName;
     private String reasonReject;
     private LocalDate expDate;
-
+    private ResponseStatusException errorMessage;
 }
