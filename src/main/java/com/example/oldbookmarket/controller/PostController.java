@@ -1,15 +1,11 @@
 package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.postDTO.PostRequestDTO;
-import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
-import com.example.oldbookmarket.entity.Post;
-import com.example.oldbookmarket.enumcode.ErrorCode;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

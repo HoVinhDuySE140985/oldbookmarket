@@ -31,5 +31,4 @@ public class PostResponseDTO {
     private String userName;
     private String reasonReject;
     private LocalDate expDate;
-    private ResponseStatusException errorMessage;
 }
