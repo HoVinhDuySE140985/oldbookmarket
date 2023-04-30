@@ -467,17 +467,29 @@ public class PostServiceimpl implements PostService {
             List<String> fcmKey = new ArrayList<>();
             List<PostNotification> postNotifications = postNotificationRepo.findAllByBookNoty(post.getTitle());
             for (PostNotification postNotification : postNotifications) {
-                User user = postNotification.getUser();
+                User user = userRepo.findUserByEmail(postNotification.getUser().getEmail());
                 if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
                     fcmKey.add(user.getFcmKey());
                 }
             }
             if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
                 // pushnoti
-                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Cuon sach da duoc duyet",
-                        "Hay nhanh chong xem chi tiet cuon sach ban da dang ki");
+                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Sách Đăng Ký",
+                        "Cuốn sách bạn đang tìm đã xuất hiện ");
                 fcmService.pushNotification(pnsRequest);
             }
+            List<String> fcmKey1 = new ArrayList<>();
+            User poster = userRepo.findUserByEmail(post.getUser().getEmail());
+            if (!poster.getFcmKey().isEmpty() && poster.getFcmKey() != null) {
+                fcmKey1.add(poster.getFcmKey());
+            }
+            if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                // pushnoti
+                PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Sách Đăng Ký",
+                        "Cuốn sách bạn đang tìm đã xuất hiện ");
+                fcmService.pushNotification(pnsRequest);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
