@@ -370,6 +370,7 @@ public class PostServiceimpl implements PostService {
             // nếu key != null và sort null
             if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("null")) {
                 postList = postRepo.findByKeyWord(keyWord);
+
             }
             // nếu key != null và sort tăng
             if (!keyWord.equalsIgnoreCase("null") && sortBy.equalsIgnoreCase("tăng dần")) {
@@ -381,8 +382,8 @@ public class PostServiceimpl implements PostService {
             }
             if (!filter.equalsIgnoreCase("null")) {
                 for (Post post : postList) {
-                    if (post.getPostStatus().equalsIgnoreCase("active")
-                            && post.getLocation().equalsIgnoreCase(filter)) {
+                    System.out.println(postList.size());
+                    if (post.getPostStatus().equalsIgnoreCase("active") && post.getLocation().equalsIgnoreCase(filter)) {
                         PostResponseDTO postResponseDTO = new PostResponseDTO();
                         postResponseDTO.setId(post.getId());
                         postResponseDTO.setTitle(post.getTitle());

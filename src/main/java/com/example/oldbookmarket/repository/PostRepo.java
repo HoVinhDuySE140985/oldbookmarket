@@ -21,9 +21,9 @@ public interface PostRepo extends JpaRepository<Post, Long> {
             "where (p.title LIKE %:keyWord%) or (ba.name LIKE %:keyWord%)")
     List<Post> findByKeyWord(String keyWord, Sort sort);
 
-    @Query("select p  " +
-            "from Post p  left join Book b on p.id = b.post.id left join BookAuthor ba on ba.id = b.bookAuthor.id " +
-            "where (p.title LIKE %:keyWord%) or (ba.name LIKE %:keyWord%)")
+    @Query("select distinct p\n" +
+            "from Post p  left join Book b on p.id = b.post.id left join BookAuthor ba on ba.id = b.bookAuthor.id  \n" +
+            "where ((p.title LIKE %:keyWord%) or (ba.name LIKE %:keyWord%)) and p.postStatus = 'active'")
     List<Post> findByKeyWord(String keyWord);
 
     List<Post> findAllBySubcategory_Id(Long subcategoryId);

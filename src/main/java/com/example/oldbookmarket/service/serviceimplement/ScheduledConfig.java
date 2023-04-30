@@ -131,7 +131,7 @@ public class ScheduledConfig {
                         orderRepo.save(order);
                     }
                 }
-                // trao đổi that bai
+                // trao đổi bị cancel
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
                     BigDecimal amountToBePaid = order.getAmount();
 
