@@ -5,6 +5,7 @@ import com.example.oldbookmarket.dto.response.addressDTO.CityResponseDTO;
 import com.example.oldbookmarket.dto.response.postDTO.PostResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
 import com.example.oldbookmarket.entity.Post;
+import com.example.oldbookmarket.enumcode.ErrorCode;
 import com.example.oldbookmarket.enumcode.SuccessCode;
 import com.example.oldbookmarket.service.serviceinterface.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class PostController {
 
     @GetMapping("get_all_post_no_condition") // lấy post ko can có diều kiện trạng thái
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllPostNoCondition(){
+    public ResponseEntity<ResponseDTO> getAllPostNoCondition() {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> postList = postService.getAllPostNoCondition();
@@ -72,9 +73,9 @@ public class PostController {
     @PermitAll
     public ResponseEntity<ResponseDTO> searchPostByKeyWord(@RequestParam(required = false) @Validated String keyWord,
                                                            @RequestParam(required = false) @Validated String sortBy,
-                                                           @RequestParam(required = false) @Validated  String filter) {
+                                                           @RequestParam(required = false) @Validated String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
-        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord,sortBy,filter);
+        List<PostResponseDTO> resultList = postService.searchPostByKeyWord(keyWord, sortBy, filter);
         try {
             responseDTO.setData(resultList);
             responseDTO.setResult(resultList.size());
@@ -117,13 +118,9 @@ public class PostController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updatePostStatus(@PathVariable @Validated Long id) {
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
-            responseDTO.setData(postResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        PostResponseDTO postResponseDTO = postService.updatePostStatus(id);
+        responseDTO.setData(postResponseDTO);
+        responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -131,13 +128,8 @@ public class PostController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> updatePostInfo(@RequestBody @Validated PostRequestDTO postRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO postResponseDTO = postService.updatePostInfo(postRequestDTO);
-            responseDTO.setData(postResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        responseDTO.setData(postService.updatePostInfo(postRequestDTO));
+        responseDTO.setSuccessCode(SuccessCode.UPDATE_SUCCESS);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -145,14 +137,14 @@ public class PostController {
     @PermitAll
     public ResponseEntity<ResponseDTO> getAllPostBySubCategory(@RequestParam @Validated Long subcategoryId,
                                                                @RequestParam(required = false) @Validated String sortBy,
-                                                               @RequestParam(required = false) @Validated String filter){
+                                                               @RequestParam(required = false) @Validated String filter) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId,sortBy,filter);
+            List<PostResponseDTO> postResponseDTOs = postService.getAllPostBySubcategory(subcategoryId, sortBy, filter);
             responseDTO.setData(postResponseDTOs);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
             responseDTO.setResult(postResponseDTOs.size());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
@@ -160,13 +152,13 @@ public class PostController {
 
     @GetMapping("get-all-new-post")
     @PermitAll
-    public ResponseEntity<ResponseDTO> getAllNewPost(){
+    public ResponseEntity<ResponseDTO> getAllNewPost() {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             List<PostResponseDTO> postLists = postService.getAllNewPost();
             responseDTO.setData(postLists);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
@@ -174,13 +166,13 @@ public class PostController {
 
     @GetMapping("get-post-by-id")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> getPostById(@RequestParam Long postId){
+    public ResponseEntity<ResponseDTO> getPostById(@RequestParam Long postId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             PostResponseDTO dto = postService.getPostById(postId);
             responseDTO.setData(dto);
             responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
@@ -188,12 +180,12 @@ public class PostController {
 
     @PutMapping("post-extension")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> postExtension(@RequestParam Long postId){
+    public ResponseEntity<ResponseDTO> postExtension(@RequestParam Long postId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
             responseDTO.setData(postService.postExtension(postId));
             responseDTO.setSuccessCode(SuccessCode.FOUND_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
