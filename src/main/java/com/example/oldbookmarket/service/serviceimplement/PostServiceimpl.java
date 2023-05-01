@@ -537,27 +537,30 @@ public class PostServiceimpl implements PostService {
     public PostResponseDTO updatePostStatus(Long id) {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         Post post = postRepo.findById(id).get();
-        Order order = orderRepo.findOrderByPostId(id);
-        if (order == null) {
-            if (post.getPostStatus().equalsIgnoreCase("active")) {
-                post.setPostStatus("deactive");
-                postRepo.save(post);
-            } else if (post.getPostStatus().equalsIgnoreCase("deactive")) {
-                post.setPostStatus("active");
-                postRepo.save(post);
+        if (!post.getPostStatus().equalsIgnoreCase("pending")){
+            Order order = orderRepo.findOrderByPostId(id);
+            if (order == null) {
+                if (post.getPostStatus().equalsIgnoreCase("active")) {
+                    post.setPostStatus("deactive");
+                    postRepo.save(post);
+                } else if (post.getPostStatus().equalsIgnoreCase("deactive")) {
+                    post.setPostStatus("active");
+                    postRepo.save(post);
+                }
+            } else {
+                throw new ResponseStatusException(HttpStatus.valueOf(400), "bài đăng đã được mua/trao đổi, không thể cập nhập trạng thái");
             }
-        } else {
-            throw new ResponseStatusException(HttpStatus.valueOf(400), "bài đăng đã được mua/trao đổi, không thể cập nhập trạng thái");
+            postResponseDTO.setId(post.getId());
+            postResponseDTO.setTitle(post.getTitle());
+            postResponseDTO.setForm(post.getForm());
+            postResponseDTO.setImageUrl(post.getImageUrl());
+            postResponseDTO.setLocation(post.getLocation());
+            postResponseDTO.setPrice(post.getPrice());
+            postResponseDTO.setStatus(post.getPostStatus());
+            postResponseDTO.setUserId(post.getUser().getId());
+        }else{
+            throw new ResponseStatusException(HttpStatus.valueOf(400), "bài đăng đang chờ duyệt, không thể cập nhập trạng thái");
         }
-        postResponseDTO.setId(post.getId());
-        postResponseDTO.setTitle(post.getTitle());
-        postResponseDTO.setForm(post.getForm());
-        postResponseDTO.setImageUrl(post.getImageUrl());
-        postResponseDTO.setLocation(post.getLocation());
-        postResponseDTO.setPrice(post.getPrice());
-        postResponseDTO.setStatus(post.getPostStatus());
-        postResponseDTO.setUserId(post.getUser().getId());
-
         return postResponseDTO;
     }
 
