@@ -92,7 +92,7 @@ public class AddressServiceImpl implements AddressService {
                 address.setProvince(updateAddressRequestDTO.getProvince());
                 address.setDistrict(updateAddressRequestDTO.getDistrict());
                 address.setWard(updateAddressRequestDTO.getWard());
-                address.setStreet(updateAddressRequestDTO.getWard());
+                address.setStreet(updateAddressRequestDTO.getStreet());
                 address = addressRepo.save(address);
                 addressResponseDTO = AddressResponseDTO.builder()
                         .id(address.getId())

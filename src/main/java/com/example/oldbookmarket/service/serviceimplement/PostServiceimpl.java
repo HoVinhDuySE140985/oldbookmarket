@@ -286,12 +286,21 @@ public class PostServiceimpl implements PostService {
                     List<Book> bookList = post.getBooks();
                     List<BookPendingResponseDTO> bookPendingResponseDTOS = new ArrayList<>();
                     for (Book book : bookList) {
-                        BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder().bookId(book.getId())
-                                .name(book.getName()).coverType(book.getCoverType()).description(book.getDescription())
-                                .isbn(book.getIsbn()).publicationDate(book.getPublicationDate())
-                                .bookExchange(post.getBookExchange()).publicCompany(book.getPublicCompany())
-                                .statusQuo(book.getStatusQuo()).language(book.getLanguage())
-                                .author(book.getBookAuthor().getName()).imageBook(book.getImageList()).build();
+                        BookPendingResponseDTO responseDTO = BookPendingResponseDTO.builder()
+                                .bookId(book.getId())
+                                .name(book.getName())
+                                .coverType(book.getCoverType())
+                                .description(book.getDescription())
+                                .isbn(book.getIsbn())
+                                .reprints(book.getReprints())
+                                .publicationDate(book.getPublicationDate())
+                                .bookExchange(post.getBookExchange())
+                                .publicCompany(book.getPublicCompany())
+                                .statusQuo(book.getStatusQuo())
+                                .language(book.getLanguage())
+                                .author(book.getBookAuthor().getName())
+                                .imageBook(book.getImageList())
+                                .build();
                         bookPendingResponseDTOS.add(responseDTO);
                     }
                     postResponseDTO.setBookList(bookPendingResponseDTOS);
