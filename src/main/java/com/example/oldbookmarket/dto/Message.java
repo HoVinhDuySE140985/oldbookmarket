@@ -10,8 +10,8 @@ import java.util.Date;
 @Setter
 @ToString
 public class Message {
-    private String senderName;
-    private String receiverName;
+    private String senderEmail;
+    private String receiverEmail;
     private String message;
     private String date;
     private Status status;
