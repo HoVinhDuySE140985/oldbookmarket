@@ -472,14 +472,11 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setPrice(post.getPrice());
             postResponseDTO.setStatus(post.getPostStatus());
             postResponseDTO.setUserId(post.getUser().getId());
-
+            // gửi noti cho người đăng
             List<String> fcmKey = new ArrayList<>();
-            List<PostNotification> postNotifications = postNotificationRepo.findAllByBookNoty(post.getTitle());
-            for (PostNotification postNotification : postNotifications) {
-                User user = userRepo.findUserByEmail(postNotification.getUser().getEmail());
-                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-                    fcmKey.add(user.getFcmKey());
-                }
+            User user = userRepo.findUserByEmail(post.getUser().getEmail());
+            if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                fcmKey.add(user.getFcmKey());
             }
             if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
                 // pushnoti
@@ -487,6 +484,7 @@ public class PostServiceimpl implements PostService {
                         "Cuốn sách bạn đang tìm đã xuất hiện ");
                 fcmService.pushNotification(pnsRequest);
             }
+            // gửi noti cho người đăng ký nhận thông tin
             List<String> fcmKey1 = new ArrayList<>();
             User poster = userRepo.findUserByEmail(post.getUser().getEmail());
             if (!poster.getFcmKey().isEmpty() && poster.getFcmKey() != null) {
@@ -495,7 +493,7 @@ public class PostServiceimpl implements PostService {
             if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
                 // pushnoti
                 PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Sách Đăng Ký",
-                        "Cuốn sách bạn đang tìm đã xuất hiện ");
+                        "Cuốn sách bạn đang tìm đã được đăng ");
                 fcmService.pushNotification(pnsRequest);
             }
 
@@ -541,8 +539,8 @@ public class PostServiceimpl implements PostService {
                 post.setPostStatus("active");
                 postRepo.save(post);
             }
-        }else {
-            throw new ResponseStatusException(HttpStatus.valueOf(400),"bài đăng đã được mua/trao đổi, không thể cập nhập trạng thái");
+        } else {
+            throw new ResponseStatusException(HttpStatus.valueOf(400), "bài đăng đã được mua/trao đổi, không thể cập nhập trạng thái");
         }
         postResponseDTO.setId(post.getId());
         postResponseDTO.setTitle(post.getTitle());

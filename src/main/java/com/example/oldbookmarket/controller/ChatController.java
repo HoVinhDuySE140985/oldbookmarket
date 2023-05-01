@@ -44,7 +44,7 @@ public class ChatController {
         if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
             // pushnoti
             PnsRequest pnsRequest = new PnsRequest(fcmKey, "Bạn có tin nhắn mới",
-                    "Mã đơn hàng của bạn là :" + message.getSenderName());
+                    "https://thriving-crumble-cf370e.netlify.app/chat-seller?seller=" + message.getSenderName());
             fcmService.pushNotification(pnsRequest);
         }
         System.out.println(message.toString());
