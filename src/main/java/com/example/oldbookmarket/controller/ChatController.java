@@ -35,16 +35,16 @@ public class ChatController {
 
     @MessageMapping("/private-message")
     public Message recMessage(@Payload Message message){
-        simpMessagingTemplate.convertAndSendToUser(message.getReceiverEmail(),"/private",message);
+        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
         List<String> fcmKey = new ArrayList<>();
-        User user = userService.findUserByEmail(message.getReceiverEmail());
+        User user = userService.findUserByName(message.getReceiverName());
         if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
             fcmKey.add(user.getFcmKey());
         }
         if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
             // pushnoti
             PnsRequest pnsRequest = new PnsRequest(fcmKey, "Bạn có tin nhắn mới",
-                    "https://thriving-crumble-cf370e.netlify.app/chat-seller?seller=" + message.getSenderEmail());
+                    "https://thriving-crumble-cf370e.netlify.app/chat-seller?seller=" + message.getSenderName());
             fcmService.pushNotification(pnsRequest);
         }
         System.out.println(message.toString());
