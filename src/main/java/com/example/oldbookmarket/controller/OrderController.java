@@ -30,7 +30,7 @@ public class OrderController {
 
     @PostMapping("create-new-order-with-momo")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewOrderWithMomo(@RequestParam @Validated Long postId,
+    public ResponseEntity<ResponseDTO> createNewOrderWithMomo(@RequestParam @Validated String postId,
                                                               @RequestParam @Validated Long userId,
                                                               @RequestParam @Validated BigDecimal amount,
                                                               @RequestParam @Validated String paymentMethod,
@@ -39,7 +39,8 @@ public class OrderController {
         ResponseDTO responseDTO = new ResponseDTO();
 
         try {
-            responseDTO.setData(orderService.createNewOrderWithMomo(postId, userId, amount, paymentMethod, note, shipAddress));
+            Long pId = Long.parseLong(postId);
+            responseDTO.setData(orderService.createNewOrderWithMomo(pId, userId, amount, paymentMethod, note, shipAddress));
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
