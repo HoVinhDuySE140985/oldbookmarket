@@ -38,7 +38,7 @@ public class ScheduledConfig {
     ComplaintRepo complaintRepo;
 
 //    @Scheduled(cron = "0 0 0 ? * * *" , zone = "Asia/Ho_Chi_Minh")
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 1600000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
         Transaction transaction = null;

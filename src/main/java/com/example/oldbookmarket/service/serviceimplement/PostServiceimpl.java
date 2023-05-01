@@ -66,7 +66,7 @@ public class PostServiceimpl implements PostService {
     @Override
     public PostResponseDTO createPost(PostRequestDTO postRequestDTO) {
         PostResponseDTO postResponseDTO = null;
-        User user = userRepo.getById(postRequestDTO.getUserId());
+        User user = userRepo.findById(postRequestDTO.getUserId()).get();
         Subcategory subcategory = null;
         Transaction transaction = null;
         BookAuthor bookAuthor = null;
@@ -86,6 +86,7 @@ public class PostServiceimpl implements PostService {
                 post.setPrice(postRequestDTO.getPrice());
                 post.setBookExchange(postRequestDTO.getBookExchange());
                 post.setLocation(postRequestDTO.getLocation());
+                post.setIsCheck(0);
                 post.setPostStatus("pending");
                 post.setUser(user);
                 post = postRepo.save(post);
@@ -165,8 +166,8 @@ public class PostServiceimpl implements PostService {
                             .amount(BigDecimal.valueOf(14000))
                             .build();
                     transactionRepo.save(transaction);
-                    user = userRepo.findUserByRole_Id(1L);
-                    Wallet walletAdmin = walletRepo.findByUserId(user.getId());
+                    User admin = userRepo.findUserByRole_Id(1L);
+                    Wallet walletAdmin = walletRepo.findByUserId(admin.getId());
                     walletAdmin.setAmount(walletAdmin.getAmount().add(BigDecimal.valueOf(14000)));
                     walletRepo.save(walletAdmin);
                     transaction = Transaction.builder()
@@ -460,9 +461,15 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         try {
             Post post = postRepo.findById(id).get();
-            post.setPostStatus("active");
-            post.setCreateAt(LocalDate.now());
-            post.setExpDate(LocalDate.now().plusDays(7));
+            if(post.getIsCheck() == 0){
+                post.setPostStatus("active");
+                post.setIsCheck(1);
+                post.setCreateAt(LocalDate.now());
+                post.setExpDate(LocalDate.now().plusDays(7));
+            }
+            if (post.getIsCheck()==1){
+                post.setPostStatus("active");
+            }
             postRepo.save(post);
             postResponseDTO.setId(post.getId());
             postResponseDTO.setTitle(post.getTitle());

@@ -37,6 +37,7 @@ public class Post {
     private String reasonReject;
     private String location;
     private LocalDate expDate;
+    private int isCheck;
 
     @JsonIgnore
     @OneToMany(mappedBy = "post")
