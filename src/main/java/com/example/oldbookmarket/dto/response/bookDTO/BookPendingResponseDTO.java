@@ -26,5 +26,4 @@ public class BookPendingResponseDTO {
     private String bookExchange;
     private String statusQuo;
     private String description;
-    private String reprint;
 }

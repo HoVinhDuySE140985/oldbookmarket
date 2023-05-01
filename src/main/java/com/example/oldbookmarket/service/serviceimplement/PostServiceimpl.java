@@ -748,7 +748,6 @@ public class PostServiceimpl implements PostService {
         return postResponseDTO;
     }
 
-
     @Override
     public Boolean postExtension(Long postId) {
         Wallet wallet = null;
