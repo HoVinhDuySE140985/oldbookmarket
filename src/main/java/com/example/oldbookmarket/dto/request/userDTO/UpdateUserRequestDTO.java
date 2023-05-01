@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @Data
 public class UpdateUserRequestDTO {
-    private Long id;
+//    private Long id;
     private String name;
     private String phoneNumber;
     private String email;
