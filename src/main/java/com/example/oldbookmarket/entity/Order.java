@@ -40,6 +40,7 @@ public class Order implements Serializable {
     private String cancelReason;
     @Column(length = 40)
     private String codeOrder;
+    private LocalDate dateShipComplete;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)

@@ -37,8 +37,8 @@ public class ScheduledConfig {
     @Autowired
     ComplaintRepo complaintRepo;
 
-//    @Scheduled(cron = "0 0 0 ? * * *" , zone = "Asia/Ho_Chi_Minh")
-    @Scheduled(fixedDelay = 1600000)
+    @Scheduled(cron = "0 0 0 ? * * " , zone = "Asia/Ho_Chi_Minh")
+//    @Scheduled(fixedDelay = 1600000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
         Transaction transaction = null;
@@ -47,13 +47,13 @@ public class ScheduledConfig {
             User admin = userRepo.findUserByRole_Id(1L);
             User buyer = userRepo.findById(order.getUser().getId()).get();
             List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
-            LocalDate futureDay = order.getOrderDate().plusDays(10);
-            LocalDate currentDay = LocalDate.now();
+            LocalDate futureDay = order.getDateShipComplete().plusDays(3);
+
             //bán
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){
                 // dơn thành công
                 if (order.getStatus().equalsIgnoreCase("complete") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
-                    if (currentDay.equals(futureDay) && complaints.isEmpty()){
+                    if (order.getDateShipComplete().equals(futureDay) && complaints.isEmpty()){
                         BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.80));
 
                         Wallet adminWallet = walletRepo.findById(admin.getId()).get();
@@ -106,7 +106,8 @@ public class ScheduledConfig {
             }else {
                 // trao đổi thanh cong
                 if (order.getStatus().equalsIgnoreCase("Received") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
-                    LocalDate futureDateReceive = order.getResentDate().plusDays(5);
+                    LocalDate futureDateReceive = order.getResentDate().plusDays(8);
+                    LocalDate currentDay = LocalDate.now();
                     if (currentDay.equals(futureDateReceive) && complaints.isEmpty() ){
                         BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.90));
 

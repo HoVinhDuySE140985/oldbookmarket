@@ -62,7 +62,6 @@ public class OrderServiceImpl implements OrderService {
     ComplaintRepo complaintRepo;
 
     @Override
-    @Transactional
     public ResponseEntity<MomoResponse> createNewOrderWithMomo(Long postId, Long userId, BigDecimal amount, String paymentMethod, String note, String shipAddress) {
         ResponseEntity<MomoResponse> response = null;
         try {
@@ -75,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public ResponseEntity<MomoResponse> createNewOrder(Long postId, Long userId, BigDecimal amount, String paymentMethod, String note, String shipAddress, String orderCode) {
         ResponseEntity<MomoResponse> response = null;
         User user = userRepo.findById(userId).get();
@@ -136,7 +136,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    @Synchronized
     public OrderResponseDTO createNewOrderWithMyWallet(AddOrderRequestDTO addOrderRequestDTO) {
         OrderResponseDTO orderResponseDTO = null;
         Transaction transaction = null;
@@ -160,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
                         .post(post)
                         .amount(post.getPrice())
                         .note(addOrderRequestDTO.getNote())
-                        .paymentMethod("VÍ CỦA TÔI")
+                        .paymentMethod("Ví Của Tôi")
                         .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                         .status("WaitingForConfirmation")
                         .codeOrder(orderCode)
@@ -331,16 +330,27 @@ public class OrderServiceImpl implements OrderService {
             }
             if (order.getStatus().equalsIgnoreCase("delivery")) {
                 order.setStatus("complete");
+                order.setDateShipComplete(LocalDate.now());
+                orderRepo.save(order);
+                List<String> fcmKey = new ArrayList<>();
+                if (!order.getUser().getFcmKey().isEmpty() && order.getUser().getFcmKey() != null) {
+                    fcmKey.add(order.getUser().getFcmKey());
+                }
+                if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
+                    // pushnoti
+                    PnsRequest pnsRequest = new PnsRequest(fcmKey, "Đơn hàng Thành Công",
+                            "Đơn hàng của bạn đã được giao tơi nơi");
+                    fcmService.pushNotification(pnsRequest);
+                }
+                return true;
+            }
+            if (order.getStatus().equalsIgnoreCase("complete")) {
+                order.setStatus("resent");
                 orderRepo.save(order);
                 return true;
             }
             if (order.getStatus().equalsIgnoreCase("resent")) {
                 order.setStatus("received");
-                orderRepo.save(order);
-                return true;
-            }
-            if (order.getStatus().equalsIgnoreCase("complete")) {
-                order.setStatus("resent");
                 orderRepo.save(order);
                 return true;
             }
@@ -464,6 +474,16 @@ public class OrderServiceImpl implements OrderService {
                     .build();
             transactionRepo.save(transaction);
 
+            List<String> fcmKey = new ArrayList<>();
+            if (!order.getUser().getFcmKey().isEmpty() && order.getUser().getFcmKey() != null) {
+                fcmKey.add(order.getUser().getFcmKey());
+            }
+            if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
+                // pushnoti
+                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Hủy Đơn Thành Công",
+                        "Tiền của bạn sẽ được hoàn vào ví trong 1 - 2 ngày tới");
+                fcmService.pushNotification(pnsRequest);
+            }
         } else {
             throw new ResponseStatusException(HttpStatus.valueOf(200), "Huy Đơn Không Thành Công");
         }
