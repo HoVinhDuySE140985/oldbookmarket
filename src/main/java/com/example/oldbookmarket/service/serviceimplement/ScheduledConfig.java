@@ -37,7 +37,7 @@ public class ScheduledConfig {
     @Autowired
     ComplaintRepo complaintRepo;
 
-    @Scheduled(cron = "0 0 12 * * ? " , zone = "Asia/Ho_Chi_Minh")
+    @Scheduled(cron = "0 0 0 ? * * " , zone = "Asia/Ho_Chi_Minh")
 //    @Scheduled(fixedDelay = 1600000)
     public void load5sForCheckOrderStatus(){
         List<Order> orderList = orderRepo.findAll();
