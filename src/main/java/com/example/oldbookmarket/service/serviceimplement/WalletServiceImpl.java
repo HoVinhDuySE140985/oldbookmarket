@@ -76,8 +76,8 @@ public class WalletServiceImpl implements WalletService {
             }
             if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
                 // pushnoti
-                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Cuon sach da duoc duyet",
-                        "Hay nhanh chong xem chi tiet cuon sach ban da dang ki");
+                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Nạp Tiền Thành Công",
+                        "bạn đã nạp thành công"+ depositAmount + " vào ví !");
                 fcmService.pushNotification(pnsRequest);
             }
         } catch (Exception e) {

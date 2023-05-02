@@ -72,7 +72,7 @@ public class ComplaintServiceimpl implements ComplaintService {
         try {
             complaints = complaintRepo.findAll();
             for (Complaint complaint : complaints) {
-                if (complaint.getStatus() == 0) {
+                if (complaint.getStatus() == 1) {
                     Order order = orderRepo.findByCodeOrder(complaint.getOrder().getCodeOrder());
                     complaintResponseDTO = ComplaintResponseDTO.builder()
                             .id(complaint.getId())
