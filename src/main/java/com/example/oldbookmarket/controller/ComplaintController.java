@@ -46,7 +46,7 @@ public class ComplaintController {
     }
 
     @PostMapping("reject-complaint")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> rejectComplaint(@RequestParam Long senderId,
                                                        @RequestParam Long complaintId){
         ResponseDTO responseDTO = new ResponseDTO();
