@@ -716,8 +716,8 @@ public class OrderServiceImpl implements OrderService {
                 }
                 orderList = orderRepo.findAllByOrderDate(Integer.parseInt(year), Integer.parseInt(month));
                 for (Order order : orderList) {
-                    complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
-                    if(complaints == null){
+//                    complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
+//                    if(complaints == null || com){
                         if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
                             if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
                                 integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
@@ -727,7 +727,7 @@ public class OrderServiceImpl implements OrderService {
                                 integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
                             }
                         }
-                    }
+//                    }
                 }
                 Set set = integerBigDecimalMap.keySet();
                 for (Object key : set) {
