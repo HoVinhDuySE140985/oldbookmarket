@@ -80,98 +80,100 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepo.findById(userId).get();
         Post post = postRepo.findById(postId).get();
         try {
-            post.setPostStatus("deactive");
-            postRepo.save(post);
-            if (post.getForm().equalsIgnoreCase("bán")) {
-                Order order = Order.builder()
-                        .user(user)
-                        .shipAddress(shipAddress)
-                        .orderDate(LocalDate.now())
-                        .post(post)
-                        .amount(post.getPrice())
-                        .note(note)
-                        .codeOrder(orderCode)
-                        .paymentMethod("VÍ MOMO")
-                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                        .status("WaitingForConfirmation")
-                        .paymentStatus("PAID")
-                        .build();
-                orderRepo.save(order);
-                Transaction transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("Thanh Toán")
-                        .paymentMethod("Ví MoMo")
-                        .orderCode(orderCode)
-                        .wallet(walletRepo.findByUserId(userId))
-                        .amount(amount)
-                        .build();
-                transactionRepo.save(transaction);
+            if (!shipAddress.equalsIgnoreCase(null)){
+                post.setPostStatus("deactive");
+                postRepo.save(post);
+                if (post.getForm().equalsIgnoreCase("bán")) {
+                    Order order = Order.builder()
+                            .user(user)
+                            .shipAddress(shipAddress)
+                            .orderDate(LocalDate.now())
+                            .post(post)
+                            .amount(post.getPrice())
+                            .note(note)
+                            .codeOrder(orderCode)
+                            .paymentMethod("VÍ MOMO")
+                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                            .status("WaitingForConfirmation")
+                            .paymentStatus("PAID")
+                            .build();
+                    orderRepo.save(order);
+                    Transaction transaction = Transaction.builder()
+                            .createAt(LocalDate.now())
+                            .type("Thanh Toán")
+                            .paymentMethod("Ví MoMo")
+                            .orderCode(orderCode)
+                            .wallet(walletRepo.findByUserId(userId))
+                            .amount(amount)
+                            .build();
+                    transactionRepo.save(transaction);
 
-                List<String> fcmKey1 = new ArrayList<>();
-                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-                    fcmKey1.add(user.getFcmKey());
+                    List<String> fcmKey1 = new ArrayList<>();
+                    if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                        fcmKey1.add(user.getFcmKey());
+                    }
+                    if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+                                "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
+                    List<String> fcmKey2 = new ArrayList<>();
+                    if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                        fcmKey2.add(post.getUser().getFcmKey());
+                    }
+                    if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Duyệt đơn hàng",
+                                "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
                 }
-                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
-                    // pushnoti
-                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
-                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
-                    fcmService.pushNotification(pnsRequest);
+                if (post.getForm().equalsIgnoreCase("Trao Đổi")){
+                    Order order = Order.builder()
+                            .user(user)
+                            .shipAddress(shipAddress)
+                            .orderDate(LocalDate.now())
+                            .post(post)
+                            .amount(post.getPrice())
+                            .note(note)
+                            .codeOrder(orderCode)
+                            .paymentMethod("VÍ MOMO")
+                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                            .status("WaitingForConfirmation")
+                            .paymentStatus("DEPOSITED")
+                            .build();
+                    orderRepo.save(order);
+                    Transaction transaction = Transaction.builder()
+                            .createAt(LocalDate.now())
+                            .type("ĐĂT CỌC")
+                            .paymentMethod("Ví MoMo")
+                            .orderCode(orderCode)
+                            .wallet(walletRepo.findByUserId(userId))
+                            .amount(amount)
+                            .build();
+                    transactionRepo.save(transaction);
+                    List<String> fcmKey1 = new ArrayList<>();
+                    if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                        fcmKey1.add(user.getFcmKey());
+                    }
+                    if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+                                "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
+                    List<String> fcmKey2 = new ArrayList<>();
+                    if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                        fcmKey2.add(post.getUser().getFcmKey());
+                    }
+                    if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Duyệt đơn hàng",
+                                "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
                 }
-                List<String> fcmKey2 = new ArrayList<>();
-                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
-                    fcmKey2.add(post.getUser().getFcmKey());
-                }
-                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
-                    // pushnoti
-                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Duyệt đơn hàng",
-                            "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
-                    fcmService.pushNotification(pnsRequest);
-                }
-            }
-            if (post.getForm().equalsIgnoreCase("Trao Đổi")){
-                Order order = Order.builder()
-                        .user(user)
-                        .shipAddress(shipAddress)
-                        .orderDate(LocalDate.now())
-                        .post(post)
-                        .amount(post.getPrice())
-                        .note(note)
-                        .codeOrder(orderCode)
-                        .paymentMethod("VÍ MOMO")
-                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                        .status("WaitingForConfirmation")
-                        .paymentStatus("DEPOSITED")
-                        .build();
-                orderRepo.save(order);
-                Transaction transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("ĐĂT CỌC")
-                        .paymentMethod("Ví MoMo")
-                        .orderCode(orderCode)
-                        .wallet(walletRepo.findByUserId(userId))
-                        .amount(amount)
-                        .build();
-                transactionRepo.save(transaction);
-//                List<String> fcmKey1 = new ArrayList<>();
-//                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-//                    fcmKey1.add(user.getFcmKey());
-//                }
-//                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
-//                    // pushnoti
-//                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
-//                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
-//                    fcmService.pushNotification(pnsRequest);
-//                }
-//                List<String> fcmKey2 = new ArrayList<>();
-//                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
-//                    fcmKey2.add(post.getUser().getFcmKey());
-//                }
-//                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
-//                    // pushnoti
-//                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Duyệt đơn hàng",
-//                            "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
-//                    fcmService.pushNotification(pnsRequest);
-//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,174 +187,176 @@ public class OrderServiceImpl implements OrderService {
         OrderResponseDTO orderResponseDTO = null;
         Transaction transaction = null;
         String orderCode = Utilities.randomAlphaNumeric(10);
-        User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        post.setPostStatus("deactive");
-        postRepo.save(post);
-        if (post.getForm().equalsIgnoreCase("bán")) {
-            // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
-            // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
-            // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
-            Wallet walletBuyer = walletRepo.findByUserId(user.getId());
-            if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
-                throw new ResponseStatusException(HttpStatus.valueOf(400), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+        if(!addOrderRequestDTO.getShipAddress().equalsIgnoreCase(null)){
+            User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            post.setPostStatus("deactive");
+            postRepo.save(post);
+            if (post.getForm().equalsIgnoreCase("bán")) {
+                // kiểm tra tiền trong ví người mua neu ko du thi gui thong bao nap tien va tiep tuc
+                // neu du tien thi tao don hang va tru tien cua nguoi mua chuyen vao tk admin
+                // sau khi ket giao dich chuyen tien tu TK admin vao tai khoan nguoi ban - hoa hong
+                Wallet walletBuyer = walletRepo.findByUserId(user.getId());
+                if (walletBuyer.getAmount().compareTo(post.getPrice()) < 0) {
+                    throw new ResponseStatusException(HttpStatus.valueOf(400), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+                } else {
+                    Order order = Order.builder()
+                            .user(user)
+                            .shipAddress(addOrderRequestDTO.getShipAddress())
+                            .orderDate(LocalDate.now())
+                            .post(post)
+                            .amount(post.getPrice())
+                            .note(addOrderRequestDTO.getNote())
+                            .paymentMethod("Ví Của Tôi")
+                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                            .status("WaitingForConfirmation")
+                            .codeOrder(orderCode)
+                            .paymentStatus("PAID")
+                            .build();
+                    order = orderRepo.save(order);
+                    orderResponseDTO = OrderResponseDTO.builder()
+                            .orderId(order.getId())
+                            .postId(order.getPost().getId())
+                            .userId(order.getUser().getId())
+                            .shipAddress(order.getShipAddress())
+                            .orderDate(order.getOrderDate())
+                            .amount(order.getAmount())
+                            .note(order.getNote())
+                            .paymentMethod(order.getPaymentMethod())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .status(order.getStatus())
+                            .paymentStatus(order.getPaymentStatus())
+                            .build();
+                    // tru tien trong vi va luu lai
+                    walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
+                    walletRepo.save(walletBuyer);
+                    transaction = Transaction.builder()
+                            .createAt(LocalDate.now())
+                            .type("Thanh Toán")
+                            .paymentMethod("Ví Của Tôi")
+                            .orderCode(orderCode)
+                            .wallet(walletBuyer)
+                            .amount(order.getAmount())
+                            .build();
+                    transactionRepo.save(transaction);
+                    // cong tien vao vi admin
+                    User admin = userRepo.findUserByRole_Id(1L);
+                    Wallet adminWallet = walletRepo.findById(admin.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                    adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
+                    walletRepo.save(adminWallet);
+                    transaction = Transaction.builder()
+                            .createAt(LocalDate.now())
+                            .type("Admin Nhận Thanh Toán")
+                            .paymentMethod("Ví Của Tôi")
+                            .orderCode(orderCode)
+                            .wallet(adminWallet)
+                            .amount(order.getAmount())
+                            .build();
+                    transactionRepo.save(transaction);
+                    // neu don hang co trang thai thanh cong thi
+                    //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
+                    List<String> fcmKey1 = new ArrayList<>();
+                    if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                        fcmKey1.add(user.getFcmKey());
+                    }
+                    if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+                                "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
+                    List<String> fcmKey2 = new ArrayList<>();
+                    if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                        fcmKey2.add(post.getUser().getFcmKey());
+                    }
+                    if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Bạn có đơn hàng mới cần duyệt",
+                                "Mã đơn hàng là :" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
+                }
             } else {
-                Order order = Order.builder()
-                        .user(user)
-                        .shipAddress(addOrderRequestDTO.getShipAddress())
-                        .orderDate(LocalDate.now())
-                        .post(post)
-                        .amount(post.getPrice())
-                        .note(addOrderRequestDTO.getNote())
-                        .paymentMethod("Ví Của Tôi")
-                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                        .status("WaitingForConfirmation")
-                        .codeOrder(orderCode)
-                        .paymentStatus("PAID")
-                        .build();
-                order = orderRepo.save(order);
-                orderResponseDTO = OrderResponseDTO.builder()
-                        .orderId(order.getId())
-                        .postId(order.getPost().getId())
-                        .userId(order.getUser().getId())
-                        .shipAddress(order.getShipAddress())
-                        .orderDate(order.getOrderDate())
-                        .amount(order.getAmount())
-                        .note(order.getNote())
-                        .paymentMethod(order.getPaymentMethod())
-                        .deliveryMethod(order.getDeliveryMethod())
-                        .status(order.getStatus())
-                        .paymentStatus(order.getPaymentStatus())
-                        .build();
-                // tru tien trong vi va luu lai
-                walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
-                walletRepo.save(walletBuyer);
-                transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("Thanh Toán")
-                        .paymentMethod("Ví Của Tôi")
-                        .orderCode(orderCode)
-                        .wallet(walletBuyer)
-                        .amount(order.getAmount())
-                        .build();
-                transactionRepo.save(transaction);
-                // cong tien vao vi admin
-                User admin = userRepo.findUserByRole_Id(1L);
-                Wallet adminWallet = walletRepo.findById(admin.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-                adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
-                walletRepo.save(adminWallet);
-                transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("Admin Nhận Thanh Toán")
-                        .paymentMethod("Ví Của Tôi")
-                        .orderCode(orderCode)
-                        .wallet(adminWallet)
-                        .amount(order.getAmount())
-                        .build();
-                transactionRepo.save(transaction);
-                // neu don hang co trang thai thanh cong thi
-                //tự động gọi hàm sheduled để check và chuyển tiền vào ví người bán
-                List<String> fcmKey1 = new ArrayList<>();
-                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-                    fcmKey1.add(user.getFcmKey());
-                }
-                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
-                    // pushnoti
-                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
-                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
-                    fcmService.pushNotification(pnsRequest);
-                }
-                List<String> fcmKey2 = new ArrayList<>();
-                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
-                    fcmKey2.add(post.getUser().getFcmKey());
-                }
-                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
-                    // pushnoti
-                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Bạn có đơn hàng mới cần duyệt",
-                            "Mã đơn hàng là :" + order.getCodeOrder());
-                    fcmService.pushNotification(pnsRequest);
-                }
-            }
-        } else {
-            Wallet walletBuyer = walletRepo.findById(user.getId()).get();
-            if (walletBuyer.getAmount().compareTo(post.getInitPrice()) < 0) {
-                throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
-            } else {
-                Order order = Order.builder()
-                        .user(user)
-                        .shipAddress(addOrderRequestDTO.getShipAddress())
-                        .orderDate(LocalDate.now())
-                        .post(post)
-                        .amount(post.getInitPrice())
-                        .note(addOrderRequestDTO.getNote())
-                        .paymentMethod("VÍ CỦA TÔI")
-                        .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                        .status("WaitingForConfirmation")
-                        .paymentStatus("DEPOSITED")
-                        .codeOrder(orderCode)
-                        .build();
-                order = orderRepo.save(order);
-                orderResponseDTO = OrderResponseDTO.builder()
-                        .orderId(order.getId())
-                        .postId(order.getPost().getId())
-                        .userId(order.getUser().getId())
-                        .shipAddress(order.getShipAddress())
-                        .orderDate(order.getOrderDate())
-                        .amount(order.getAmount())
-                        .note(order.getNote())
-                        .paymentMethod(order.getPaymentMethod())
-                        .deliveryMethod(order.getDeliveryMethod())
-                        .status(order.getStatus())
-                        .form(post.getForm())
-                        .paymentStatus(order.getPaymentStatus())
-                        .build();
-                // tru tien trong vi va luu lai
-                walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
-                walletRepo.save(walletBuyer);
-                transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("Đặt Cọc")
-                        .paymentMethod("Ví Của Tôi")
-                        .orderCode(orderCode)
-                        .wallet(walletBuyer)
-                        .amount(order.getAmount())
-                        .build();
-                transactionRepo.save(transaction);
-                // cong tien vao vi admin
-                User admin = userRepo.findUserByRole_Id(1L);
-                Wallet adminWallet = walletRepo.findById(admin.getId()).get();
-                adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
-                walletRepo.save(adminWallet);
-                transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("Admin Nhận Đăt Cọc")
-                        .paymentMethod("Ví Của Tôi")
-                        .orderCode(orderCode)
-                        .wallet(adminWallet)
-                        .amount(order.getAmount())
-                        .build();
-                transactionRepo.save(transaction);
-                // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
-                //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
-                List<String> fcmKey1 = new ArrayList<>();
-                if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-                    fcmKey1.add(user.getFcmKey());
-                }
-                if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
-                    // pushnoti
-                    PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng đã được đặt cọc",
-                            "Mã đơn hàng của bạn là :" + order.getCodeOrder());
-                    fcmService.pushNotification(pnsRequest);
-                }
-                List<String> fcmKey2 = new ArrayList<>();
-                if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
-                    fcmKey2.add(post.getUser().getFcmKey());
-                }
-                if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
-                    // pushnoti
-                    PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Bạn có đơn hàng mới cần duyệt",
-                            "Mã đơn hàng là :" + order.getCodeOrder());
-                    fcmService.pushNotification(pnsRequest);
+                Wallet walletBuyer = walletRepo.findById(user.getId()).get();
+                if (walletBuyer.getAmount().compareTo(post.getInitPrice()) < 0) {
+                    throw new ResponseStatusException(HttpStatus.valueOf(200), "VÍ CỦA BẠN KHÔNG ĐỦ TIỀN VUI LONG NẠP TIỀN VÀ THỬ LẠI");
+                } else {
+                    Order order = Order.builder()
+                            .user(user)
+                            .shipAddress(addOrderRequestDTO.getShipAddress())
+                            .orderDate(LocalDate.now())
+                            .post(post)
+                            .amount(post.getInitPrice())
+                            .note(addOrderRequestDTO.getNote())
+                            .paymentMethod("VÍ CỦA TÔI")
+                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+                            .status("WaitingForConfirmation")
+                            .paymentStatus("DEPOSITED")
+                            .codeOrder(orderCode)
+                            .build();
+                    order = orderRepo.save(order);
+                    orderResponseDTO = OrderResponseDTO.builder()
+                            .orderId(order.getId())
+                            .postId(order.getPost().getId())
+                            .userId(order.getUser().getId())
+                            .shipAddress(order.getShipAddress())
+                            .orderDate(order.getOrderDate())
+                            .amount(order.getAmount())
+                            .note(order.getNote())
+                            .paymentMethod(order.getPaymentMethod())
+                            .deliveryMethod(order.getDeliveryMethod())
+                            .status(order.getStatus())
+                            .form(post.getForm())
+                            .paymentStatus(order.getPaymentStatus())
+                            .build();
+                    // tru tien trong vi va luu lai
+                    walletBuyer.setAmount(walletBuyer.getAmount().subtract(order.getAmount()));
+                    walletRepo.save(walletBuyer);
+                    transaction = Transaction.builder()
+                            .createAt(LocalDate.now())
+                            .type("Đặt Cọc")
+                            .paymentMethod("Ví Của Tôi")
+                            .orderCode(orderCode)
+                            .wallet(walletBuyer)
+                            .amount(order.getAmount())
+                            .build();
+                    transactionRepo.save(transaction);
+                    // cong tien vao vi admin
+                    User admin = userRepo.findUserByRole_Id(1L);
+                    Wallet adminWallet = walletRepo.findById(admin.getId()).get();
+                    adminWallet.setAmount(adminWallet.getAmount().add(order.getAmount()));
+                    walletRepo.save(adminWallet);
+                    transaction = Transaction.builder()
+                            .createAt(LocalDate.now())
+                            .type("Admin Nhận Đăt Cọc")
+                            .paymentMethod("Ví Của Tôi")
+                            .orderCode(orderCode)
+                            .wallet(adminWallet)
+                            .amount(order.getAmount())
+                            .build();
+                    transactionRepo.save(transaction);
+                    // neu don hang đến tay người nhận và sau khi người nhận xác nhận ngày gửi lại và người bán xác nhận đã nhận được hàng
+                    //tự động gọi hàm sheduled để check và chuyển tiền vào ví người mua đồng thời trừ tiền hoa hồng
+                    List<String> fcmKey1 = new ArrayList<>();
+                    if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                        fcmKey1.add(user.getFcmKey());
+                    }
+                    if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng đã được đặt cọc",
+                                "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
+                    List<String> fcmKey2 = new ArrayList<>();
+                    if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                        fcmKey2.add(post.getUser().getFcmKey());
+                    }
+                    if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+                        // pushnoti
+                        PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Bạn có đơn hàng mới cần duyệt",
+                                "Mã đơn hàng là :" + order.getCodeOrder());
+                        fcmService.pushNotification(pnsRequest);
+                    }
                 }
             }
         }

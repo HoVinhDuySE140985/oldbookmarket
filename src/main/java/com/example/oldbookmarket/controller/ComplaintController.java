@@ -44,4 +44,18 @@ public class ComplaintController {
         }
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @PostMapping("reject-complaint")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ResponseDTO> rejectComplaint(@RequestParam Long senderId,
+                                                       @RequestParam Long complaintId){
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            responseDTO.setData(complaintService.rejectComplaint(senderId,complaintId));
+            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 }

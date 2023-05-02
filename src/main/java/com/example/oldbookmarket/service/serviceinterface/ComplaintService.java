@@ -8,4 +8,6 @@ import java.util.List;
 public interface ComplaintService {
     ComplaintResponseDTO createComplaint(ComplaintRequestDTO complaintRequestDTO) ;
     List<ComplaintResponseDTO> getAllComplaint();
+
+    Boolean rejectComplaint(Long senderId, Long complaintId);
 }

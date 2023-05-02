@@ -69,17 +69,17 @@ public class WalletServiceImpl implements WalletService {
                     .createAt(LocalDate.now())
                     .build();
             transactionRepo.save(transaction);
-//            List<String> fcmKey = new ArrayList<>();
-//            User user = userRepo.findById(userId).get();
-//            if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-//                fcmKey.add(user.getFcmKey());
-//            }
-//            if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
-//                // pushnoti
-//                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Cuon sach da duoc duyet",
-//                        "Hay nhanh chong xem chi tiet cuon sach ban da dang ki");
-//                fcmService.pushNotification(pnsRequest);
-//            }
+            List<String> fcmKey = new ArrayList<>();
+            User user = userRepo.findById(userId).get();
+            if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+                fcmKey.add(user.getFcmKey());
+            }
+            if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
+                // pushnoti
+                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Cuon sach da duoc duyet",
+                        "Hay nhanh chong xem chi tiet cuon sach ban da dang ki");
+                fcmService.pushNotification(pnsRequest);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

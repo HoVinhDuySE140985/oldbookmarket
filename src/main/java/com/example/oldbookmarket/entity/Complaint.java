@@ -26,6 +26,7 @@ public class Complaint {
     private String description;
     @Column(length = 25)
     private String userComplained;
+    private int status;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

@@ -1,6 +1,7 @@
 package com.example.oldbookmarket.service.serviceimplement;
 
 import com.example.oldbookmarket.dto.request.ComplaintDTO.ComplaintRequestDTO;
+import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.example.oldbookmarket.dto.response.complaintDTO.ComplaintResponseDTO;
 import com.example.oldbookmarket.entity.Complaint;
 import com.example.oldbookmarket.entity.Order;
@@ -9,6 +10,7 @@ import com.example.oldbookmarket.repository.ComplaintRepo;
 import com.example.oldbookmarket.repository.OrderRepo;
 import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.ComplaintService;
+import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ public class ComplaintServiceimpl implements ComplaintService {
 
     @Autowired
     OrderRepo orderRepo;
+
+    @Autowired
+    FcmService fcmService;
 
     @Autowired
     ComplaintRepo complaintRepo;
@@ -40,6 +45,7 @@ public class ComplaintServiceimpl implements ComplaintService {
                     .userComplained(order.getPost().getUser().getName())
                     .order(order)
                     .user(sender)
+                    .status(1)
                     .build();
             complaint = complaintRepo.save(complaint);
             complaintResponseDTO = ComplaintResponseDTO.builder()
@@ -83,5 +89,30 @@ public class ComplaintServiceimpl implements ComplaintService {
             e.printStackTrace();
         }
         return complaintResponseDTOS;
+    }
+
+    @Override
+    public Boolean rejectComplaint(Long senderId, Long complaintId) {
+        try {
+            Complaint complaint = complaintRepo.findById(complaintId).get();
+            complaint.setStatus(0);
+            complaintRepo.save(complaint);
+
+            List<String> fcmKey = new ArrayList<>();
+            User sender = userRepo.findById(senderId).get();
+            if (!sender.getFcmKey().isEmpty() && sender.getFcmKey() != null) {
+                fcmKey.add(sender.getFcmKey());
+            }
+            if (!fcmKey.isEmpty() || fcmKey.size() > 0) { // co key
+                // pushnoti
+                PnsRequest pnsRequest = new PnsRequest(fcmKey, "Từ Chối",
+                        "Khiếu nại của bạn bị từ chối");
+                fcmService.pushNotification(pnsRequest);
+            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }
