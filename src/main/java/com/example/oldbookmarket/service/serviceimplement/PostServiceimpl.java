@@ -190,7 +190,6 @@ public class PostServiceimpl implements PostService {
                     post.setPrice(postRequestDTO.getPrice());
                     post.setBookExchange(postRequestDTO.getBookExchange());
                     post.setLocation(postRequestDTO.getLocation());
-                    post.setExpDate(LocalDate.now().plusDays(7));
                     post.setPostStatus("pending");
                     post.setUser(user);
                     post = postRepo.save(post);

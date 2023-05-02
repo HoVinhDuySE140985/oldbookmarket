@@ -31,6 +31,7 @@ public class ComplaintServiceimpl implements ComplaintService {
 
     @Autowired
     ComplaintRepo complaintRepo;
+
     @Override
     public ComplaintResponseDTO createComplaint(ComplaintRequestDTO complaintRequestDTO) {
         ComplaintResponseDTO complaintResponseDTO = null;
@@ -57,7 +58,7 @@ public class ComplaintServiceimpl implements ComplaintService {
                     .userComplained(complaint.getUserComplained())
                     .senderId(complaint.getUser().getId())
                     .build();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return complaintResponseDTO;
@@ -70,22 +71,24 @@ public class ComplaintServiceimpl implements ComplaintService {
         ComplaintResponseDTO complaintResponseDTO = null;
         try {
             complaints = complaintRepo.findAll();
-            for (Complaint complaint: complaints) {
-                Order order = orderRepo.findByCodeOrder(complaint.getOrder().getCodeOrder());
-                complaintResponseDTO = ComplaintResponseDTO.builder()
-                        .id(complaint.getId())
-                        .title(complaint.getTitle())
-                        .complaintImage(complaint.getComplaintImage())
-                        .createAt(complaint.getCreateAt())
-                        .orderCode(complaint.getOrder().getCodeOrder())
-                        .description(complaint.getDescription())
-                        .userComplained(complaint.getUserComplained())
-                        .userComplainedId(order.getPost().getUser().getId())
-                        .senderId(complaint.getUser().getId())
-                        .build();
-                complaintResponseDTOS.add(complaintResponseDTO);
+            for (Complaint complaint : complaints) {
+                if (complaint.getStatus() == 0) {
+                    Order order = orderRepo.findByCodeOrder(complaint.getOrder().getCodeOrder());
+                    complaintResponseDTO = ComplaintResponseDTO.builder()
+                            .id(complaint.getId())
+                            .title(complaint.getTitle())
+                            .complaintImage(complaint.getComplaintImage())
+                            .createAt(complaint.getCreateAt())
+                            .orderCode(complaint.getOrder().getCodeOrder())
+                            .description(complaint.getDescription())
+                            .userComplained(complaint.getUserComplained())
+                            .userComplainedId(order.getPost().getUser().getId())
+                            .senderId(complaint.getUser().getId())
+                            .build();
+                    complaintResponseDTOS.add(complaintResponseDTO);
+                }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return complaintResponseDTOS;
@@ -110,7 +113,7 @@ public class ComplaintServiceimpl implements ComplaintService {
                 fcmService.pushNotification(pnsRequest);
             }
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;

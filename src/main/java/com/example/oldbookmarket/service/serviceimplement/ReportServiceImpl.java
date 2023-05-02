@@ -30,11 +30,13 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportResponseDTO createNewReport(ReportRequestDTO reportRequestDTO) {
         ReportResponseDTO reportResponseDTO = null;
-//        Complaint complaint = complaintRepo.findById(reportRequestDTO.getComplaintId()).get();
+
         try {
             User approvedBy = userRepo.findById(reportRequestDTO.getApprovedBy()).get();
             User userReported = userRepo.findById(reportRequestDTO.getUserReportedId()).get();
             Complaint complaint = complaintRepo.findById(reportRequestDTO.getComplaintId()).get();
+            complaint.setStatus(1);
+            complaintRepo.save(complaint);
             Report report = Report.builder()
                     .user(approvedBy)
                     .createAt(LocalDate.now())
