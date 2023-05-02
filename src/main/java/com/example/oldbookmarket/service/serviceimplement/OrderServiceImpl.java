@@ -778,10 +778,10 @@ public class OrderServiceImpl implements OrderService {
             orderRepo.save(order);
             User admin = userRepo.findUserByRole_Id(1L);
             Wallet adminWallet = walletRepo.findByUserId(admin.getId());
-            adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount()));
+            adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
             walletRepo.save(adminWallet);
             Wallet buyerWallet = walletRepo.findByUserId(order.getUser().getId());
-            buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount()));
+            buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
             walletRepo.save(buyerWallet);
             Transaction transaction = Transaction.builder()
                     .createAt(LocalDate.now())
