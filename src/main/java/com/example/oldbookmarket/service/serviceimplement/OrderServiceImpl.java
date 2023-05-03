@@ -129,51 +129,51 @@ public class OrderServiceImpl implements OrderService {
                         fcmService.pushNotification(pnsRequest);
                     }
                 }
-                if (post.getForm().equalsIgnoreCase("Trao Đổi")){
-                    Order order = Order.builder()
-                            .user(user)
-                            .shipAddress(shipAddress)
-                            .orderDate(LocalDate.now())
-                            .post(post)
-                            .amount(post.getPrice())
-                            .note(note)
-                            .codeOrder(orderCode)
-                            .paymentMethod("VÍ MOMO")
-                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
-                            .status("WaitingForConfirmation")
-                            .paymentStatus("DEPOSITED")
-                            .build();
-                    orderRepo.save(order);
-                    Transaction transaction = Transaction.builder()
-                            .createAt(LocalDate.now())
-                            .type("ĐĂT CỌC")
-                            .paymentMethod("Ví MoMo")
-                            .orderCode(orderCode)
-                            .wallet(walletRepo.findByUserId(userId))
-                            .amount(amount)
-                            .build();
-                    transactionRepo.save(transaction);
-                    List<String> fcmKey1 = new ArrayList<>();
-                    if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
-                        fcmKey1.add(user.getFcmKey());
-                    }
-                    if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
-                        // pushnoti
-                        PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
-                                "Mã đơn hàng của bạn là :" + order.getCodeOrder());
-                        fcmService.pushNotification(pnsRequest);
-                    }
-                    List<String> fcmKey2 = new ArrayList<>();
-                    if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
-                        fcmKey2.add(post.getUser().getFcmKey());
-                    }
-                    if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
-                        // pushnoti
-                        PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Duyệt đơn hàng",
-                                "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
-                        fcmService.pushNotification(pnsRequest);
-                    }
-                }
+//                if (post.getForm().equalsIgnoreCase("Trao Đổi")){
+//                    Order order = Order.builder()
+//                            .user(user)
+//                            .shipAddress(shipAddress)
+//                            .orderDate(LocalDate.now())
+//                            .post(post)
+//                            .amount(post.getPrice())
+//                            .note(note)
+//                            .codeOrder(orderCode)
+//                            .paymentMethod("VÍ MOMO")
+//                            .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
+//                            .status("WaitingForConfirmation")
+//                            .paymentStatus("DEPOSITED")
+//                            .build();
+//                    orderRepo.save(order);
+//                    Transaction transaction = Transaction.builder()
+//                            .createAt(LocalDate.now())
+//                            .type("ĐĂT CỌC")
+//                            .paymentMethod("Ví MoMo")
+//                            .orderCode(orderCode)
+//                            .wallet(walletRepo.findByUserId(userId))
+//                            .amount(amount)
+//                            .build();
+//                    transactionRepo.save(transaction);
+//                    List<String> fcmKey1 = new ArrayList<>();
+//                    if (!user.getFcmKey().isEmpty() && user.getFcmKey() != null) {
+//                        fcmKey1.add(user.getFcmKey());
+//                    }
+//                    if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+//                        // pushnoti
+//                        PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Đơn hàng của bạn đã thanh toán thành công",
+//                                "Mã đơn hàng của bạn là :" + order.getCodeOrder());
+//                        fcmService.pushNotification(pnsRequest);
+//                    }
+//                    List<String> fcmKey2 = new ArrayList<>();
+//                    if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+//                        fcmKey2.add(post.getUser().getFcmKey());
+//                    }
+//                    if (!fcmKey2.isEmpty() || fcmKey2.size() > 0) { // co key
+//                        // pushnoti
+//                        PnsRequest pnsRequest = new PnsRequest(fcmKey2, "Duyệt đơn hàng",
+//                                "Bạn có đơn hàng mới cần duyệt:" + order.getCodeOrder());
+//                        fcmService.pushNotification(pnsRequest);
+//                    }
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();

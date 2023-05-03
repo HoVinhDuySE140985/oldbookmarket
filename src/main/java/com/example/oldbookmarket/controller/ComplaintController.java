@@ -17,29 +17,26 @@ import java.util.List;
 public class ComplaintController {
     @Autowired
     ComplaintService complaintService;
+
     @PostMapping("create-complaint")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<ResponseDTO> createNewComplaint(@RequestBody ComplaintRequestDTO complaintRequestDTO){
+    public ResponseEntity<ResponseDTO> createNewComplaint(@RequestBody ComplaintRequestDTO complaintRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
         ComplaintResponseDTO complaintResponseDTO = complaintService.createComplaint(complaintRequestDTO);
-        try {
-            responseDTO.setData(complaintResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        responseDTO.setData(complaintResponseDTO);
+        responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @GetMapping("get-all-complaint")
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
-    public ResponseEntity<ResponseDTO> getAllComplaint(){
+    public ResponseEntity<ResponseDTO> getAllComplaint() {
         ResponseDTO responseDTO = new ResponseDTO();
         List<ComplaintResponseDTO> complaintResponseDTOS = complaintService.getAllComplaint();
         try {
             responseDTO.setData(complaintResponseDTOS);
             responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);
@@ -48,12 +45,12 @@ public class ComplaintController {
     @PostMapping("reject-complaint")
     @PreAuthorize("hasRole('STAFF')")
     public ResponseEntity<ResponseDTO> rejectComplaint(@RequestParam Long senderId,
-                                                       @RequestParam Long complaintId){
+                                                       @RequestParam Long complaintId) {
         ResponseDTO responseDTO = new ResponseDTO();
         try {
-            responseDTO.setData(complaintService.rejectComplaint(senderId,complaintId));
+            responseDTO.setData(complaintService.rejectComplaint(senderId, complaintId));
             responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok().body(responseDTO);

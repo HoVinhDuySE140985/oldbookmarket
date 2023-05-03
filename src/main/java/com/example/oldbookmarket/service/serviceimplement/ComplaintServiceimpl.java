@@ -12,7 +12,9 @@ import com.example.oldbookmarket.repository.UserRepo;
 import com.example.oldbookmarket.service.serviceinterface.ComplaintService;
 import com.example.oldbookmarket.service.serviceinterface.FcmService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -35,9 +37,11 @@ public class ComplaintServiceimpl implements ComplaintService {
     @Override
     public ComplaintResponseDTO createComplaint(ComplaintRequestDTO complaintRequestDTO) {
         ComplaintResponseDTO complaintResponseDTO = null;
-        try {
-            User sender = userRepo.findById(complaintRequestDTO.getSenderId()).get();
-            Order order = orderRepo.findByCodeOrder(complaintRequestDTO.getOrderCode());
+        User sender = userRepo.findById(complaintRequestDTO.getSenderId()).get();
+        Order order = orderRepo.findByCodeOrder(complaintRequestDTO.getOrderCode());
+        if (order == null) {
+            throw new ResponseStatusException(HttpStatus.valueOf(400), "Đơn Hàng không tồn tại");
+        }else{
             Complaint complaint = Complaint.builder()
                     .createAt(LocalDate.now())
                     .title(complaintRequestDTO.getTitle())
@@ -58,8 +62,6 @@ public class ComplaintServiceimpl implements ComplaintService {
                     .userComplained(complaint.getUserComplained())
                     .senderId(complaint.getUser().getId())
                     .build();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return complaintResponseDTO;
     }
