@@ -2,6 +2,7 @@ package com.example.oldbookmarket.controller;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
+import com.example.oldbookmarket.dto.response.orderDTO.DataResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.ResponseDTO;
@@ -192,6 +193,16 @@ public class OrderController {
         }catch (Exception e){
             e.printStackTrace();
         }
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("count-user-and-order")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponseDTO> getAllUserAndOrder(){
+        ResponseDTO responseDTO = new ResponseDTO();
+        DataResponseDTO dataResponseDTO = orderService.getAllUserAndOrder();
+        responseDTO.setData(dataResponseDTO);
+        responseDTO.setSuccessCode(SuccessCode.Get_All_Success);
         return ResponseEntity.ok().body(responseDTO);
     }
 }

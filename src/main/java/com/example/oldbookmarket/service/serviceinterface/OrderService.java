@@ -2,6 +2,7 @@ package com.example.oldbookmarket.service.serviceinterface;
 
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
+import com.example.oldbookmarket.dto.response.orderDTO.DataResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.RevenueResponseDTO;
@@ -24,4 +25,6 @@ public interface OrderService {
     List<OrderHistoryResponseDTO> getAllOrderByStatus(Long userId, String status);
     List<RevenueResponseDTO> profitCalculation( String month, String year);
     Boolean refundOrderToWallet(Long orderId);
+
+    DataResponseDTO getAllUserAndOrder();
 }

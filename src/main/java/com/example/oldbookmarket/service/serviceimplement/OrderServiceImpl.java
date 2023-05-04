@@ -4,6 +4,7 @@ import com.example.oldbookmarket.dto.request.NotiRequestDTO.PnsRequest;
 import com.example.oldbookmarket.dto.request.orderDTO.AddOrderRequestDTO;
 import com.example.oldbookmarket.dto.response.bookDTO.BookPendingResponseDTO;
 import com.example.oldbookmarket.dto.response.momoDTO.MomoResponse;
+import com.example.oldbookmarket.dto.response.orderDTO.DataResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderHistoryResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.OrderResponseDTO;
 import com.example.oldbookmarket.dto.response.orderDTO.RevenueResponseDTO;
@@ -799,5 +800,16 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public DataResponseDTO getAllUserAndOrder() {
+        List<User> users = userRepo.findAll();
+        List<Order> orders = orderRepo.findAll();
+        DataResponseDTO dataResponseDTO = DataResponseDTO.builder()
+                .numberUser(users.size())
+                .numberOrder(orders.size())
+                .build();
+        return dataResponseDTO;
     }
 }
