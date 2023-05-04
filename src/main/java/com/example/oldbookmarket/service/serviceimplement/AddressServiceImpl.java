@@ -34,11 +34,11 @@ public class AddressServiceImpl implements AddressService {
         User user = null;
         try {
             user = userRepo.findById(addressRequestDTO.getUserId()).get();
-            if (user.getUserStatus().equals(1)){
+            if (user.getUserStatus().equals("active")) {
                 Boolean f = false;
                 user = userRepo.getById(addressRequestDTO.getUserId());
                 List<Address> result = addressRepo.findAllByUser_Id(addressRequestDTO.getUserId());
-                for (Address address: result) {
+                for (Address address : result) {
                     if (address.getProvince().equalsIgnoreCase(addressRequestDTO.getProvince()) && address.getCity().equalsIgnoreCase(addressRequestDTO.getCity()) &&
                             address.getWard().equalsIgnoreCase(addressRequestDTO.getWard()) && address.getDistrict().equalsIgnoreCase(addressRequestDTO.getDistrict()) &&
                             address.getStreet().equalsIgnoreCase(addressRequestDTO.getStreet()) && address.getStatus().equalsIgnoreCase("deactive")) {
@@ -55,7 +55,7 @@ public class AddressServiceImpl implements AddressService {
                         f = true;
                     }
                 }
-                if(!f) {
+                if (!f) {
                     Address address = new Address();
                     address.setCity(addressRequestDTO.getCity());
                     address.setDistrict(addressRequestDTO.getDistrict());
@@ -75,7 +75,7 @@ public class AddressServiceImpl implements AddressService {
                             .build();
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return addressResponseDTO;
@@ -87,7 +87,7 @@ public class AddressServiceImpl implements AddressService {
         User user = null;
         try {
             Address address = addressRepo.getById(updateAddressRequestDTO.getAddressId());
-            if(address != null){
+            if (address != null) {
                 address.setCity(updateAddressRequestDTO.getCity());
                 address.setProvince(updateAddressRequestDTO.getProvince());
                 address.setDistrict(updateAddressRequestDTO.getDistrict());
@@ -103,7 +103,7 @@ public class AddressServiceImpl implements AddressService {
                         .street(address.getStreet())
                         .build();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return addressResponseDTO;
@@ -114,11 +114,11 @@ public class AddressServiceImpl implements AddressService {
         Address address = new Address();
         try {
             address = addressRepo.getById(addressId);
-            if (address!=null){
+            if (address != null) {
                 address.setStatus("DEACTIVATE");
                 address = addressRepo.save(address);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return address;
@@ -130,8 +130,8 @@ public class AddressServiceImpl implements AddressService {
         List<AddressResponseDTO> addressResponseDTOS = new ArrayList<>();
         try {
             addressList = addressRepo.findAllByUser_Id(userId);
-            for (Address address: addressList) {
-                if(address.getStatus().equalsIgnoreCase("active")){
+            for (Address address : addressList) {
+                if (address.getStatus().equalsIgnoreCase("active")) {
                     AddressResponseDTO addressResponseDTO = AddressResponseDTO.builder()
                             .id(address.getId())
                             .province(address.getProvince())
@@ -144,7 +144,7 @@ public class AddressServiceImpl implements AddressService {
                     addressResponseDTOS.add(addressResponseDTO);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return addressResponseDTOS;
@@ -155,7 +155,7 @@ public class AddressServiceImpl implements AddressService {
         List<String> listCities = new ArrayList<>();
         try {
             listCities = postRepo.findAllCity();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return listCities;
