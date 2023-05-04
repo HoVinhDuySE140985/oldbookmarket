@@ -774,25 +774,28 @@ public class OrderServiceImpl implements OrderService {
         Order order = null;
         try {
             order = orderRepo.findById(orderId).get();
-            order.setPaymentStatus("REFUND_COMPLETED");
-            orderRepo.save(order);
-            User admin = userRepo.findUserByRole_Id(1L);
-            Wallet adminWallet = walletRepo.findByUserId(admin.getId());
-            adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
-            walletRepo.save(adminWallet);
-            Wallet buyerWallet = walletRepo.findByUserId(order.getUser().getId());
-            buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
-            walletRepo.save(buyerWallet);
-            Transaction transaction = Transaction.builder()
-                    .createAt(LocalDate.now())
-                    .type("Hoàn tiền")
-                    .paymentMethod("Ví Của Tôi")
-                    .orderCode(order.getCodeOrder())
-                    .wallet(walletRepo.findByUserId(order.getUser().getId()))
-                    .amount(order.getAmount())
-                    .build();
-            transactionRepo.save(transaction);
-            return true;
+            List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
+            if(!complaints.isEmpty()){
+                order.setPaymentStatus("REFUND_COMPLETED");
+                orderRepo.save(order);
+                User admin = userRepo.findUserByRole_Id(1L);
+                Wallet adminWallet = walletRepo.findByUserId(admin.getId());
+                adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
+                walletRepo.save(adminWallet);
+                Wallet buyerWallet = walletRepo.findByUserId(order.getUser().getId());
+                buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
+                walletRepo.save(buyerWallet);
+                Transaction transaction = Transaction.builder()
+                        .createAt(LocalDate.now())
+                        .type("Hoàn tiền")
+                        .paymentMethod("Ví Của Tôi")
+                        .orderCode(order.getCodeOrder())
+                        .wallet(walletRepo.findByUserId(order.getUser().getId()))
+                        .amount(order.getAmount())
+                        .build();
+                transactionRepo.save(transaction);
+                return true;
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

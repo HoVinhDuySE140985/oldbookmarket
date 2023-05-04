@@ -183,7 +183,7 @@ public class OrderController {
     }
 
     @PutMapping("refund-to-wallet")
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseDTO> getOrderByOrderCode(@RequestParam Long orderId){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
