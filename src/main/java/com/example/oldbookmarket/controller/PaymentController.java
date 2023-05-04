@@ -108,7 +108,7 @@ public class PaymentController {
             e.printStackTrace();
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create("https://thriving-crumble-cf370e.netlify.app/")); // deploy lên thì chạy về trang cần trả về
+        headers.setLocation(URI.create("https://cho-sach-cu.vercel.app/")); // deploy lên thì chạy về trang cần trả về
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
