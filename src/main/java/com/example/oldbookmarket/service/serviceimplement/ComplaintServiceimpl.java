@@ -39,6 +39,8 @@ public class ComplaintServiceimpl implements ComplaintService {
         ComplaintResponseDTO complaintResponseDTO = null;
         User sender = userRepo.findById(complaintRequestDTO.getSenderId()).get();
         Order order = orderRepo.findByCodeOrder(complaintRequestDTO.getOrderCode());
+        order.setIsCheck(1);
+        orderRepo.save(order);
         if (order == null) {
             throw new ResponseStatusException(HttpStatus.valueOf(400), "Đơn Hàng không tồn tại");
         }else{

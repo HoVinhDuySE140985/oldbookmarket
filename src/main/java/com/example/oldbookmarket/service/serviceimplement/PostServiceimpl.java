@@ -160,7 +160,7 @@ public class PostServiceimpl implements PostService {
                 walletRepo.save(walletPoster);
                 transaction = Transaction.builder()
                         .createAt(LocalDate.now())
-                        .type("Gia Hạn  Bài Đăng")
+                        .type("Trả Phí Đăng Bài")
                         .paymentMethod("Ví Của Tôi")
                         .orderCode(orderCode)
                         .wallet(walletPoster)
@@ -528,6 +528,16 @@ public class PostServiceimpl implements PostService {
             postResponseDTO.setStatus(post.getPostStatus());
             postResponseDTO.setReasonReject(post.getReasonReject());
             postResponseDTO.setUserId(post.getUser().getId());
+            List<String> fcmKey1 = new ArrayList<>();
+            if (!post.getUser().getFcmKey().isEmpty() && post.getUser().getFcmKey() != null) {
+                fcmKey1.add(post.getUser().getFcmKey());
+            }
+            if (!fcmKey1.isEmpty() || fcmKey1.size() > 0) { // co key
+                // pushnoti
+                PnsRequest pnsRequest = new PnsRequest(fcmKey1, "Bài đăng bị từ chối",
+                        "Bài đăng của bạn bị từ chối :" + post.getReasonReject());
+                fcmService.pushNotification(pnsRequest);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

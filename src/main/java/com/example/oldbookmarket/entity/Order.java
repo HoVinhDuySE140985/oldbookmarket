@@ -41,6 +41,7 @@ public class Order implements Serializable {
     @Column(length = 40)
     private String codeOrder;
     private LocalDate dateShipComplete;
+    private int isCheck;
 
     @MapsId
     @OneToOne(fetch = FetchType.EAGER)

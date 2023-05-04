@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
         User user = userRepo.findById(userId).get();
         Post post = postRepo.findById(postId).get();
         try {
-            if (!shipAddress.equalsIgnoreCase(null)){
+            if (!shipAddress.equalsIgnoreCase(null)) {
                 post.setPostStatus("deactive");
                 postRepo.save(post);
                 if (post.getForm().equalsIgnoreCase("bán")) {
@@ -96,6 +96,7 @@ public class OrderServiceImpl implements OrderService {
                             .deliveryMethod("Khách Hàng Tự Thỏa Thuận")
                             .status("WaitingForConfirmation")
                             .paymentStatus("PAID")
+                            .isCheck(0)
                             .build();
                     orderRepo.save(order);
                     Transaction transaction = Transaction.builder()
@@ -187,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
         OrderResponseDTO orderResponseDTO = null;
         Transaction transaction = null;
         String orderCode = Utilities.randomAlphaNumeric(10);
-        if(!addOrderRequestDTO.getShipAddress().equalsIgnoreCase(null)){
+        if (!addOrderRequestDTO.getShipAddress().equalsIgnoreCase(null)) {
             User user = userRepo.findById(addOrderRequestDTO.getUserId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             Post post = postRepo.findById(addOrderRequestDTO.getPostId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
             post.setPostStatus("deactive");
@@ -212,6 +213,7 @@ public class OrderServiceImpl implements OrderService {
                             .status("WaitingForConfirmation")
                             .codeOrder(orderCode)
                             .paymentStatus("PAID")
+                            .isCheck(0)
                             .build();
                     order = orderRepo.save(order);
                     orderResponseDTO = OrderResponseDTO.builder()
@@ -293,6 +295,7 @@ public class OrderServiceImpl implements OrderService {
                             .status("WaitingForConfirmation")
                             .paymentStatus("DEPOSITED")
                             .codeOrder(orderCode)
+                            .isCheck(0)
                             .build();
                     order = orderRepo.save(order);
                     orderResponseDTO = OrderResponseDTO.builder()
@@ -415,7 +418,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderResponseDTO> responseDTOS = new ArrayList<>();
         Post post = null;
         try {
-            if (orderCode.equalsIgnoreCase("null")){
+            if (orderCode.equalsIgnoreCase("null")) {
                 orderList = orderRepo.findAll();
                 for (Order order : orderList) {
                     post = postRepo.findById(order.getId()).get();
@@ -453,10 +456,11 @@ public class OrderServiceImpl implements OrderService {
                             .postImage(post.getImageUrl())
                             .listBooks(listBookResponse)
                             .paymentStatus(order.getPaymentStatus())
+                            .isCheck(order.getIsCheck())
                             .build();
                     responseDTOS.add(orderResponseDTO);
                 }
-            }else {
+            } else {
                 Order order = orderRepo.findOrderByCodeOrder(orderCode);
                 post = postRepo.findById(order.getId()).get();
                 List<Book> books = bookRepo.findAllByPost_Id(post.getId());
@@ -493,6 +497,7 @@ public class OrderServiceImpl implements OrderService {
                         .postImage(post.getImageUrl())
                         .listBooks(listBookResponse)
                         .paymentStatus(order.getPaymentStatus())
+                        .isCheck(order.getIsCheck())
                         .build();
                 responseDTOS.add(orderResponseDTO);
             }
@@ -716,18 +721,15 @@ public class OrderServiceImpl implements OrderService {
                 }
                 orderList = orderRepo.findAllByOrderDate(Integer.parseInt(year), Integer.parseInt(month));
                 for (Order order : orderList) {
-//                    complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
-//                    if(complaints == null || com){
-                        if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
-                            if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
-                                integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
-                            }
-                        } else {
-                            if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
-                                integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
-                            }
+                    if (order.getPost().getForm().equalsIgnoreCase("Bán")) {
+                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                            integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.8)))));
                         }
-//                    }
+                    } else {
+                        if (integerBigDecimalMap.containsKey(order.getOrderDate().getDayOfMonth())) {
+                            integerBigDecimalMap.put(order.getOrderDate().getDayOfMonth(), integerBigDecimalMap.get(order.getOrderDate().getDayOfMonth()).add(order.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.9)))));
+                        }
+                    }
                 }
                 Set set = integerBigDecimalMap.keySet();
                 for (Object key : set) {
@@ -774,29 +776,26 @@ public class OrderServiceImpl implements OrderService {
         Order order = null;
         try {
             order = orderRepo.findById(orderId).get();
-            List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
-            if(!complaints.isEmpty()){
-                order.setPaymentStatus("REFUND_COMPLETED");
-                orderRepo.save(order);
-                User admin = userRepo.findUserByRole_Id(1L);
-                Wallet adminWallet = walletRepo.findByUserId(admin.getId());
-                adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
-                walletRepo.save(adminWallet);
-                Wallet buyerWallet = walletRepo.findByUserId(order.getUser().getId());
-                buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
-                walletRepo.save(buyerWallet);
-                Transaction transaction = Transaction.builder()
-                        .createAt(LocalDate.now())
-                        .type("Hoàn tiền")
-                        .paymentMethod("Ví Của Tôi")
-                        .orderCode(order.getCodeOrder())
-                        .wallet(walletRepo.findByUserId(order.getUser().getId()))
-                        .amount(order.getAmount())
-                        .build();
-                transactionRepo.save(transaction);
-                return true;
-            }
-        }catch (Exception e){
+            order.setPaymentStatus("REFUND_COMPLETED");
+            orderRepo.save(order);
+            User admin = userRepo.findUserByRole_Id(1L);
+            Wallet adminWallet = walletRepo.findByUserId(admin.getId());
+            adminWallet.setAmount(adminWallet.getAmount().subtract(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
+            walletRepo.save(adminWallet);
+            Wallet buyerWallet = walletRepo.findByUserId(order.getUser().getId());
+            buyerWallet.setAmount(buyerWallet.getAmount().add(order.getAmount().multiply(BigDecimal.valueOf(0.5))));
+            walletRepo.save(buyerWallet);
+            Transaction transaction = Transaction.builder()
+                    .createAt(LocalDate.now())
+                    .type("Hoàn tiền")
+                    .paymentMethod("Ví Của Tôi")
+                    .orderCode(order.getCodeOrder())
+                    .wallet(walletRepo.findByUserId(order.getUser().getId()))
+                    .amount(order.getAmount())
+                    .build();
+            transactionRepo.save(transaction);
+            return true;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;

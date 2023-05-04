@@ -30,4 +30,5 @@ public class OrderResponseDTO {
     private String orderCode;
     private String postImage;
     private List<BookPendingResponseDTO> listBooks;
+    private int isCheck;
 }
