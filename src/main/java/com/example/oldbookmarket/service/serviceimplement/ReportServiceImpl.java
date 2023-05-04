@@ -35,7 +35,7 @@ public class ReportServiceImpl implements ReportService {
             User approvedBy = userRepo.findById(reportRequestDTO.getApprovedBy()).get();
             User userReported = userRepo.findById(reportRequestDTO.getUserReportedId()).get();
             Complaint complaint = complaintRepo.findById(reportRequestDTO.getComplaintId()).get();
-            complaint.setStatus(1);
+            complaint.setStatus(0);
             complaintRepo.save(complaint);
             Report report = Report.builder()
                     .user(approvedBy)
