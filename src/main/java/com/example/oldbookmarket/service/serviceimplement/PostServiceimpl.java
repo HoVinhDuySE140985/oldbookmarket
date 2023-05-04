@@ -579,7 +579,7 @@ public class PostServiceimpl implements PostService {
     public PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO) {
         PostResponseDTO postResponseDTO = null;
         Post post = postRepo.findById(postRequestDTO.getId()).get();
-        Order order = orderRepo.findOrderByPostId(post.getId());
+        Order order = orderRepo.findOrderByPostId(postRequestDTO.getId());
         if (order == null) {
             post.setPostStatus("pending");
             post.setTitle(postRequestDTO.getTitle());
