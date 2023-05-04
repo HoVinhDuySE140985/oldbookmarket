@@ -578,7 +578,6 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = null;
         Post post = postRepo.findById(postRequestDTO.getId()).get();
         Order order = orderRepo.findOrderByPostId(postRequestDTO.getId());
-        System.out.println(order.getId());
         if (order == null) {
             post.setPostStatus("pending");
             post.setTitle(postRequestDTO.getTitle());
@@ -598,7 +597,8 @@ public class PostServiceimpl implements PostService {
                     .bookExchange(post.getBookExchange())
                     .location(post.getLocation())
                     .build();
-        } else {
+        }
+        if(order != null || post.getPostStatus().equalsIgnoreCase("pending")){
             throw new ResponseStatusException(HttpStatus.valueOf(400), "Bài đang đã được mua/trao đổi không thể cập nhập thông tin");
         }
         return postResponseDTO;
