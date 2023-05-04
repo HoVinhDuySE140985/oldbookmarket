@@ -493,7 +493,7 @@ public class PostServiceimpl implements PostService {
             // gửi noti cho người đăng ký nhận thông tin
             List<String> fcmKey1 = new ArrayList<>();
             List<PostNotification> postNotifications = postNotificationRepo.findAllByBookNoty(post.getTitle());
-            for (PostNotification postNotification: postNotifications) {
+            for (PostNotification postNotification : postNotifications) {
                 User regisUser = userRepo.findUserByEmail(postNotification.getEmail());
                 if (!regisUser.getFcmKey().isEmpty() && regisUser.getFcmKey() != null) {
                     fcmKey1.add(regisUser.getFcmKey());
@@ -578,34 +578,29 @@ public class PostServiceimpl implements PostService {
     @Override
     public PostResponseDTO updatePostInfo(PostRequestDTO postRequestDTO) {
         PostResponseDTO postResponseDTO = null;
-        try {
-            Post post = postRepo.findById(postRequestDTO.getId()).get();
-            Order order = orderRepo.findOrderByPostId(post.getId());
-            if (order == null) {
-                post.setPostStatus("pending");
-                post.setTitle(postRequestDTO.getTitle());
-                post.setImageUrl(postRequestDTO.getImageUrl());
-                post.setLocation(postRequestDTO.getLocation());
-                post.setPrice(postRequestDTO.getPrice());
-                post.setInitPrice(postRequestDTO.getInitPrice());
-                post.setBookExchange(postRequestDTO.getBookExchange());
-                post = postRepo.save(post);
-                postResponseDTO = PostResponseDTO.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .form(post.getForm())
-                        .imageUrl(post.getImageUrl())
-                        .initPrice(post.getInitPrice())
-                        .price(post.getPrice())
-                        .bookExchange(post.getBookExchange())
-                        .location(post.getLocation())
-                        .build();
-            } else {
-                throw new ResponseStatusException(HttpStatus.valueOf(400), "Bài đang đã được mua/trao đổi không thể cập nhập thông tin");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        Post post = postRepo.findById(postRequestDTO.getId()).get();
+        Order order = orderRepo.findOrderByPostId(post.getId());
+        if (order == null) {
+            post.setPostStatus("pending");
+            post.setTitle(postRequestDTO.getTitle());
+            post.setImageUrl(postRequestDTO.getImageUrl());
+            post.setLocation(postRequestDTO.getLocation());
+            post.setPrice(postRequestDTO.getPrice());
+            post.setInitPrice(postRequestDTO.getInitPrice());
+            post.setBookExchange(postRequestDTO.getBookExchange());
+            post = postRepo.save(post);
+            postResponseDTO = PostResponseDTO.builder()
+                    .id(post.getId())
+                    .title(post.getTitle())
+                    .form(post.getForm())
+                    .imageUrl(post.getImageUrl())
+                    .initPrice(post.getInitPrice())
+                    .price(post.getPrice())
+                    .bookExchange(post.getBookExchange())
+                    .location(post.getLocation())
+                    .build();
+        } else {
+            throw new ResponseStatusException(HttpStatus.valueOf(400), "Bài đang đã được mua/trao đổi không thể cập nhập thông tin");
         }
         return postResponseDTO;
     }
