@@ -36,7 +36,7 @@ public class Book {
     @Column(length = 25)
     private String language;
     private String statusQuo; // đồng nghĩa với condition
-    @Column(length = 500)
+    @Column(length = 1000)
     private String description;
 
 
