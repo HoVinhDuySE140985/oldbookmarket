@@ -256,8 +256,6 @@ public class PostServiceimpl implements PostService {
             }
 
         }
-
-
         return postResponseDTO;
     }
 
@@ -580,6 +578,7 @@ public class PostServiceimpl implements PostService {
         PostResponseDTO postResponseDTO = null;
         Post post = postRepo.findById(postRequestDTO.getId()).get();
         Order order = orderRepo.findOrderByPostId(postRequestDTO.getId());
+        System.out.println(order.getId());
         if (order == null) {
             post.setPostStatus("pending");
             post.setTitle(postRequestDTO.getTitle());

@@ -26,13 +26,9 @@ public class PostController {
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ResponseDTO> creatPost(@RequestBody @Validated PostRequestDTO postRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            PostResponseDTO postResponseDTO = postService.createPost(postRequestDTO);
-            responseDTO.setData(postResponseDTO);
-            responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+        PostResponseDTO postResponseDTO = postService.createPost(postRequestDTO);
+        responseDTO.setData(postResponseDTO);
+        responseDTO.setSuccessCode(SuccessCode.CREATE_SUCCESS);
         return ResponseEntity.ok().body(responseDTO);
     }
 
