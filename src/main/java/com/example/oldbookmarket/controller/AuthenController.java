@@ -208,7 +208,7 @@ public class AuthenController {
     }
 
     @PutMapping("unban-user")
-    @PermitAll
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseDTO> unBanUser(@RequestParam String email){
         ResponseDTO responseDTO = new ResponseDTO();
         try {
