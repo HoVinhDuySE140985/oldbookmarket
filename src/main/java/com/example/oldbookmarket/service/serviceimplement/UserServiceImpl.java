@@ -199,15 +199,17 @@ public class UserServiceImpl implements UserService {
             if (email.equalsIgnoreCase("null")){
                 userList = userRepo.findAll();
                 for (User user : userList) {
-                    UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                            .id(user.getId())
-                            .email(user.getEmail())
-                            .name(user.getName())
-                            .userImage(user.getImageUrl())
-                            .phoneNumber(user.getPhoneNumber())
-                            .userStatus(user.getUserStatus())
-                            .build();
-                    userResponseDTOS.add(userResponseDTO);
+                    if (user.getRole().equals(3)){
+                        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
+                                .id(user.getId())
+                                .email(user.getEmail())
+                                .name(user.getName())
+                                .userImage(user.getImageUrl())
+                                .phoneNumber(user.getPhoneNumber())
+                                .userStatus(user.getUserStatus())
+                                .build();
+                        userResponseDTOS.add(userResponseDTO);
+                    }
                 }
             }else {
                 User user = userRepo.findUserByEmail(email);
