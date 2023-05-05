@@ -199,7 +199,7 @@ public class UserServiceImpl implements UserService {
             if (email.equalsIgnoreCase("null")){
                 userList = userRepo.findAll();
                 for (User user : userList) {
-                    if (user.getRole().equals(3)){
+                    if (user.getRole().getId().equals(3)){
                         UserResponseDTO userResponseDTO = UserResponseDTO.builder()
                                 .id(user.getId())
                                 .email(user.getEmail())
