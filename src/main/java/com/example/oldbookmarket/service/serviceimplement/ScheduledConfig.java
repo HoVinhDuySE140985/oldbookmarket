@@ -46,8 +46,8 @@ public class ScheduledConfig {
             User seller = userRepo.findById(order.getPost().getUser().getId()).get();
             User admin = userRepo.findUserByRole_Id(1L);
             User buyer = userRepo.findById(order.getUser().getId()).get();
-            List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
-            LocalDate futureDay = order.getDateShipComplete().plusDays(3);
+//            List<Complaint> complaints = complaintRepo.findAllByOrder_CodeOrder(order.getCodeOrder());
+//            LocalDate futureDay = order.getDateShipComplete().plusDays(3);
 
             //bán
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){
