@@ -53,7 +53,7 @@ public class ScheduledConfig {
             if (order.getPost().getForm().equalsIgnoreCase("Bán")){
                 // dơn thành công
                 if (order.getStatus().equalsIgnoreCase("complete") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
-                    if (order.getDateShipComplete().equals(futureDay) && complaints.isEmpty()){
+//                    if (order.getDateShipComplete().equals(futureDay) && complaints.isEmpty()){
                         BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.80));
 
                         Wallet adminWallet = walletRepo.findById(admin.getId()).get();
@@ -76,7 +76,7 @@ public class ScheduledConfig {
                         transactionRepo.save(transaction);
                         order.setPaymentStatus("PAYMENT_COMPLETED");
                         orderRepo.save(order);
-                    }
+//                    }
                 }
                 //đơn hàng cancel
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("PAID")){
@@ -105,10 +105,10 @@ public class ScheduledConfig {
                 }
             }else {
                 // trao đổi thanh cong
-                if (order.getStatus().equalsIgnoreCase("Received") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
-                    LocalDate futureDateReceive = order.getResentDate().plusDays(8);
-                    LocalDate currentDay = LocalDate.now();
-                    if (currentDay.equals(futureDateReceive) && complaints.isEmpty() ){
+                if (order.getStatus().equalsIgnoreCase("received") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){
+//                    LocalDate futureDateReceive = order.getResentDate().plusDays(8);
+//                    LocalDate currentDay = LocalDate.now();
+//                    if (currentDay.equals(futureDateReceive) && complaints.isEmpty() ){
                         BigDecimal amountToBePaid = order.getAmount().multiply(BigDecimal.valueOf(0.90));
 
                         Wallet adminWallet = walletRepo.findById(admin.getId()).get();
@@ -130,7 +130,7 @@ public class ScheduledConfig {
                         transactionRepo.save(transaction);
                         order.setPaymentStatus("EXCHANGE_COMPLETED");
                         orderRepo.save(order);
-                    }
+//                    }
                 }
                 // trao đổi bị cancel
                 if (order.getStatus().equalsIgnoreCase("cancel") && order.getPaymentStatus().equalsIgnoreCase("DEPOSITED")){

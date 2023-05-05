@@ -166,7 +166,7 @@ public class AuthenController {
     }
 
     @PutMapping("ban-user")
-    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponseDTO> banUser(@RequestParam String email){
         ResponseDTO responseDTO = new ResponseDTO();
         try{
